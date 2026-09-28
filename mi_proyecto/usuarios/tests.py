@@ -12,6 +12,8 @@ class TraditionalAccountFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'auth-card')
         self.assertContains(response, 'ENVIAR ENLACE')
+        self.assertContains(response, 'class="guest-view"')
+        self.assertContains(response, '.guest-view main { padding-top: 0; }')
         self.assertNotContains(response, 'Administración de Django')
 
     @patch('usuarios.views.enviar_cupon_bienvenida')

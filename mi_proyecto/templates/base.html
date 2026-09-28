@@ -656,6 +656,7 @@
       }
 
       main { padding-top: 86px; min-height: 85vh; }
+      .guest-view main { padding-top: 0; }
 
       /* Sub-footer */
       .sub-footer {
@@ -1062,7 +1063,7 @@
 
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{% if not request.user.is_authenticated %}guest-view{% endif %}">
     {% if request.user.is_authenticated %}
     <!-- Sub-page Apple Dynamic Island Header -->
     <header class="sub-header" id="siteHeader">
