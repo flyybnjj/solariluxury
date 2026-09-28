@@ -987,11 +987,32 @@
   }
 
   @media (max-width: 900px) {
+    .info-container { padding: 0 16px; }
+    .preventa-section { padding: 24px 16px; border-radius: 16px; }
     .info-grid { grid-template-columns: 1fr; }
-    .preventa-grid { grid-template-columns: 1fr; }
+    .preventa-grid { grid-template-columns: 1fr; gap: 24px; }
     .tracking-input-group { flex-direction: column; }
-    .faq-section { padding: 24px; }
-    .preventa-row { grid-template-columns: 1fr; }
+    .faq-section { padding: 20px 16px; }
+    .preventa-row { grid-template-columns: 1fr; gap: 12px; }
+    .preventa-preview-card { position: static; padding: 18px 16px; }
+    .apple-select-trigger { padding: 10px 12px; }
+    .apple-selected-info { min-width: 0; }
+    .apple-selected-name { font-size: 13px; }
+  }
+
+  @media (max-width: 480px) {
+    .info-page { padding: 40px 0 60px; }
+    .info-container { padding: 0 12px; }
+    .info-title { font-size: 36px; }
+    .info-subtitle { font-size: 13px; line-height: 1.5; margin-bottom: 24px; }
+    .info-nav-tabs { gap: 8px; }
+    .info-tab-btn { padding: 7px 12px; font-size: 11px; }
+    .preventa-section { padding: 18px 12px; border-radius: 16px; }
+    .preventa-input, .preventa-select, .preventa-textarea { font-size: 16px; }
+    .apple-select-trigger { padding: 8px 10px; }
+    .apple-selected-thumb { width: 34px; height: 34px; }
+    .apple-selected-content { gap: 8px; }
+    .order-meta-grid { grid-template-columns: 1fr; }
   }
 
   /* Apple Light Mode Adaptations for Informacion & Preventa */

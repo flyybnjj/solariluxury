@@ -577,10 +577,93 @@
   }
 
   @media (max-width: 900px) {
-    .detail-grid { grid-template-columns: 1fr; gap: 36px; }
+    .detail-page { padding: 84px 18px 80px; }
+    .detail-grid { grid-template-columns: 1fr; gap: 32px; }
     .detail-gallery-main { position: static; }
-    .gallery-main-img { height: 380px; }
-    .detail-price { font-size: 36px; }
+    .gallery-main-img { height: clamp(280px, 60vw, 380px); padding: 20px; border-radius: 20px; }
+    .detail-price { font-size: 34px; }
+    .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+  }
+
+  @media (max-width: 640px) {
+    .detail-page {
+      padding: 76px 14px calc(100px + env(safe-area-inset-bottom, 20px));
+    }
+    .gallery-main-img {
+      height: clamp(250px, 75vw, 320px);
+      padding: 16px;
+      border-radius: 18px;
+    }
+    .size-btn {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .detail-actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin-bottom: 0;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 12px));
+      background: rgba(14, 14, 18, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      z-index: 800;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+      flex-direction: row;
+      gap: 10px;
+    }
+    html[data-theme="light"] .detail-actions {
+      background: rgba(255, 255, 255, 0.94);
+      border-top-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.06);
+    }
+    .detail-actions .btn-add-cart {
+      flex: 1;
+      min-height: 48px;
+      padding: 12px 18px;
+      font-size: 14px;
+    }
+    .detail-actions .btn-wishlist {
+      width: 48px;
+      min-width: 48px;
+      min-height: 48px;
+      padding: 0;
+      border-radius: 50%;
+    }
+    .detail-actions .btn-wishlist #detailWishText {
+      display: none;
+    }
+    .detail-title {
+      font-size: 26px;
+      line-height: 1.2;
+    }
+    .detail-price {
+      font-size: 28px;
+    }
+    .stockx-360-bar {
+      padding: 14px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .detail-title {
+      font-size: 22px;
+    }
+    .detail-price {
+      font-size: 24px;
+    }
+    .gallery-main-img {
+      height: 240px;
+    }
+    .related-grid {
+      grid-template-columns: 1fr !important;
+    }
   }
 </style>
 

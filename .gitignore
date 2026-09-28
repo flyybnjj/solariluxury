@@ -13,4 +13,5 @@ venv/
 *.pdf
 *.xlsx
 evidencias_ia/
+capturas_mobile_audit/
 .temp*

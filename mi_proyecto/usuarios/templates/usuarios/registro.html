@@ -135,6 +135,28 @@
     font-family: inherit;
     margin-bottom: 8px;
   }
+
+  @media (max-width: 480px) {
+    .auth-wrapper {
+      padding: 80px 14px 60px;
+      min-height: calc(100dvh - 80px);
+    }
+    .auth-card {
+      padding: 28px 18px;
+      border-radius: 20px;
+    }
+    .auth-title {
+      font-size: 24px;
+    }
+    .auth-input {
+      font-size: 16px !important;
+      min-height: 46px;
+    }
+    .auth-btn-submit {
+      min-height: 48px;
+      font-size: 15px;
+    }
+  }
 </style>
 {% endblock %}
 

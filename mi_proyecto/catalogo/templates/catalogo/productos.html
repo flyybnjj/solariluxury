@@ -13,11 +13,17 @@
     border-bottom: 1px solid var(--border);
     background: radial-gradient(ellipse 65% 45% at 50% 0%, rgba(0, 113, 227, 0.1) 0%, transparent 80%);
     position: relative;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
   .vault-container {
     max-width: 1360px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 32px;
+    box-sizing: border-box;
+    min-width: 0;
   }
   .vault-tag {
     font-family: inherit;
@@ -200,6 +206,12 @@
     display: flex;
     gap: 8px;
     overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
     padding: 4px 2px 16px;
     margin-bottom: 32px;
     scrollbar-width: thin;
@@ -1081,24 +1093,51 @@
     .prod-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (max-width: 860px) {
-    .prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .vault-container { padding: 0 16px; }
+    .catalog-pro-toolbar { flex-direction: column; align-items: stretch; padding: 12px 14px; gap: 12px; border-radius: 16px; }
+    .toolbar-left, .toolbar-right { width: 100%; justify-content: space-between; }
+    .catalog-search-box { min-width: 0; width: 100%; max-width: 100%; }
+    .density-switcher { width: 100%; justify-content: center; }
+    .sort-wrap { width: 100%; }
+    .sort-select { width: 100%; }
+    .vault-filters-subrow { flex-direction: column; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 14px; }
+    .category-scroll-rail { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; flex-wrap: nowrap; padding-bottom: 12px; }
+    .prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 48px; }
     .prod-grid.view-editorial { grid-template-columns: 1fr; }
-    .qv-modal-dialog { grid-template-columns: 1fr; max-height: 85vh; }
-    .qv-media-col { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 24px; }
-    .qv-info-col { padding: 24px; }
-    .catalog-search-box { max-width: 100%; width: 100%; }
-    .catalog-pro-toolbar { flex-direction: column; align-items: stretch; }
+    .qv-modal-dialog { grid-template-columns: 1fr; max-height: 88vh; max-height: 88dvh; border-radius: 20px 20px 0 0; }
+    .qv-media-col { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px; }
+    .qv-info-col { padding: 18px; }
+    .pc-img { height: 200px; }
+    .pc-name { font-size: 16px; min-height: 38px; max-height: 38px; }
+    .pc-price { font-size: 19px; }
+    .pc-add-btn { padding: 8px 12px; font-size: 9px; min-height: 38px; }
+    .pc-wish-btn { width: 38px; height: 38px; }
+  }
+  @media (max-width: 480px) {
+    .vault-hero { padding: 40px 0 24px; }
+    .vault-title { font-size: 38px; }
+    .vault-desc { font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+    .prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pc-img { height: 160px; }
+    .pc-body { padding: 10px 10px 12px; }
+    .pc-name { font-size: 15px; min-height: 34px; max-height: 34px; }
+    .pc-foot { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .pc-add-btn { width: 100%; justify-content: center; }
+  }
+  @media (max-width: 330px) {
+    .prod-grid { grid-template-columns: 1fr; }
+    .pc-img { height: 220px; }
   }
   /* Floating Luxury Toast Notification */
   .luxury-toast {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: calc(20px + var(--sab));
+    right: 20px;
     z-index: 100000;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 22px;
+    padding: 12px 20px;
     border-radius: 100px;
     background: rgba(10, 10, 14, 0.95);
     backdrop-filter: blur(20px);
@@ -1131,6 +1170,7 @@
     background: var(--accent);
     color: #fff;
     font-size: 11px;
+  }
   /* Apple Light Mode Adaptations for The Vault */
   html[data-theme="light"] .vault-title {
     color: #111827;

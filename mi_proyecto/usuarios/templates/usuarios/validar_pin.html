@@ -255,6 +255,62 @@
     border: 1px solid #bbf7d0;
     color: #15803d;
   }
+
+  @media (max-width: 480px) {
+    .apple-page-wrapper {
+      padding: 72px 14px 60px;
+      min-height: calc(100dvh - 90px);
+    }
+    .apple-card {
+      padding: 28px 16px 24px;
+      border-radius: 28px;
+    }
+    .apple-halo-badge {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 12px;
+    }
+    .apple-dots-svg {
+      width: 100px;
+      height: 100px;
+    }
+    .apple-static-logo {
+      width: 36px;
+      height: 36px;
+    }
+    .apple-id-title {
+      font-size: 20px;
+    }
+    .apple-2fa-grid {
+      gap: 5px;
+      margin: 14px 0 14px;
+    }
+    .apple-2fa-box {
+      width: clamp(34px, 12vw, 44px);
+      height: clamp(44px, 14vw, 52px);
+      font-size: clamp(20px, 6vw, 24px);
+      border-radius: 8px;
+    }
+    .apple-text-input, .apple-textarea {
+      font-size: 16px !important;
+      min-height: 44px;
+    }
+    .apple-pill-btn {
+      height: 48px;
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .apple-2fa-grid {
+      gap: 3px;
+    }
+    .apple-2fa-box {
+      width: 32px;
+      height: 40px;
+      font-size: 18px;
+    }
+  }
 </style>
 {% endblock %}
 
@@ -278,7 +334,7 @@
 
       <!-- 6 Cajas estilo Apple 2FA -->
       <div class="apple-2fa-grid" id="page2faGrid">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="0" autofocus>
+        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-index="0" autofocus>
         <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="1">
         <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="2">
         <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="3">
