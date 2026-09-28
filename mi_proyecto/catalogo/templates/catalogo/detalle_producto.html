@@ -11,6 +11,7 @@
     color: var(--text-primary);
     padding: 100px 24px 80px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
   .detail-container {
     max-width: 1240px;
@@ -20,19 +21,19 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 36px;
-    font-family: 'Space Mono', monospace;
-    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--text-muted, #86868b);
+    margin-bottom: 32px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
   }
   .detail-breadcrumb a {
-    color: rgba(255,255,255,0.4);
+    color: var(--text-muted, #86868b);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
   }
-  .detail-breadcrumb a:hover { color: #fff; }
-  .detail-breadcrumb-sep { opacity: 0.3; }
+  .detail-breadcrumb a:hover { color: var(--text-primary, #ffffff); }
+  .detail-breadcrumb-sep { opacity: 0.4; }
 
   .detail-grid {
     display: grid;
@@ -50,66 +51,84 @@
     width: 100%;
     height: 480px;
     background: #ffffff;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
     overflow: hidden;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 24px;
+    padding: 32px;
     cursor: {% if es_360 %}ew-resize{% else %}default{% endif %};
     user-select: none;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    transition: border-color 0.3s ease;
+  }
+  html[data-theme="light"] .gallery-main-img {
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.08);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.06);
   }
   .gallery-main-img img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     object-position: center;
-    transition: transform 0.25s ease;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
     -webkit-user-drag: none;
   }
   .gallery-main-img:hover img {
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
 
-  /* 360 StockX Floating Badge */
+  /* 360 Apple Floating Badge */
   .badge-360-overlay {
     position: absolute;
-    top: 16px;
-    left: 16px;
+    top: 18px;
+    left: 18px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(230, 0, 0, 0.5);
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: #ff6b6b;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    backdrop-filter: blur(10px);
+    background: rgba(18, 18, 22, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 6px 14px;
+    border-radius: 980px;
+    font-size: 11px;
+    color: #f5f5f7;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  html[data-theme="light"] .badge-360-overlay {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
   }
 
   /* ======================================================
-     STOCKX 360 SLIDER CONTROL
+     APPLE INTERACTIVE 360 SLIDER CONTROL
   ====================================================== */
   .stockx-360-bar {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
     padding: 16px 20px;
     margin-bottom: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+  html[data-theme="light"] .stockx-360-bar {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   }
   .stockx-header-row {
     display: flex;
@@ -117,24 +136,27 @@
     justify-content: space-between;
   }
   .stockx-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    color: #e60000;
-    font-weight: 700;
-    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-primary, #f5f5f7);
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
   .stockx-angle-text {
-    font-family: 'Space Mono', monospace;
     font-size: 11px;
-    font-weight: 700;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 2px 8px;
-    border-radius: 6px;
+    font-weight: 500;
+    color: var(--text-muted, #86868b);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 980px;
+  }
+  html[data-theme="light"] .stockx-angle-text {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #4b5563;
   }
   .stockx-controls-row {
     display: flex;
@@ -142,75 +164,87 @@
     gap: 14px;
   }
   .stockx-auto-spin-btn {
-    background: rgba(230, 0, 0, 0.15);
-    border: 1px solid rgba(230, 0, 0, 0.4);
-    color: #ff6b6b;
-    padding: 8px 14px;
-    border-radius: 100px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary, #f5f5f7);
+    padding: 8px 16px;
+    border-radius: 980px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .stockx-auto-spin-btn:hover {
-    background: #e60000;
-    color: #fff;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.02);
+  }
+  html[data-theme="light"] .stockx-auto-spin-btn {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .stockx-auto-spin-btn:hover {
+    background: rgba(0, 0, 0, 0.12);
   }
   .stockx-range {
     flex: 1;
     -webkit-appearance: none;
     appearance: none;
-    height: 6px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.16);
+    height: 4px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.15);
     outline: none;
     cursor: pointer;
     transition: background 0.2s;
   }
+  html[data-theme="light"] .stockx-range {
+    background: rgba(0, 0, 0, 0.12);
+  }
   .stockx-range::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: #ffffff;
-    border: 3px solid #e60000;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     cursor: ew-resize;
-    transition: transform 0.15s ease, background 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .stockx-range::-webkit-slider-thumb:hover {
-    transform: scale(1.18);
-    background: #ff4d4d;
+    transform: scale(1.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   }
   .stockx-range::-webkit-slider-thumb:active {
-    transform: scale(1.25);
+    transform: scale(1.22);
   }
   .stockx-range::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: #ffffff;
-    border: 3px solid #e60000;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     cursor: ew-resize;
   }
   .stockx-hint {
     text-align: center;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.35);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: var(--text-muted, #86868b);
+    letter-spacing: 0.01em;
   }
 
   /* Thumbnails Strip */
   .gallery-thumbs {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     overflow-x: auto;
     padding-bottom: 6px;
     scrollbar-width: thin;
@@ -220,20 +254,20 @@
     width: 72px;
     height: 72px;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
     background: #ffffff;
     border: 1px solid rgba(255,255,255,0.1);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 6px;
   }
   .gallery-thumb:hover, .gallery-thumb.active {
-    border-color: #e60000;
-    box-shadow: 0 0 14px rgba(230,0,0,0.45);
+    border-color: #0071e3;
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.4);
     transform: translateY(-2px);
   }
   .gallery-thumb img {
@@ -245,81 +279,88 @@
   /* Info Column */
   .detail-info { padding-top: 4px; }
   .detail-cat {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: #e60000;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted, #86868b);
     text-transform: uppercase;
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .detail-title {
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: clamp(34px, 4.5vw, 56px);
-    line-height: 1.05;
-    letter-spacing: 0.02em;
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(32px, 3.8vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary, #ffffff);
     margin-bottom: 8px;
     word-break: break-word;
   }
   .detail-subtitle {
-    font-size: 14px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--text-muted, #86868b);
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 18px;
   }
 
-  /* Status badge */
+  /* Status badge - Apple Subtle Pills */
   .detail-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-    font-family: 'Space Mono', monospace;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 980px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    margin-bottom: 24px;
   }
   .detail-badge.available {
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.3);
-    color: #4ade80;
+    background: rgba(52, 199, 89, 0.12);
+    border: 1px solid rgba(52, 199, 89, 0.28);
+    color: #34c759;
   }
   .detail-badge.soldout {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #86868b;
   }
   .detail-badge.limited {
-    background: rgba(230,0,0,0.12);
-    border: 1px solid rgba(230,0,0,0.45);
-    color: #ff6b6b;
+    background: rgba(255, 59, 48, 0.12);
+    border: 1px solid rgba(255, 59, 48, 0.28);
+    color: #ff3b30;
+  }
+  .badge-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   .detail-price {
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: clamp(42px, 5vw, 64px);
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-size: clamp(38px, 4vw, 54px);
+    font-weight: 700;
+    color: var(--text-primary, #ffffff);
     line-height: 1;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
     margin-bottom: 6px;
   }
   .detail-price-usd {
-    font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 30px;
+    font-size: 13.5px;
+    color: var(--text-muted, #86868b);
+    font-family: inherit;
+    margin-bottom: 28px;
   }
 
-  /* Size selector */
+  /* Size selector - Apple Segmented Pills */
   .detail-section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    font-family: 'Space Mono', monospace;
+    color: var(--text-muted, #86868b);
     margin-bottom: 12px;
   }
   .sizes-flex {
@@ -329,29 +370,47 @@
     margin-bottom: 32px;
   }
   .size-btn {
-    padding: 10px 18px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04);
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 980px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary, #f5f5f7);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .size-btn:hover {
-    border-color: rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.08);
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
   }
   .size-btn.active {
-    background: #e60000;
-    border-color: #e60000;
-    color: #fff;
-    box-shadow: 0 0 16px rgba(230,0,0,0.5);
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 600;
+    box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
+  html[data-theme="light"] .size-btn {
+    background: #f4f4f7;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .size-btn:hover {
+    background: #ebebed;
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  html[data-theme="light"] .size-btn.active {
+    background: #000000 !important;
+    border-color: #000000 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
   }
 
-  /* Action buttons */
+  /* Action buttons - Apple Cupertino Buttons */
   .detail-actions {
     display: flex;
     flex-direction: column;
@@ -360,53 +419,75 @@
   }
   .btn-add-cart {
     width: 100%;
-    padding: 18px;
-    background: #e60000;
+    padding: 16px 28px;
+    background: #0071e3;
     border: none;
-    border-radius: 14px;
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    border-radius: 980px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 30px rgba(230,0,0,0.35);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 113, 227, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   .btn-add-cart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(230,0,0,0.55);
+    background: #0077ed;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5);
+  }
+  .btn-add-cart:active {
+    transform: scale(0.99);
   }
   .btn-add-cart:disabled {
     background: rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.3);
     cursor: not-allowed;
     box-shadow: none;
+    transform: none;
   }
   .btn-wishlist {
     width: 100%;
-    padding: 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    color: rgba(255,255,255,0.7);
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 980px;
+    color: var(--text-primary, #f5f5f7);
+    font-family: inherit;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   .btn-wishlist:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.2);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+  }
+  html[data-theme="light"] .btn-wishlist {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .btn-wishlist:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.22);
   }
 
   /* Description & Specs */
   .detail-desc {
     font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.7;
+    color: var(--text-secondary, rgba(255,255,255,0.65));
+    line-height: 1.65;
     margin-bottom: 32px;
   }
   .detail-specs-list {
@@ -414,19 +495,29 @@
     border-top: 1px solid rgba(255,255,255,0.08);
     margin-bottom: 32px;
   }
+  html[data-theme="light"] .detail-specs-list {
+    border-top-color: rgba(0,0,0,0.08);
+  }
   .detail-specs-list li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding: 12px 0;
     border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 12px;
-    color: rgba(255,255,255,0.65);
-    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary, rgba(255,255,255,0.7));
+  }
+  html[data-theme="light"] .detail-specs-list li {
+    border-bottom-color: rgba(0,0,0,0.05);
+    color: #4b5563;
   }
   .detail-specs-list li::before {
-    content: '→';
-    color: #e60000;
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #0071e3;
+    flex-shrink: 0;
   }
 
   .shipping-note {
@@ -434,12 +525,18 @@
     align-items: center;
     gap: 12px;
     padding: 14px 18px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    font-size: 12.5px;
+    color: var(--text-muted, #86868b);
+    line-height: 1.4;
     margin-bottom: 36px;
+  }
+  html[data-theme="light"] .shipping-note {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #6b7280;
   }
 
   .detail-nav {
@@ -449,86 +546,41 @@
     padding-top: 24px;
     border-top: 1px solid rgba(255,255,255,0.08);
   }
+  html[data-theme="light"] .detail-nav {
+    border-top-color: rgba(0,0,0,0.08);
+  }
   .detail-nav-btn {
-    padding: 10px 20px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.6);
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    padding: 9px 18px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted, #86868b);
+    font-size: 12px;
+    font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .detail-nav-btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border-color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary, #ffffff);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  html[data-theme="light"] .detail-nav-btn {
+    background: #f4f4f7;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #4b5563;
+  }
+  html[data-theme="light"] .detail-nav-btn:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
   }
 
   @media (max-width: 900px) {
     .detail-grid { grid-template-columns: 1fr; gap: 36px; }
     .detail-gallery-main { position: static; }
     .gallery-main-img { height: 380px; }
-    .detail-price { font-size: 40px; }
-  }
-
-  /* Apple Light Mode Adaptations for Detail Page */
-  html[data-theme="light"] .detail-name {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-price {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-breadcrumb a,
-  html[data-theme="light"] .detail-breadcrumb span {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .detail-desc {
-    color: #4b5563;
-  }
-  html[data-theme="light"] .size-chip {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.12);
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-specs-table {
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-  html[data-theme="light"] .spec-row {
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-  html[data-theme="light"] .spec-label {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .spec-value {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-nav-btn {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #4b5563;
-  }
-  html[data-theme="light"] .detail-nav-btn:hover {
-    background: #111827;
-    color: #ffffff;
-  }
-  html[data-theme="light"] .stockx-360-bar {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-  html[data-theme="light"] .stockx-title {
-    color: #111827;
-  }
-  html[data-theme="light"] .stockx-angle-text {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .stockx-auto-spin-btn {
-    background: #f3f4f6;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #111827;
+    .detail-price { font-size: 36px; }
   }
 </style>
 
@@ -550,23 +602,31 @@
       <div class="detail-gallery-main">
         <div class="gallery-main-img" id="mainImgWrap">
           {% if es_360 %}
-          <div class="badge-360-overlay"><svg class="anim-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg> STOCKX 360° VIEW</div>
+          <div class="badge-360-overlay">
+            <svg class="anim-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/>
+            </svg>
+            <span>Vista 360° Interactiva</span>
+          </div>
           {% endif %}
           <img src="{% static prod.imagen %}" alt="{{ prod.nombre }}" id="mainDetailImg">
         </div>
 
         {% if es_360 %}
-        <!-- STOCKX 360 INTERACTIVE SLIDER -->
+        <!-- APPLE INTERACTIVE 360 SLIDER -->
         <div class="stockx-360-bar">
           <div class="stockx-header-row">
             <span class="stockx-title">
-              <span style="display:inline-flex; align-items:center; vertical-align:middle; margin-right:4px;"><svg class="anim-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e60000" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg></span> ROTACIÓN 360° TIPO STOCKX
+              <svg class="anim-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/>
+              </svg>
+              <span>Rotación 360°</span>
             </span>
-            <span class="stockx-angle-text" id="angleDeg">0° / ÁNGULO 1</span>
+            <span class="stockx-angle-text" id="angleDeg">0° • Ángulo 1</span>
           </div>
           <div class="stockx-controls-row">
             <button type="button" class="stockx-auto-spin-btn" id="autoSpinBtn" onclick="toggleAutoSpin()">
-              ▶ AUTO GIRO
+              <span>▶</span> Auto Giro
             </button>
             <input type="range" 
                    id="stockxSlider" 
@@ -575,9 +635,10 @@
                    max="{{ galeria|length|add:'-1' }}" 
                    value="0" 
                    step="1" 
-                   oninput="onSliderMove(this.value)">
+                   oninput="onSliderMove(this.value)"
+                   aria-label="Control de giro 360">
           </div>
-          <div class="stockx-hint">↔ ARRASTRA EL SLIDER O DESLIZA SOBRE LA ZAPATILLA PARA GIRARLA</div>
+          <div class="stockx-hint">Desliza horizontalmente sobre la zapatilla o usa el control para girar</div>
         </div>
         {% endif %}
 
@@ -603,19 +664,19 @@
         <p class="detail-subtitle">{{ prod.subtitulo }}</p>
 
         {% if prod.badge_estado == "AGOTADO" %}
-        <div class="detail-badge soldout">AGOTADO</div>
+        <div class="detail-badge soldout"><span class="badge-status-dot"></span> Agotado</div>
         {% elif prod.badge_estado == "LIMITED DROP" %}
-        <div class="detail-badge limited"><svg class="anim-flame" width="12" height="12" viewBox="0 0 24 24" fill="#ff4500" stroke="#ff8c00" stroke-width="1.5" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg> LIMITED DROP</div>
+        <div class="detail-badge limited"><span class="badge-status-dot"></span> Edición Limitada</div>
         {% else %}
-        <div class="detail-badge available">● DISPONIBLE EN STOCK</div>
+        <div class="detail-badge available"><span class="badge-status-dot"></span> Disponible en Stock</div>
         {% endif %}
 
         <div class="detail-price">${{ prod.precio|floatformat:"0" }} CLP</div>
-        <div class="detail-price-usd">≈ ${{ prod.precio_usd }} USD (Precio Internacional de Referencia)</div>
+        <div class="detail-price-usd">≈ ${{ prod.precio_usd }} USD • Precio internacional de referencia</div>
 
         <!-- Sizes -->
         {% if tallas %}
-        <div class="detail-section-label">SELECCIONAR TALLA</div>
+        <div class="detail-section-label">Seleccionar Talla</div>
         <div class="sizes-flex">
           {% for talla in tallas %}
           <button type="button" class="size-btn {% if forloop.first %}active{% endif %}" onclick="selectSize(this)">{{ talla.nombre }}</button>
@@ -626,14 +687,14 @@
         <!-- Actions -->
         <div class="detail-actions">
           {% if prod.badge_estado == "AGOTADO" %}
-          <button class="btn-add-cart" disabled>PRODUCTO AGOTADO</button>
+          <button class="btn-add-cart" disabled>Producto Agotado</button>
           {% else %}
           <button class="btn-add-cart" id="btnAddToCart" onclick="addToCartFromDetail()">
-            AGREGAR AL CARRITO — ${{ prod.precio|floatformat:"0" }} CLP
+            <span>Añadir a la Bolsa</span> — ${{ prod.precio|floatformat:"0" }} CLP
           </button>
           {% endif %}
-          <button class="btn-wishlist" onclick="this.textContent = this.textContent.includes('✓') ? '♡ GUARDAR EN WISHLIST' : '♥ GUARDADO EN WISHLIST'; this.style.borderColor = this.textContent.includes('♥') ? '#e60000' : ''; this.style.color = this.textContent.includes('♥') ? '#ff6b6b' : '';">
-            ♡ GUARDAR EN WISHLIST
+          <button type="button" class="btn-wishlist" id="detailWishBtn" onclick="toggleDetailWishlist()">
+            <span id="detailWishIcon">♡</span> <span id="detailWishText">Guardar en Wishlist</span>
           </button>
         </div>
 
@@ -642,7 +703,7 @@
 
         <!-- Specs -->
         {% if detalles %}
-        <div class="detail-section-label">ESPECIFICACIONES DEL PRODUCTO</div>
+        <div class="detail-section-label">Especificaciones de la Pieza</div>
         <ul class="detail-specs-list">
           {% for d in detalles %}
           <li>{{ d.texto }}</li>
@@ -652,14 +713,14 @@
 
         <!-- Shipping note -->
         <div class="shipping-note">
-          <svg class="anim-float" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e60000" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          <span>Despacho prioritario asegurado y garantía de autenticidad verificada por Solariluxury.</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <span>Despacho prioritario asegurado y garantía de autenticidad verificada por SOLARY Archive.</span>
         </div>
 
         <!-- Prev / Next -->
         <div class="detail-nav">
-          <a href="{% url 'detalle_producto' prev_id %}" class="detail-nav-btn">← ANTERIOR</a>
-          <a href="{% url 'detalle_producto' next_id %}" class="detail-nav-btn">SIGUIENTE →</a>
+          <a href="{% url 'detalle_producto' prev_id %}" class="detail-nav-btn">← Anterior</a>
+          <a href="{% url 'detalle_producto' next_id %}" class="detail-nav-btn">Siguiente →</a>
         </div>
       </div>
     </div>
@@ -669,21 +730,21 @@
     <div class="related-section" style="margin-top: 80px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.08);">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
         <div>
-          <div style="font-family: 'Space Mono', monospace; font-size: 10px; color: #e60000; letter-spacing: 0.2em; text-transform: uppercase;">CATÁLOGO OFICIAL</div>
-          <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.05em; color: #fff;">PIEZAS RELACIONADAS</h2>
+          <div style="font-size: 11px; color: #86868b; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">COLECCIÓN ARCHIVE</div>
+          <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary, #fff);">Piezas Relacionadas</h2>
         </div>
-        <a href="{% url 'lista_productos' %}" style="font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); text-decoration: none;">VER CATÁLOGO COMPLETO →</a>
+        <a href="{% url 'lista_productos' %}" style="font-size: 13px; color: #0071e3; text-decoration: none; font-weight: 500;">Ver Catálogo Completo →</a>
       </div>
       <div class="related-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
         {% for r in relacionados %}
-        <a href="{% url 'detalle_producto' r.id %}" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
-          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+        <a href="{% url 'detalle_producto' r.id %}" style="text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <img src="{% static r.imagen %}" alt="{{ r.nombre }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
-          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">{{ r.categoria.nombre|default:"STREETWEAR" }}</span>
-            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">{{ r.nombre|truncatechars:35 }}</span>
-            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">${{ r.precio|floatformat:"0" }} CLP</span>
+          <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">{{ r.categoria.nombre|default:"STREETWEAR" }}</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">{{ r.nombre|truncatechars:35 }}</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">${{ r.precio|floatformat:"0" }} CLP</span>
           </div>
         </a>
         {% endfor %}
@@ -799,7 +860,7 @@ function toggleAutoSpin() {
   if (autoSpinTimer) {
     stopAutoSpin();
   } else {
-    if (btn) btn.textContent = '❚❚ PAUSAR';
+    if (btn) btn.innerHTML = '<span>❚❚</span> Pausar';
     autoSpinTimer = setInterval(() => {
       let nextIdx = (currentIndex + 1) % galleryImages.length;
       updateAngleView(nextIdx);
@@ -812,7 +873,7 @@ function stopAutoSpin() {
     clearInterval(autoSpinTimer);
     autoSpinTimer = null;
     const btn = document.getElementById('autoSpinBtn');
-    if (btn) btn.textContent = '▶ AUTO GIRO';
+    if (btn) btn.innerHTML = '<span>▶</span> Auto Giro';
   }
 }
 
@@ -842,13 +903,71 @@ function addToCartFromDetail() {
   const btn = document.getElementById('btnAddToCart');
   if (btn) {
     const origHtml = btn.innerHTML;
-    btn.innerHTML = '<span>✓ AGREGADO A LA BOLSA</span>';
-    btn.style.background = '#16a34a';
+    btn.innerHTML = '<span>✓ Añadido a la Bolsa</span>';
+    btn.style.background = '#34c759';
     setTimeout(() => {
       btn.innerHTML = origHtml;
       btn.style.background = '';
     }, 2000);
   }
 }
+
+function toggleDetailWishlist() {
+  const prodId = "{{ prod.id }}";
+  const name = "{{ prod.nombre|escapejs }}";
+  const price = "${{ prod.precio|floatformat:0 }} CLP";
+  const priceUsd = "{{ prod.precio_usd }}";
+  const img = "{% static prod.imagen %}";
+  const url = window.location.pathname;
+
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('solari_wishlist') || '[]'); } catch(e) {}
+  const idx = list.findIndex(it => String(it.id) === String(prodId));
+
+  const btn = document.getElementById('detailWishBtn');
+  const icon = document.getElementById('detailWishIcon');
+  const txt = document.getElementById('detailWishText');
+
+  if (idx > -1) {
+    list.splice(idx, 1);
+    if (btn) {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }
+    if (icon) icon.textContent = '♡';
+    if (txt) txt.textContent = 'Guardar en Wishlist';
+    if (typeof showGlobalToast === 'function') showGlobalToast('Eliminado de tu Wishlist');
+  } else {
+    list.push({ id: prodId, name: name, price: price, priceUsd: priceUsd, img: img, url: url });
+    if (btn) {
+      btn.style.borderColor = '#ff3b30';
+      btn.style.color = '#ff3b30';
+    }
+    if (icon) icon.textContent = '♥';
+    if (txt) txt.textContent = 'Guardado en Wishlist';
+    if (typeof showGlobalToast === 'function') showGlobalToast(`Añadido a tu Wishlist: ${name}`);
+  }
+
+  try { localStorage.setItem('solari_wishlist', JSON.stringify(list)); } catch(e) {}
+  if (typeof updateGlobalWishlistBadges === 'function') updateGlobalWishlistBadges();
+}
+
+(function initDetailWishlistState() {
+  const prodId = "{{ prod.id }}";
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('solari_wishlist') || '[]'); } catch(e) {}
+  const exists = list.some(it => String(it.id) === String(prodId));
+  if (exists) {
+    const btn = document.getElementById('detailWishBtn');
+    const icon = document.getElementById('detailWishIcon');
+    const txt = document.getElementById('detailWishText');
+    if (btn) {
+      btn.style.borderColor = '#ff3b30';
+      btn.style.color = '#ff3b30';
+    }
+    if (icon) icon.textContent = '♥';
+    if (txt) txt.textContent = 'GUARDADO EN WISHLIST';
+  }
+})();
 </script>
 {% endblock %}

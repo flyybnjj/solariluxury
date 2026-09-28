@@ -1,0 +1,398 @@
+================================================================================
+REPORTE DE AUDITORÍA Y CONTROL DE CALIDAD (QA SENIOR)
+SISTEMA: SOLARY ARCHIVE / SOLARY LUXURY
+FECHA: 28 de Septiembre de 2026
+VEREDICTO: NO APTO PARA SALIR A PRODUCCIÓN (16 BUGS ENCONTRADOS)
+================================================================================
+
+RESUMEN EJECUTIVO:
+- 🔴 CRÍTICOS : 5
+- 🟠 ALTOS    : 4
+- 🟡 MEDIOS   : 5
+- 🟢 BAJOS    : 2
+- TOTAL       : 16 BUGS IDENTIFICADOS Y VERIFICADOS CON EVIDENCIA REAL
+
+================================================================================
+ÍNDICE DE HALLAZGOS POR SEVERIDAD
+================================================================================
+[BUG-001] 🔴 CRÍTICO - Manipulación arbitraria de precios desde el cliente (Cart Price Spoofing)
+[BUG-002] 🔴 CRÍTICO - Open Relay público de correos masivos (Spam Bot vulnerability)
+[BUG-003] 🔴 CRÍTICO - Pérdida catastrófica de historial de ventas por CASCADE en Producto
+[BUG-004] 🔴 CRÍTICO - Stock puramente cosmético que nunca se descuenta (Over-selling infinito)
+[BUG-016] 🔴 CRÍTICO - Datos fijos en correos: Siempre sale la AF1, código FZ4210-001 y valores falsos
+[BUG-005] 🟠 ALTO    - Carritos de 1 solo artículo ignoran cantidad y no guardan desglose
+[BUG-006] 🟠 ALTO    - Cupones de bienvenida reutilizables infinitamente y sin validación de titular
+[BUG-007] 🟠 ALTO    - Crash AttributeError: 'Producto' object has no attribute 'precio_clp'
+[BUG-008] 🟠 ALTO    - Ausencia total de Rate Limiting en validación de PIN OTP (Fuerza bruta)
+[BUG-009] 🟡 MEDIO   - Inconsistencia de marca: Locales muestran prefijo "TRAPSTAR" en lugar de "SOLARY"
+[BUG-010] 🟡 MEDIO   - Menciones prohibidas de "Solari" en templates y mensajes del sistema
+[BUG-011] 🟡 MEDIO   - Desincronización de flags de sesión entre las dos pantallas de login OTP
+[BUG-012] 🟡 MEDIO   - Duplicación redundante de modelos relacionales (PreOrden vs Pedido)
+[BUG-013] 🟡 MEDIO   - Descalce en cálculo de IVA y Neto por truncamiento entero frente a norma SII
+[BUG-014] 🟢 BAJO    - Enlaces muertos apuntando a '#' en catálogo y correos transaccionales
+[BUG-015] 🟢 BAJO    - Código muerto: Formulario RegistroForm desacoplado y obsoleto
+
+================================================================================
+DETALLE DE ERRORES CON EVIDENCIA Y PASOS DE REPRODUCCIÓN
+================================================================================
+
+--------------------------------------------------------------------------------
+ID: BUG-001
+SEVERIDAD: 🔴 Crítico
+CATEGORÍA: Lógica / Seguridad Financiera
+UBICACIÓN: mi_proyecto/locales/views.py:347-352
+QUÉ PASA:
+El servidor confía ciegamente en el precio enviado por el navegador dentro del
+JSON (campo 'price'). Un atacante puede comprar productos de $200.000+ por $1.
+PASOS PARA REPRODUCIR:
+1. Enviar POST a /api/crear-preorden/ con:
+   {"items": [{"id": 33, "price": "$1 CLP", "size": "M"}, {"id": 33, "price": "$1 CLP", "size": "M"}]}
+2. El sistema aprueba la orden por $2 CLP.
+RESULTADO ESPERADO:
+El backend debe buscar el ID en la BD y calcular con Producto.objects.get(id=...).precio.
+RESULTADO REAL:
+Cobra y persiste en la base de datos oficial una orden por $2 CLP.
+EVIDENCIA:
+Orden real generada: SL-2026-7705 | Cliente: hacker@test.com | Total en DB: $2 CLP.
+SUGERENCIA DE ARREGLO:
+No leer it.get('price'). Consultar Producto.objects.get(id=id).precio y multiplicar por cantidad.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-002
+SEVERIDAD: 🔴 Crítico
+CATEGORÍA: Seguridad / Infraestructura
+UBICACIÓN: mi_proyecto/usuarios/views.py:652 y mi_proyecto/usuarios/urls.py:21
+QUÉ PASA:
+Open Relay de correo SMTP público. La vista enviar_email_prueba_view tiene @csrf_exempt
+y no requiere login (@login_required o is_staff). Cualquier bot de internet puede usar
+el servidor para enviar spam masivo desde tu cuenta Gmail oficial.
+PASOS PARA REPRODUCIR:
+1. Enviar POST anónimo a /api/enviar-email-prueba/ con:
+   {"email": "victima@cualquiera.com", "plantilla": "cupon_bienvenida"}
+RESULTADO ESPERADO:
+Retorno 401 Unauthorized o 403 Forbidden.
+RESULTADO REAL:
+Retorno 200 OK y despacho real del correo por Gmail SMTP.
+EVIDENCIA:
+Status 200: {"success": true, "message": "Correo enviado exitosamente a destinatario_cualquiera@externo.com..."}
+SUGERENCIA DE ARREGLO:
+Eliminar la ruta en producción o protegerla con @user_passes_test(lambda u: u.is_staff).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-003
+SEVERIDAD: 🔴 Crítico
+CATEGORÍA: Base de Datos / Pérdida Catastrófica de Datos
+UBICACIÓN: mi_proyecto/catalogo/models.py:167 y mi_proyecto/catalogo/models.py:218
+QUÉ PASA:
+PreOrden.producto y Pedido.producto tienen 'on_delete=models.CASCADE'. Si un admin
+borra un producto descatalogado en Django Admin, se borran automáticamente todas
+las órdenes de compra históricas, facturas y comprobantes asociados a ese producto.
+PASOS PARA REPRODUCIR:
+1. Inspeccionar los campos foráneos en catalogo/models.py.
+RESULTADO ESPERADO:
+on_delete=models.PROTECT o models.SET_NULL para no destruir la contabilidad.
+RESULTADO REAL:
+on_delete=models.CASCADE.
+EVIDENCIA:
+PreOrden.producto.remote_field.on_delete.__name__ == 'CASCADE'
+Pedido.producto.remote_field.on_delete.__name__ == 'CASCADE'
+SUGERENCIA DE ARREGLO:
+Cambiar a on_delete=models.PROTECT para impedir el borrado accidental de productos vendidos.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-004
+SEVERIDAD: 🔴 Crítico
+CATEGORÍA: Lógica de Negocio / Base de Datos
+UBICACIÓN: mi_proyecto/locales/views.py:278 y mi_proyecto/catalogo/models.py:100-104
+QUÉ PASA:
+El inventario (campo 'stock' en ProductoTalla) es cosmético. Cuando se confirma
+una compra, el sistema nunca descuenta el stock en la base de datos, permitiendo
+vender infinitas unidades de productos agotados (over-selling).
+PASOS PARA REPRODUCIR:
+1. Verificar stock de New Era Hat (5 unidades).
+2. Comprar 1 unidad vía /api/crear-preorden/.
+3. Verificar stock posterior en BD.
+RESULTADO ESPERADO:
+El stock debe quedar en 4 unidades.
+RESULTADO REAL:
+El stock permanece en 5 unidades.
+EVIDENCIA:
+Stock Inicial: 5 | Compra: True | Stock Posterior en DB: 5 | ¿Descontó?: False.
+SUGERENCIA DE ARREGLO:
+Implementar transacción atómica que ejecute:
+producto_talla.stock = F('stock') - cantidad
+y valide que haya existencias antes de confirmar.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-016
+SEVERIDAD: 🔴 Crítico
+CATEGORÍA: Lógica de Vistas / Renderizado de Templates / Modelo Incompleto
+UBICACIÓN: mi_proyecto/locales/views.py:39-60 y mi_proyecto/usuarios/templates/emails/*.html
+QUÉ PASA:
+Los correos siempre muestran la zapatilla Nike Air Force 1 Low x Syna World, el código
+de estilo FZ4210-001, precio $189.990 y la foto af1_syna_email.png, sin importar qué
+producto compre el cliente (por ejemplo un Tracksuit de Trapstar o una gorra).
+Además, los códigos de estilo y colores no existen en el modelo Producto de la BD.
+PASOS PARA REPRODUCIR:
+1. Comprar el producto New Era Hat ($222.000 CLP, ID 33).
+2. Renderizar o despachar el correo con enviar_correo_preorden(orden).
+RESULTADO ESPERADO:
+El correo debe mostrar "New Era Syna World...", foto de la gorra y precio $222.000.
+RESULTADO REAL:
+El correo muestra:
+- Nombre: "Nike Air Force 1 Low × Syna World"
+- Imagen: https://raw.githubusercontent.com/.../af1_syna_email.png
+- Código de estilo: "FZ4210-001"
+- Precio: "$189.990 CLP"
+EVIDENCIA:
+Verificado mediante ejecución real de render_to_string con orden de prueba de gorra New Era.
+CAUSA EXACTA:
+1. enviar_correo_preorden() pasa en el contexto 'producto_nombre', pero el template
+   busca {{ producto.nombre }} y {{ producto.imagen_url }}.
+2. Como 'producto' no está en el contexto, Django activa los filtros por defecto
+   hardcodeados con los datos de prueba: |default:"Nike Air Force 1..."
+3. El modelo Producto no tiene los campos 'codigo_estilo' ni 'color'; por eso
+   getattr(orden.producto, 'codigo_estilo', 'FZ4210-001') siempre devuelve FZ4210-001.
+SUGERENCIA DE ARREGLO:
+1. Pasar en el contexto el objeto 'producto' con sus campos reales:
+   'producto': {'nombre': orden.producto.nombre, 'imagen_url': ..., 'codigo_estilo': ...}
+2. Eliminar los defaults fijos de la AF1 de todas las plantillas de correo.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-005
+SEVERIDAD: 🟠 Alto
+CATEGORÍA: Lógica de Carrito
+UBICACIÓN: mi_proyecto/locales/views.py:343
+QUÉ PASA:
+Si el carrito tiene 1 solo producto, la condición 'if items_list and len(items_list) > 1:'
+evalúa a Falso. Se ignora la cantidad pedida (si pidió 5 unidades, cobra y anota 1) y
+las notas de la orden quedan en blanco sin el desglose de piezas.
+PASOS PARA REPRODUCIR:
+1. Enviar checkout con items: [{"id": 33, "quantity": 5, "price": "$50.000 CLP"}].
+RESULTADO ESPERADO:
+Cobrar 5 unidades y registrar el detalle en notas.
+RESULTADO REAL:
+Se cobra 1 sola unidad y 'notas' queda vacío.
+EVIDENCIA:
+Orden creada con len(items)==1 -> cantidad=1, notas=''.
+SUGERENCIA DE ARREGLO:
+Cambiar a 'if items_list:' para procesar carritos de 1 o más elementos.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-006
+SEVERIDAD: 🟠 Alto
+CATEGORÍA: Lógica / Finanzas
+UBICACIÓN: mi_proyecto/locales/views.py:359
+QUÉ PASA:
+Los cupones de bienvenida únicos no se queman ni se asocian al usuario comprador.
+Un cliente puede usar el cupón infinitas veces, o cualquier tercero que adivine
+el código puede aplicarlo en su propia cuenta.
+PASOS PARA REPRODUCIR:
+1. Comprar con cupón SOLARY-Y6NFL (Descuento 15% aplicado).
+2. Hacer una segunda compra con el mismo cupón desde otro usuario totalmente distinto.
+RESULTADO ESPERADO:
+Rechazar el cupón en la segunda compra como "Ya utilizado" o "No autorizado".
+RESULTADO REAL:
+Acepta el cupón en ambas compras indefinidamente.
+EVIDENCIA:
+Compra 1: True (Desc: $33.300) | Compra 2 (Otro usuario): True (Desc: $33.300).
+SUGERENCIA DE ARREGLO:
+Validar que cupón pertenezca a request.user.cliente y marcar un campo
+'cupon_utilizado = True' tras completar la compra.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-007
+SEVERIDAD: 🟠 Alto
+CATEGORÍA: Runtime Error / Crash 500
+UBICACIÓN: mi_proyecto/locales/views.py:32
+QUÉ PASA:
+Crash con AttributeError. Si orden.precio_total es 0, la vista intenta acceder a
+orden.producto.precio_clp, pero dicho campo NO existe en el modelo Producto
+(el campo real se llama 'precio').
+PASOS PARA REPRODUCIR:
+1. Invocar enviar_correo_preorden con orden donde precio_total=0.
+RESULTADO ESPERADO:
+Calcular con orden.producto.precio * orden.cantidad.
+RESULTADO REAL:
+AttributeError: 'Producto' object has no attribute 'precio_clp'.
+EVIDENCIA:
+Excepción capturada en ejecución de test suite.
+SUGERENCIA DE ARREGLO:
+Reemplazar 'orden.producto.precio_clp' por 'orden.producto.precio'.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-008
+SEVERIDAD: 🟠 Alto
+CATEGORÍA: Seguridad
+UBICACIÓN: mi_proyecto/catalogo/views.py:183 y mi_proyecto/usuarios/views.py:127
+QUÉ PASA:
+Cero Rate Limiting en la validación del PIN OTP de 6 dígitos. Un atacante puede
+hacer fuerza bruta y probar miles de combinaciones numéricas antes de que
+expiren los 10 minutos de validez sin ser bloqueado.
+PASOS PARA REPRODUCIR:
+1. Enviar 10 peticiones automáticas seguidas con PINs incorrectos a /api/validar-key/.
+RESULTADO ESPERADO:
+Bloqueo tras 3-5 intentos fallidos (HTTP 429).
+RESULTADO REAL:
+Acepta las 10 peticiones en 0.2 segundos sin penalización ni bloqueo.
+EVIDENCIA:
+10 peticiones fallidas consecutivas aceptadas sin captcha ni delay.
+SUGERENCIA DE ARREGLO:
+Implementar contador de intentos fallidos en Cliente o django-ratelimit.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-009
+SEVERIDAD: 🟡 Medio
+CATEGORÍA: Diseño / Branding
+UBICACIÓN: mi_proyecto/locales/models.py:26
+QUÉ PASA:
+Inconsistencia de marca. El método badge_tipo() de las tiendas físicas retorna
+el prefijo "TRAPSTAR" en lugar de "SOLARY", mostrando en pantalla:
+"TRAPSTAR ATELIER", "TRAPSTAR FLAGSHIP", "TRAPSTAR STUDIO".
+PASOS PARA REPRODUCIR:
+1. Ejecutar [loc.badge_tipo() for loc in Local.objects.all()].
+RESULTADO ESPERADO:
+Badges con la marca "SOLARY".
+RESULTADO REAL:
+Retorna "TRAPSTAR ATELIER", "TRAPSTAR FLAGSHIP".
+EVIDENCIA:
+def badge_tipo(self): return f"TRAPSTAR {self.tipo}"
+SUGERENCIA DE ARREGLO:
+Cambiar "TRAPSTAR" por "SOLARY" en locales/models.py.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-010
+SEVERIDAD: 🟡 Medio
+CATEGORÍA: Diseño / Reglas de Marca
+UBICACIÓN: mi_proyecto/usuarios/templates/usuarios/validar_pin.html:272,344 y mi_proyecto/usuarios/views.py:198,313
+QUÉ PASA:
+Violación de la regla #3 de marca ("Nunca escribir 'Solari'").
+Se detectaron menciones de "Solari Luxury" y "Solari ID" en lugar de SOLARY.
+PASOS PARA REPRODUCIR:
+1. Inspeccionar validar_pin.html líneas 272 y 344.
+2. Inspeccionar mensajes en usuarios/views.py líneas 198 y 313.
+RESULTADO ESPERADO:
+Todas las referencias deben decir "SOLARY".
+RESULTADO REAL:
+Dice 'alt="Solari Luxury"', 'Solari ID', 'Bienvenido/a a Solari Luxury'.
+EVIDENCIA:
+Detectado por script de auditoría estática.
+SUGERENCIA DE ARREGLO:
+Normalizar los textos a "SOLARY".
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-011
+SEVERIDAD: 🟡 Medio
+CATEGORÍA: Lógica de Sesiones
+UBICACIÓN: mi_proyecto/usuarios/views.py:180 frente a mi_proyecto/catalogo/views.py:231
+QUÉ PASA:
+Desincronización de flags de sesión. Si el usuario valida su PIN desde /validar-pin/,
+no se setea request.session['tienda_desbloqueada'] = True. Solo se setea si entra
+por el modal de catalogo (/api/validar-key/).
+PASOS PARA REPRODUCIR:
+1. Validar PIN mediante validar_pin_view.
+2. Comprobar request.session.get('tienda_desbloqueada').
+RESULTADO ESPERADO:
+tienda_desbloqueada = True en ambos flujos.
+RESULTADO REAL:
+Es False si se autentica desde /validar-pin/.
+EVIDENCIA:
+'tienda_desbloqueada' in validar_pin_view source: False.
+SUGERENCIA DE ARREGLO:
+Agregar request.session['tienda_desbloqueada'] = True en validar_pin_view.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-012
+SEVERIDAD: 🟡 Medio
+CATEGORÍA: Base de Datos / Normalización
+UBICACIÓN: mi_proyecto/catalogo/models.py:200
+QUÉ PASA:
+Duplicación de tablas. Existen dos modelos paralelos idénticos: 'PreOrden' y 'Pedido'.
+Un post_save copia los datos de una a otra. Si se actualiza el estado en una tabla
+sin actualizar la otra, los datos quedan desincronizados.
+PASOS PARA REPRODUCIR:
+1. Comparar los campos de PreOrden y Pedido en catalogo/models.py.
+RESULTADO ESPERADO:
+Un único modelo transaccional normalizado con tabla hija para items.
+RESULTADO REAL:
+Modelos duplicados y sincronizados por trigger post_save.
+EVIDENCIA:
+Exactamente 6 PreÓrdenes y 6 Pedidos idénticos en la base de datos.
+SUGERENCIA DE ARREGLO:
+Unificar en un solo modelo Pedido con modelo hijo ItemPedido.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-013
+SEVERIDAD: 🟡 Medio
+CATEGORÍA: Finanzas / Impuestos
+UBICACIÓN: mi_proyecto/locales/views.py:33-34
+QUÉ PASA:
+Descuadre contable de $1 peso en IVA y Neto por truncamiento con int() en lugar
+de redondeo comercial estándar exigido por el SII chileno.
+PASOS PARA REPRODUCIR:
+1. Calcular desglose de $161.492 ($189.990 con 15% OFF).
+2. int(161492 / 1.19) da 135707 (el valor exacto redondeado es 135708).
+RESULTADO ESPERADO:
+Neto: $135.708 | IVA 19%: $25.785 (Suma: $161.492).
+RESULTADO REAL:
+Neto: $135.707 | IVA: $25.785 (Neto desfasado en $1).
+EVIDENCIA:
+Neto Sistema: $135.707 vs Neto Real: $135.708.
+SUGERENCIA DE ARREGLO:
+Usar round(total_val / 1.19).
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-014
+SEVERIDAD: 🟢 Bajo
+CATEGORÍA: UI/UX
+UBICACIÓN: mi_proyecto/catalogo/templates/catalogo/inicio.html:8480,9539 y correos HTML
+QUÉ PASA:
+11 enlaces interactivos con href="#" que no ejecutan ninguna acción y recargan
+la página o saltan al inicio del documento.
+PASOS PARA REPRODUCIR:
+1. Click en 'VER FICHA TÉCNICA COMPLETA' en QuickView.
+RESULTADO ESPERADO:
+Navegar al producto o abrir modal con los datos.
+RESULTADO REAL:
+No hace nada (salta al tope de página por el #).
+EVIDENCIA:
+Detectados 11 links href="#" en inicio.html y plantillas de correo.
+SUGERENCIA DE ARREGLO:
+Vincular las URLs dinámicas con {% url 'detalle_producto' prod.id %}.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+ID: BUG-015
+SEVERIDAD: 🟢 Bajo
+CATEGORÍA: Código Muerto
+UBICACIÓN: mi_proyecto/usuarios/forms.py:6
+QUÉ PASA:
+La clase RegistroForm está completamente abandonada porque la vista registro_view
+redirige directamente a solicitar_acceso (flujo passwordless).
+PASOS PARA REPRODUCIR:
+1. Inspeccionar usuarios/views.py línea 304.
+RESULTADO ESPERADO:
+Formulario en uso o removido.
+RESULTADO REAL:
+Código muerto en forms.py.
+EVIDENCIA:
+def registro_view(request): return redirect('solicitar_acceso')
+SUGERENCIA DE ARREGLO:
+Eliminar la clase no utilizada para mantener el repositorio limpio.
+================================================================================
+FIN DEL REPORTE
+================================================================================

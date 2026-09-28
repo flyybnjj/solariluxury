@@ -28,17 +28,19 @@
     margin-bottom: 28px;
   }
   .auth-eyebrow {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--accent, #e60000);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--text-muted, #86868b);
     text-transform: uppercase;
     margin-bottom: 8px;
   }
   .auth-title {
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: 38px;
-    letter-spacing: 0.04em;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: #fff;
     margin: 0;
   }
@@ -58,10 +60,10 @@
     gap: 6px;
   }
   .auth-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
     color: rgba(255, 255, 255, 0.7);
   }
   .auth-input {
@@ -77,31 +79,30 @@
     outline: none;
   }
   .auth-input:focus {
-    border-color: #e60000;
-    background: rgba(230, 0, 0, 0.04);
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.25);
+    border-color: #0071e3;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25);
   }
   .auth-btn-submit {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     margin-top: 10px;
-    background: #e60000;
+    background: #0071e3;
     color: #fff;
     border: none;
-    border-radius: 12px;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    border-radius: 980px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(230, 0, 0, 0.4);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 113, 227, 0.35);
   }
   .auth-btn-submit:hover {
-    background: #ff1a1a;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 26px rgba(230, 0, 0, 0.6);
+    background: #0077ed;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5);
   }
   .auth-footer {
     margin-top: 28px;
@@ -112,13 +113,13 @@
     color: rgba(255, 255, 255, 0.5);
   }
   .auth-link {
-    color: #e60000;
+    color: #0071e3;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
     transition: color 0.2s;
   }
   .auth-link:hover {
-    color: #ff4d4d;
+    color: #0077ed;
     text-decoration: underline;
   }
   .auth-messages {
@@ -131,7 +132,7 @@
     padding: 10px 14px;
     border-radius: 10px;
     font-size: 12px;
-    font-family: 'Space Mono', monospace;
+    font-family: inherit;
     margin-bottom: 8px;
   }
 </style>

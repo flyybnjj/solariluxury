@@ -22,6 +22,12 @@ class Cliente(models.Model):
         default=False,
         verbose_name="Cupón de Bienvenida Enviado"
     )
+    cupon_bienvenida_codigo = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        verbose_name="Código de Cupón Único de Bienvenida"
+    )
 
     class Meta:
         verbose_name = "Cliente / Perfil OTP"
@@ -47,9 +53,13 @@ class Cliente(models.Model):
 
 @receiver(post_save, sender=User)
 def ensure_cliente_profile(sender, instance, created, **kwargs):
-    """Garantiza que todo usuario en el sistema tenga su perfil de cliente asociado."""
+    """Garantiza que todo usuario en el sistema tenga su perfil de cliente asociado con un código de cupón único."""
     if created:
-        Cliente.objects.get_or_create(user=instance)
+        cliente, _ = Cliente.objects.get_or_create(user=instance)
+        if not cliente.cupon_bienvenida_codigo:
+            from .utils import generar_codigo_cupon_unico
+            cliente.cupon_bienvenida_codigo = generar_codigo_cupon_unico(instance)
+            cliente.save(update_fields=['cupon_bienvenida_codigo'])
     else:
         if hasattr(instance, 'cliente'):
             instance.cliente.save()

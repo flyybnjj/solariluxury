@@ -11,5 +11,6 @@ urlpatterns = [
     path('bloquear-tienda/', views.bloquear_tienda, name='bloquear_tienda'),
     path('api/rastrear-pedido/', locales_views.api_rastrear, name='api_rastrear_pedido'),
     path('api/crear-preorden/', locales_views.api_crear_preorden, name='api_crear_preorden_direct'),
+    path('api/validar-cupon/', locales_views.api_validar_cupon, name='api_validar_cupon_direct'),
     path('api/dolar/', locales_views.api_dolar, name='api_dolar'),
 ]

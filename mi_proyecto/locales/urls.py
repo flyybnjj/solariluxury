@@ -7,4 +7,5 @@ urlpatterns = [
     path('crear-preorden/', views.crear_preorden, name='crear_preorden'),
     path('api/rastrear/', views.api_rastrear, name='api_rastrear'),
     path('api/crear-preorden/', views.api_crear_preorden, name='api_crear_preorden'),
+    path('api/validar-cupon/', views.api_validar_cupon, name='api_validar_cupon'),
 ]

@@ -154,38 +154,42 @@
         border-color: rgba(0, 0, 0, 0.08);
       }
 
-      /* Theme Toggle Button Styling */
+      /* Apple Minimalist Control Center Day/Night Toggle */
       .theme-toggle-btn {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        height: 32px;
-        padding: 0 10px;
-        border-radius: 100px;
-        background: var(--toggle-btn-bg);
-        border: 1px solid var(--toggle-btn-border);
-        color: var(--text-primary);
-        font-family: var(--font-mono);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #f5f5f7;
         cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         user-select: none;
-        white-space: nowrap;
         flex-shrink: 0;
+        position: relative;
       }
       .theme-toggle-btn:hover {
-        background: var(--border-hover);
-        border-color: var(--text-secondary);
-        transform: scale(1.04);
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.32);
+        transform: scale(1.08) rotate(12deg);
       }
       .theme-toggle-btn:active {
-        transform: scale(0.96);
+        transform: scale(0.92);
+      }
+      .theme-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
       html[data-theme="dark"] .theme-icon-sun {
         display: inline-flex;
-        color: #fbbf24;
+        color: #ffffff;
+        transform: rotate(0deg) scale(1);
       }
       html[data-theme="dark"] .theme-icon-moon {
         display: none;
@@ -195,7 +199,175 @@
       }
       html[data-theme="light"] .theme-icon-moon {
         display: inline-flex;
-        color: #4f46e5;
+        color: #1d1d1f;
+        transform: rotate(0deg) scale(1);
+      }
+      html[data-theme="light"] .theme-toggle-btn {
+        background: rgba(0, 0, 0, 0.06);
+        border-color: rgba(0, 0, 0, 0.12);
+        color: #1d1d1f;
+      }
+      html[data-theme="light"] .theme-toggle-btn:hover {
+        background: rgba(0, 0, 0, 0.12);
+        border-color: rgba(0, 0, 0, 0.22);
+      }
+
+      /* Header Actions Cluster & Apple User Popover */
+      .header-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .header-user-item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+      .user-pill-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #f5f5f7 !important;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .user-pill-link:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.35);
+        transform: scale(1.06);
+        color: #ffffff !important;
+      }
+      html[data-theme="light"] .user-pill-link {
+        background: rgba(0, 0, 0, 0.06) !important;
+        color: #1d1d1f !important;
+        border-color: rgba(0, 0, 0, 0.14) !important;
+      }
+      html[data-theme="light"] .user-pill-link:hover {
+        background: rgba(0, 0, 0, 0.1) !important;
+        color: #000000 !important;
+      }
+
+      .apple-user-popover {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: -8px;
+        width: 220px;
+        background: rgba(14, 14, 18, 0.94);
+        backdrop-filter: blur(36px) saturate(210%);
+        -webkit-backdrop-filter: blur(36px) saturate(210%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        border-radius: 18px;
+        padding: 12px;
+        z-index: 10005;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px) scale(0.96);
+        transform-origin: top right;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      }
+      .apple-user-popover.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+      }
+      .user-popover-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 6px 10px;
+      }
+      .user-popover-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .user-popover-info {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .user-popover-title {
+        font-family: var(--font-mono, monospace);
+        font-size: 8.5px;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+      }
+      .user-popover-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .user-popover-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 4px 0 8px;
+      }
+      .user-popover-link {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.18s ease;
+      }
+      .user-popover-link:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+      .user-popover-logout {
+        color: #ff453a !important;
+      }
+      .user-popover-logout:hover {
+        background: rgba(255, 69, 58, 0.12) !important;
+        color: #ff453a !important;
+      }
+      html[data-theme="light"] .apple-user-popover {
+        background: rgba(255, 255, 255, 0.96);
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      }
+      html[data-theme="light"] .user-popover-avatar {
+        background: rgba(0, 0, 0, 0.07);
+        color: #000;
+      }
+      html[data-theme="light"] .user-popover-title {
+        color: rgba(0, 0, 0, 0.45);
+      }
+      html[data-theme="light"] .user-popover-name {
+        color: #000;
+      }
+      html[data-theme="light"] .user-popover-divider {
+        background: rgba(0, 0, 0, 0.07);
+      }
+      html[data-theme="light"] .user-popover-link {
+        color: rgba(0, 0, 0, 0.75);
+      }
+      html[data-theme="light"] .user-popover-link:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: #000;
       }
 
       /* Animated Red-Orange Gradient Text */
@@ -221,23 +393,23 @@
         width: auto;
         max-width: 95vw;
         z-index: 1000;
-        background: rgba(12, 12, 16, 0.88);
-        backdrop-filter: blur(40px) saturate(210%);
-        -webkit-backdrop-filter: blur(40px) saturate(210%);
+        background: rgba(18, 18, 22, 0.78);
+        backdrop-filter: blur(28px) saturate(190%);
+        -webkit-backdrop-filter: blur(28px) saturate(190%);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-        border-radius: 100px;
-        padding: 5px 8px 5px 14px;
-        height: 48px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        border-radius: 9999px;
+        padding: 4px 10px 4px 16px;
+        height: 44px;
         display: inline-flex;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .sub-header:hover {
         border-color: rgba(255, 255, 255, 0.22);
-        background: rgba(16, 16, 22, 0.96);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 22px rgba(230, 0, 0, 0.2);
+        background: rgba(22, 22, 28, 0.88);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
         transform: translateX(-50%) scale(1.015);
       }
       .sub-brand {
@@ -246,42 +418,51 @@
         text-decoration: none;
       }
       .sub-brand img {
-        height: 24px; width: auto;
-        filter: drop-shadow(0 0 6px rgba(230,0,0,0.5));
-        transition: transform 0.3s ease;
+        height: 22px; width: auto;
+        transition: transform 0.2s ease;
       }
       .sub-brand:hover img {
         transform: scale(1.08);
       }
       .sub-notch-divider {
-        width: 1px;
-        height: 18px;
-        background: rgba(255, 255, 255, 0.12);
+        display: none !important;
       }
-      .sub-nav { display: inline-flex; gap: 4px; list-style: none; align-items: center; }
+      .sub-nav { display: inline-flex; gap: 4px; list-style: none; align-items: center; margin: 0; padding: 0; }
       .sub-nav a {
         display: inline-flex; align-items: center; gap: 5px;
         padding: 6px 13px;
-        border-radius: 100px; font-size: 10.5px; font-weight: 600;
-        color: rgba(255,255,255,0.65); text-decoration: none;
-        font-family: var(--font-body); letter-spacing: 0.04em;
+        border-radius: 9999px; font-size: 11.5px; font-weight: 500;
+        color: rgba(255,255,255,0.72); text-decoration: none;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        transition: all 0.25s ease;
+        border: none !important;
+        background: transparent !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .sub-nav a:hover, .sub-nav a.active {
         color: #fff;
-        background: rgba(255,255,255,0.1);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        background: rgba(255,255,255,0.09) !important;
       }
       .nav-vip-pill-btn {
-        background: rgba(230,0,0,0.12) !important;
-        border: 1px solid rgba(230,0,0,0.45) !important;
-        box-shadow: 0 0 16px rgba(230,0,0,0.25);
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.16) !important;
+        border-radius: 9999px;
+        padding: 5px 14px;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        text-decoration: none;
       }
       .nav-vip-pill-btn:hover {
-        background: rgba(230,0,0,0.25) !important;
-        box-shadow: 0 0 24px rgba(230,0,0,0.45);
-        border-color: #ff3333 !important;
+        background: rgba(255, 255, 255, 0.16) !important;
+        border-color: rgba(255, 255, 255, 0.32) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        transform: translateY(-0.5px) scale(1.02);
       }
 
       /* Animated SVG Icons */
@@ -306,24 +487,24 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        padding: 6px 15px;
+        padding: 6px 14px;
         border-radius: 100px;
-        border: 1px solid rgba(230,0,0,0.4);
-        background: rgba(230,0,0,0.12);
-        color: #ff6b6b;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
         font-family: var(--font-body);
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 0.04em;
         cursor: pointer;
         text-transform: uppercase;
-        transition: all 0.25s ease;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .header-panel-btn:hover, .header-panel-btn.open {
-        background: #e60000;
-        color: #fff;
-        border-color: #e60000;
-        box-shadow: 0 0 20px rgba(230,0,0,0.4);
+        background: rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.35);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       }
       .apple-chevron {
         font-size: 8px;
@@ -504,10 +685,10 @@
         flex-shrink: 0;
       }
       .header-bag-btn:hover {
-        background: rgba(230, 0, 0, 0.15);
-        border-color: #ff3333;
-        color: #ff4d4d;
-        transform: scale(1.04);
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+        transform: scale(1.03);
       }
       .bag-counter-badge {
         display: inline-flex;
@@ -517,12 +698,12 @@
         height: 17px;
         padding: 0 4px;
         border-radius: 100px;
-        background: #e60000;
+        background: #0071e3;
         color: #ffffff;
         font-size: 9px;
-        font-weight: 800;
-        font-family: var(--font-mono);
-        box-shadow: 0 0 10px rgba(230,0,0,0.5);
+        font-weight: 700;
+        font-family: inherit;
+        box-shadow: 0 2px 8px rgba(0, 113, 227, 0.4);
       }
 
       /* Floating Cart Button (Bottom Right) */
@@ -534,39 +715,41 @@
         width: 56px;
         height: 56px;
         border-radius: 50%;
-        background: #0a0a0c;
-        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        background: rgba(18, 18, 22, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.16);
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(230, 0, 0, 0.3);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .floating-bag-btn:hover {
-        transform: translateY(-4px) scale(1.08);
-        border-color: #e60000;
-        background: #141418;
-        box-shadow: 0 16px 45px rgba(230, 0, 0, 0.45);
+        transform: translateY(-3px) scale(1.06);
+        border-color: #0071e3;
+        background: rgba(26, 26, 32, 0.98);
+        box-shadow: 0 16px 45px rgba(0, 113, 227, 0.35);
       }
       .floating-bag-badge {
         position: absolute;
         top: -4px;
         right: -4px;
-        min-width: 22px;
-        height: 22px;
+        min-width: 20px;
+        height: 20px;
         padding: 0 4px;
         border-radius: 100px;
-        background: #e60000;
+        background: #0071e3;
         color: #ffffff;
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 800;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 0 12px rgba(230,0,0,0.8);
+        box-shadow: 0 2px 10px rgba(0, 113, 227, 0.5);
         border: 2px solid var(--bg);
       }
 
@@ -607,34 +790,179 @@
       .cd-item-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .cd-item-price { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
       .cd-item-rm { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 6px; transition: color 0.2s; }
-      .cd-item-rm:hover { color: #e60000; }
+      .cd-item-rm:hover { color: #ff3b30; }
       .cd-foot { padding: 20px 24px 32px; border-top: 1px solid var(--border); background: var(--bg); }
       .cd-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
       .cd-total-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-secondary); }
       .cd-total-val { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.03em; color: var(--text-primary); }
       .cd-cta {
-        width: 100%; padding: 16px; background: #e60000; border: none; border-radius: 12px;
-        color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+        width: 100%; padding: 16px; background: #ffffff; border: none; border-radius: 980px;
+        color: #000000; font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
         text-transform: uppercase; cursor: pointer;
-        transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(230,0,0,0.25);
+        transition: all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 4px 18px rgba(255,255,255,0.15);
       }
-      .cd-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230,0,0,0.45); background: #ff1a1a; }
+      .cd-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,255,255,0.25); background: #ebebeb; }
+      html[data-theme="light"] .cd-cta { background: #000000; color: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.15); }
+      html[data-theme="light"] .cd-cta:hover { background: #222222; }
+
+      /* Apple Checkout Modal & Wishlist in base.html */
+      .apple-modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+        backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+        z-index: 9998; display: none; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      }
+      .apple-modal-overlay.open { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
+      .apple-checkout-modal {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.96);
+        width: 92%; max-width: 520px; max-height: 88vh;
+        background: #1c1c1e; color: #f5f5f7;
+        border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.85); z-index: 9999;
+        display: none !important; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        flex-direction: column; overflow: hidden;
+      }
+      .apple-checkout-modal.open { display: flex !important; opacity: 1 !important; pointer-events: auto !important; transform: translate(-50%, -50%) scale(1) !important; }
+      html[data-theme="light"] .apple-checkout-modal { background: #ffffff; color: #1d1d1f; border-color: rgba(0,0,0,0.12); box-shadow: 0 25px 70px rgba(0,0,0,0.18); }
+      .acm-head { padding: 22px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: flex-start; justify-content: space-between; }
+      html[data-theme="light"] .acm-head { border-bottom-color: rgba(0,0,0,0.08); }
+      .acm-badge { font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.45); display: block; margin-bottom: 4px; }
+      html[data-theme="light"] .acm-badge { color: rgba(0,0,0,0.45); }
+      .acm-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; color: #ffffff; margin: 0; }
+      html[data-theme="light"] .acm-title { color: #000000; }
+      .acm-close { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      html[data-theme="light"] .acm-close { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); color: #000; }
+      .acm-body { padding: 20px 24px 26px; overflow-y: auto; max-height: calc(90vh - 75px); }
+      .acm-summary-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; }
+      html[data-theme="light"] .acm-summary-card { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+      .acm-summary-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .acm-summary-title { font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+      .acm-summary-count { font-family: var(--font-mono, monospace); font-size: 11px; color: #fff; }
+      html[data-theme="light"] .acm-summary-count { color: #000; }
+      .acm-summary-items { max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+      .acm-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+      .acm-item-name { color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 310px; }
+      html[data-theme="light"] .acm-item-name { color: rgba(0,0,0,0.85); }
+      .acm-item-price { font-family: var(--font-mono, monospace); color: rgba(255,255,255,0.65); font-size: 11px; }
+      html[data-theme="light"] .acm-item-price { color: rgba(0,0,0,0.65); }
+      .acm-summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: rgba(255,255,255,0.7); }
+      .acm-total-val { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.03em; color: #ffffff; }
+      html[data-theme="light"] .acm-total-val { color: #000000; }
+      .acm-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; margin-bottom: 18px; }
+      @media (max-width: 520px) { .acm-form-grid { grid-template-columns: 1fr; } }
+      .acm-field { display: flex; flex-direction: column; gap: 5px; }
+      .acm-field.acm-full { grid-column: 1 / -1; }
+      .acm-field label { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #86868b; }
+      html[data-theme="light"] .acm-field label { color: #6e6e73; }
+      .acm-field input, .acm-field textarea { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 11px 14px; color: #ffffff; font-size: 13.5px; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; transition: all 0.2s; outline: none; box-sizing: border-box; width: 100%; }
+      .acm-field input:focus, .acm-field textarea:focus { border-color: #0071e3; background: rgba(255,255,255,0.12); box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25); }
+      html[data-theme="light"] .acm-field input, html[data-theme="light"] .acm-field textarea { background: #f5f5f7; border-color: #d2d2d7; color: #1d1d1f; }
+      html[data-theme="light"] .acm-field input:focus, html[data-theme="light"] .acm-field textarea:focus { background: #ffffff; border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.18); }
+      .acm-payment-sec { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; }
+      .acm-sec-title { font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+      .acm-pay-opt { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+      .acm-pay-content strong { display: block; font-size: 12px; color: #ffffff; }
+      html[data-theme="light"] .acm-pay-content strong { color: #000000; }
+      .acm-pay-content span { display: block; font-size: 11px; color: rgba(255,255,255,0.5); }
+      .acm-opt-badge { margin-left: auto; font-family: var(--font-mono, monospace); font-size: 10px; background: rgba(255,255,255,0.1); color: #fff; padding: 3px 8px; border-radius: 980px; }
+      .acm-trust-row { display: flex; justify-content: space-around; margin-bottom: 18px; font-size: 11px; color: rgba(255,255,255,0.5); gap: 10px; flex-wrap: wrap; }
+      .acm-trust-row span { display: inline-flex; align-items: center; gap: 5px; }
+      .acm-submit-btn { width: 100%; padding: 16px; background: #ffffff; color: #000000; border: none; border-radius: 980px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; justify-content: center; gap: 8px; }
+      .acm-submit-btn:hover { background: #ececf0; transform: translateY(-1px); }
+      html[data-theme="light"] .acm-submit-btn { background: #000000; color: #ffffff; }
+      .acm-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+      .acm-success-card { text-align: center; padding: 16px 8px; }
+      .acm-check-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(52,199,89,0.15); border: 2px solid #34c759; color: #34c759; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+      .acm-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.04em; color: #ffffff; margin-bottom: 8px; }
+      html[data-theme="light"] .acm-success-title { color: #000000; }
+      .acm-success-msg { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 20px; }
+      .acm-info-pill-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+      .acm-info-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+      .acm-info-label { color: rgba(255,255,255,0.5); font-family: var(--font-mono, monospace); }
+      .acm-info-val { font-family: var(--font-mono, monospace); font-weight: 700; color: #ffffff; }
+      html[data-theme="light"] .acm-info-val { color: #000000; }
+      .acm-action-track { display: block; width: 100%; padding: 14px; background: #0071e3; color: #fff; border-radius: 980px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; transition: all 0.2s; text-align: center; }
+      .acm-action-track:hover { background: #0077ed; }
+      .acm-action-continue { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); border-radius: 980px; padding: 12px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+      .solary-apple-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(40px); background: rgba(18,18,22,0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.16); border-radius: 980px; padding: 10px 22px; color: #ffffff; font-size: 13px; font-weight: 500; box-shadow: 0 12px 40px rgba(0,0,0,0.6); z-index: 100000; opacity: 0; pointer-events: none; transition: all 0.35s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; gap: 8px; }
+      .solary-apple-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      html[data-theme="light"] .solary-apple-toast { background: rgba(255,255,255,0.94); color: #000; border-color: rgba(0,0,0,0.12); }
+
+      .wish-add-bag-btn { background: #ffffff; color: #000; border: none; border-radius: 980px; padding: 6px 14px; font-family: var(--font-mono, monospace); font-size: 10px; font-weight: 700; cursor: pointer; }
+      html[data-theme="light"] .wish-add-bag-btn { background: #000; color: #fff; }
 
       @media (max-width: 768px) {
         .sub-header { width: calc(100% - 20px); top: 10px; padding: 0 14px; }
         .sub-nav { display: none; }
       }
+    
+      /* iPhone Dynamic Island Morphing & Elastic Spring Interaction */
+      .sub-header {
+        cursor: default;
+        transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1), height 0.45s cubic-bezier(0.16, 1, 0.3, 1), padding 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease;
+      }
+      .sub-header.island-touch-active {
+        transform: translateX(-50%) scale(1.02);
+      }
+      @media (max-width: 768px) {
+        .sub-header {
+          width: calc(100% - 24px);
+          max-width: 440px;
+          top: 10px;
+          padding: 6px 12px;
+          height: auto;
+          min-height: 48px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          border-radius: 28px;
+        }
+        .sub-header .sub-nav {
+          display: none;
+          width: 100%;
+          order: 10;
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          flex-direction: column;
+          gap: 6px;
+        }
+        .sub-header.is-expanded .sub-nav {
+          display: flex;
+          animation: appleIslandDrop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .sub-header .island-trigger-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          color: #fff;
+          cursor: pointer;
+        }
+        @keyframes appleIslandDrop {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      }
+    
     </style>
 
     
 </head>
 <body>
-    <!-- Sub-page header -->
-    <header class="sub-header">
+    <!-- Sub-page Apple Dynamic Island Header -->
+    <header class="sub-header" id="siteHeader">
+      <!-- 1. Left Brand / Logo -->
       <a href="../../index.html" class="sub-brand">
         <img src="../../static/img/logo_marca.png" alt="Solariluxury Logo">
       </a>
       <div class="sub-notch-divider"></div>
+
+      <!-- 2. Center Navigation Links -->
       <nav>
         <ul class="sub-nav">
           <li><a href="../../index.html" >CAMPAIGN</a></li>
@@ -642,52 +970,62 @@
           <li><a href="../../locales/informacion/" >PREVENTA &amp; LOGÍSTICA</a></li>
           
           
-
-          
-          <li>
-            <a href="../../login/" class="nav-vip-pill-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5" class="anim-icon-pulse"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-              <span class="vip-gradient-text">INICIAR SESIÓN</span>
-            </a>
-          </li>
-          
         </ul>
       </nav>
       <div class="sub-notch-divider"></div>
       
-      <!-- BOTÓN CARRITO / BAG EN EL NOTCH -->
-      <button type="button" class="header-bag-btn" id="globalBagBtn" onclick="openGlobalCart()" title="Ver Bolsa / Carrito de Compras" aria-label="Carrito de compras">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        <span class="bag-label">BAG</span>
-        <span class="bag-counter-badge" id="globalBagBadge">0</span>
-      </button>
+      <!-- 3. Right Interactive Controls Cluster (Apple Cupertino Logical Order) -->
+      <div class="header-actions">
+        <!-- 3A. APPLE CONTROL CENTER THEME SWITCHER -->
+        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Modo Día / Noche" aria-label="Cambiar tema">
+          <span class="theme-icon theme-icon-sun">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="theme-icon theme-icon-moon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
 
-      <div class="sub-notch-divider"></div>
-      <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Modo Día / Noche" aria-label="Cambiar tema">
-        <span class="theme-icon theme-icon-sun">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        <!-- 3B. BOTÓN WISHLIST EN EL NOTCH -->
+        <button type="button" class="header-bag-btn" id="globalWishlistBtn" onclick="openGlobalWishlist()" title="Ver Wishlist" aria-label="Lista de deseos">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
           </svg>
-        </span>
-        <span class="theme-icon theme-icon-moon">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          <span class="bag-label">WISH</span>
+          <span class="bag-counter-badge" id="globalWishlistBadge" style="background:#ff3b30; color:#fff;">0</span>
+        </button>
+
+        <!-- 3C. BOTÓN CARRITO / BAG EN EL NOTCH -->
+        <button type="button" class="header-bag-btn" id="globalBagBtn" onclick="openGlobalCart()" title="Ver Bolsa / Carrito de Compras" aria-label="Carrito de compras">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
-        </span>
-        <span class="theme-label-text">NOCHE</span>
-      </button>
+          <span class="bag-label">BAG</span>
+          <span class="bag-counter-badge" id="globalBagBadge">0</span>
+        </button>
+
+        <!-- 3D. ANCHOR RIGHT: USER PROFILE / LOGIN -->
+        
+        <a href="../../login/" class="nav-vip-pill-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5" class="anim-icon-pulse"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span class="vip-gradient-text">INICIAR SESIÓN</span>
+        </a>
+        
+      </div>
     </header>
 
     <main>
@@ -699,6 +1037,7 @@
     color: var(--text-primary);
     padding: 100px 24px 80px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
   .detail-container {
     max-width: 1240px;
@@ -708,19 +1047,19 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 36px;
-    font-family: 'Space Mono', monospace;
-    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--text-muted, #86868b);
+    margin-bottom: 32px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
   }
   .detail-breadcrumb a {
-    color: rgba(255,255,255,0.4);
+    color: var(--text-muted, #86868b);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
   }
-  .detail-breadcrumb a:hover { color: #fff; }
-  .detail-breadcrumb-sep { opacity: 0.3; }
+  .detail-breadcrumb a:hover { color: var(--text-primary, #ffffff); }
+  .detail-breadcrumb-sep { opacity: 0.4; }
 
   .detail-grid {
     display: grid;
@@ -738,66 +1077,84 @@
     width: 100%;
     height: 480px;
     background: #ffffff;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
     overflow: hidden;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 24px;
+    padding: 32px;
     cursor: default;
     user-select: none;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    transition: border-color 0.3s ease;
+  }
+  html[data-theme="light"] .gallery-main-img {
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.08);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.06);
   }
   .gallery-main-img img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     object-position: center;
-    transition: transform 0.25s ease;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     user-select: none;
     -webkit-user-drag: none;
   }
   .gallery-main-img:hover img {
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
 
-  /* 360 StockX Floating Badge */
+  /* 360 Apple Floating Badge */
   .badge-360-overlay {
     position: absolute;
-    top: 16px;
-    left: 16px;
+    top: 18px;
+    left: 18px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(230, 0, 0, 0.5);
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: #ff6b6b;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    backdrop-filter: blur(10px);
+    background: rgba(18, 18, 22, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 6px 14px;
+    border-radius: 980px;
+    font-size: 11px;
+    color: #f5f5f7;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  html[data-theme="light"] .badge-360-overlay {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
   }
 
   /* ======================================================
-     STOCKX 360 SLIDER CONTROL
+     APPLE INTERACTIVE 360 SLIDER CONTROL
   ====================================================== */
   .stockx-360-bar {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
     padding: 16px 20px;
     margin-bottom: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+  html[data-theme="light"] .stockx-360-bar {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   }
   .stockx-header-row {
     display: flex;
@@ -805,24 +1162,27 @@
     justify-content: space-between;
   }
   .stockx-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    color: #e60000;
-    font-weight: 700;
-    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-primary, #f5f5f7);
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
   .stockx-angle-text {
-    font-family: 'Space Mono', monospace;
     font-size: 11px;
-    font-weight: 700;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 2px 8px;
-    border-radius: 6px;
+    font-weight: 500;
+    color: var(--text-muted, #86868b);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 980px;
+  }
+  html[data-theme="light"] .stockx-angle-text {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #4b5563;
   }
   .stockx-controls-row {
     display: flex;
@@ -830,75 +1190,87 @@
     gap: 14px;
   }
   .stockx-auto-spin-btn {
-    background: rgba(230, 0, 0, 0.15);
-    border: 1px solid rgba(230, 0, 0, 0.4);
-    color: #ff6b6b;
-    padding: 8px 14px;
-    border-radius: 100px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary, #f5f5f7);
+    padding: 8px 16px;
+    border-radius: 980px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .stockx-auto-spin-btn:hover {
-    background: #e60000;
-    color: #fff;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.02);
+  }
+  html[data-theme="light"] .stockx-auto-spin-btn {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .stockx-auto-spin-btn:hover {
+    background: rgba(0, 0, 0, 0.12);
   }
   .stockx-range {
     flex: 1;
     -webkit-appearance: none;
     appearance: none;
-    height: 6px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.16);
+    height: 4px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.15);
     outline: none;
     cursor: pointer;
     transition: background 0.2s;
   }
+  html[data-theme="light"] .stockx-range {
+    background: rgba(0, 0, 0, 0.12);
+  }
   .stockx-range::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: #ffffff;
-    border: 3px solid #e60000;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     cursor: ew-resize;
-    transition: transform 0.15s ease, background 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .stockx-range::-webkit-slider-thumb:hover {
-    transform: scale(1.18);
-    background: #ff4d4d;
+    transform: scale(1.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   }
   .stockx-range::-webkit-slider-thumb:active {
-    transform: scale(1.25);
+    transform: scale(1.22);
   }
   .stockx-range::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: #ffffff;
-    border: 3px solid #e60000;
-    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     cursor: ew-resize;
   }
   .stockx-hint {
     text-align: center;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.35);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: var(--text-muted, #86868b);
+    letter-spacing: 0.01em;
   }
 
   /* Thumbnails Strip */
   .gallery-thumbs {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     overflow-x: auto;
     padding-bottom: 6px;
     scrollbar-width: thin;
@@ -908,20 +1280,20 @@
     width: 72px;
     height: 72px;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
     background: #ffffff;
     border: 1px solid rgba(255,255,255,0.1);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 6px;
   }
   .gallery-thumb:hover, .gallery-thumb.active {
-    border-color: #e60000;
-    box-shadow: 0 0 14px rgba(230,0,0,0.45);
+    border-color: #0071e3;
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.4);
     transform: translateY(-2px);
   }
   .gallery-thumb img {
@@ -933,81 +1305,88 @@
   /* Info Column */
   .detail-info { padding-top: 4px; }
   .detail-cat {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: #e60000;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted, #86868b);
     text-transform: uppercase;
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   .detail-title {
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: clamp(34px, 4.5vw, 56px);
-    line-height: 1.05;
-    letter-spacing: 0.02em;
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(32px, 3.8vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary, #ffffff);
     margin-bottom: 8px;
     word-break: break-word;
   }
   .detail-subtitle {
-    font-size: 14px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--text-muted, #86868b);
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 18px;
   }
 
-  /* Status badge */
+  /* Status badge - Apple Subtle Pills */
   .detail-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-    font-family: 'Space Mono', monospace;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 980px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    margin-bottom: 24px;
   }
   .detail-badge.available {
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.3);
-    color: #4ade80;
+    background: rgba(52, 199, 89, 0.12);
+    border: 1px solid rgba(52, 199, 89, 0.28);
+    color: #34c759;
   }
   .detail-badge.soldout {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #86868b;
   }
   .detail-badge.limited {
-    background: rgba(230,0,0,0.12);
-    border: 1px solid rgba(230,0,0,0.45);
-    color: #ff6b6b;
+    background: rgba(255, 59, 48, 0.12);
+    border: 1px solid rgba(255, 59, 48, 0.28);
+    color: #ff3b30;
+  }
+  .badge-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   .detail-price {
-    font-family: var(--font-display, 'Bebas Neue', sans-serif);
-    font-size: clamp(42px, 5vw, 64px);
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-size: clamp(38px, 4vw, 54px);
+    font-weight: 700;
+    color: var(--text-primary, #ffffff);
     line-height: 1;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
     margin-bottom: 6px;
   }
   .detail-price-usd {
-    font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 30px;
+    font-size: 13.5px;
+    color: var(--text-muted, #86868b);
+    font-family: inherit;
+    margin-bottom: 28px;
   }
 
-  /* Size selector */
+  /* Size selector - Apple Segmented Pills */
   .detail-section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    font-family: 'Space Mono', monospace;
+    color: var(--text-muted, #86868b);
     margin-bottom: 12px;
   }
   .sizes-flex {
@@ -1017,29 +1396,47 @@
     margin-bottom: 32px;
   }
   .size-btn {
-    padding: 10px 18px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04);
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 980px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary, #f5f5f7);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .size-btn:hover {
-    border-color: rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.08);
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
   }
   .size-btn.active {
-    background: #e60000;
-    border-color: #e60000;
-    color: #fff;
-    box-shadow: 0 0 16px rgba(230,0,0,0.5);
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 600;
+    box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
+  html[data-theme="light"] .size-btn {
+    background: #f4f4f7;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .size-btn:hover {
+    background: #ebebed;
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  html[data-theme="light"] .size-btn.active {
+    background: #000000 !important;
+    border-color: #000000 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
   }
 
-  /* Action buttons */
+  /* Action buttons - Apple Cupertino Buttons */
   .detail-actions {
     display: flex;
     flex-direction: column;
@@ -1048,53 +1445,75 @@
   }
   .btn-add-cart {
     width: 100%;
-    padding: 18px;
-    background: #e60000;
+    padding: 16px 28px;
+    background: #0071e3;
     border: none;
-    border-radius: 14px;
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    border-radius: 980px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 30px rgba(230,0,0,0.35);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 113, 227, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   .btn-add-cart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(230,0,0,0.55);
+    background: #0077ed;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5);
+  }
+  .btn-add-cart:active {
+    transform: scale(0.99);
   }
   .btn-add-cart:disabled {
     background: rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.3);
     cursor: not-allowed;
     box-shadow: none;
+    transform: none;
   }
   .btn-wishlist {
     width: 100%;
-    padding: 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    color: rgba(255,255,255,0.7);
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 980px;
+    color: var(--text-primary, #f5f5f7);
+    font-family: inherit;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   .btn-wishlist:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.2);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+  }
+  html[data-theme="light"] .btn-wishlist {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #1d1d1f;
+  }
+  html[data-theme="light"] .btn-wishlist:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.22);
   }
 
   /* Description & Specs */
   .detail-desc {
     font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.7;
+    color: var(--text-secondary, rgba(255,255,255,0.65));
+    line-height: 1.65;
     margin-bottom: 32px;
   }
   .detail-specs-list {
@@ -1102,19 +1521,29 @@
     border-top: 1px solid rgba(255,255,255,0.08);
     margin-bottom: 32px;
   }
+  html[data-theme="light"] .detail-specs-list {
+    border-top-color: rgba(0,0,0,0.08);
+  }
   .detail-specs-list li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding: 12px 0;
     border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 12px;
-    color: rgba(255,255,255,0.65);
-    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary, rgba(255,255,255,0.7));
+  }
+  html[data-theme="light"] .detail-specs-list li {
+    border-bottom-color: rgba(0,0,0,0.05);
+    color: #4b5563;
   }
   .detail-specs-list li::before {
-    content: '→';
-    color: #e60000;
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #0071e3;
+    flex-shrink: 0;
   }
 
   .shipping-note {
@@ -1122,12 +1551,18 @@
     align-items: center;
     gap: 12px;
     padding: 14px 18px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    font-size: 12.5px;
+    color: var(--text-muted, #86868b);
+    line-height: 1.4;
     margin-bottom: 36px;
+  }
+  html[data-theme="light"] .shipping-note {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #6b7280;
   }
 
   .detail-nav {
@@ -1137,86 +1572,41 @@
     padding-top: 24px;
     border-top: 1px solid rgba(255,255,255,0.08);
   }
+  html[data-theme="light"] .detail-nav {
+    border-top-color: rgba(0,0,0,0.08);
+  }
   .detail-nav-btn {
-    padding: 10px 20px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.6);
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    padding: 9px 18px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted, #86868b);
+    font-size: 12px;
+    font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .detail-nav-btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border-color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary, #ffffff);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  html[data-theme="light"] .detail-nav-btn {
+    background: #f4f4f7;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #4b5563;
+  }
+  html[data-theme="light"] .detail-nav-btn:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
   }
 
   @media (max-width: 900px) {
     .detail-grid { grid-template-columns: 1fr; gap: 36px; }
     .detail-gallery-main { position: static; }
     .gallery-main-img { height: 380px; }
-    .detail-price { font-size: 40px; }
-  }
-
-  /* Apple Light Mode Adaptations for Detail Page */
-  html[data-theme="light"] .detail-name {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-price {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-breadcrumb a,
-  html[data-theme="light"] .detail-breadcrumb span {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .detail-desc {
-    color: #4b5563;
-  }
-  html[data-theme="light"] .size-chip {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.12);
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-specs-table {
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-  html[data-theme="light"] .spec-row {
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-  html[data-theme="light"] .spec-label {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .spec-value {
-    color: #111827;
-  }
-  html[data-theme="light"] .detail-nav-btn {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #4b5563;
-  }
-  html[data-theme="light"] .detail-nav-btn:hover {
-    background: #111827;
-    color: #ffffff;
-  }
-  html[data-theme="light"] .stockx-360-bar {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-  html[data-theme="light"] .stockx-title {
-    color: #111827;
-  }
-  html[data-theme="light"] .stockx-angle-text {
-    color: #6b7280;
-  }
-  html[data-theme="light"] .stockx-auto-spin-btn {
-    background: #f3f4f6;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #111827;
+    .detail-price { font-size: 36px; }
   }
 </style>
 
@@ -1253,15 +1643,15 @@
         <p class="detail-subtitle">Central Cee × Syna World</p>
 
         
-        <div class="detail-badge available">● DISPONIBLE EN STOCK</div>
+        <div class="detail-badge available"><span class="badge-status-dot"></span> Disponible en Stock</div>
         
 
         <div class="detail-price">$122000 CLP</div>
-        <div class="detail-price-usd">≈ $130.00 USD (Precio Internacional de Referencia)</div>
+        <div class="detail-price-usd">≈ $130.00 USD • Precio internacional de referencia</div>
 
         <!-- Sizes -->
         
-        <div class="detail-section-label">SELECCIONAR TALLA</div>
+        <div class="detail-section-label">Seleccionar Talla</div>
         <div class="sizes-flex">
           
           <button type="button" class="size-btn active" onclick="selectSize(this)">S</button>
@@ -1281,11 +1671,11 @@
         <div class="detail-actions">
           
           <button class="btn-add-cart" id="btnAddToCart" onclick="addToCartFromDetail()">
-            AGREGAR AL CARRITO — $122000 CLP
+            <span>Añadir a la Bolsa</span> — $122000 CLP
           </button>
           
-          <button class="btn-wishlist" onclick="this.textContent = this.textContent.includes('✓') ? '♡ GUARDAR EN WISHLIST' : '♥ GUARDADO EN WISHLIST'; this.style.borderColor = this.textContent.includes('♥') ? '#e60000' : ''; this.style.color = this.textContent.includes('♥') ? '#ff6b6b' : '';">
-            ♡ GUARDAR EN WISHLIST
+          <button type="button" class="btn-wishlist" id="detailWishBtn" onclick="toggleDetailWishlist()">
+            <span id="detailWishIcon">♡</span> <span id="detailWishText">Guardar en Wishlist</span>
           </button>
         </div>
 
@@ -1294,7 +1684,7 @@
 
         <!-- Specs -->
         
-        <div class="detail-section-label">ESPECIFICACIONES DEL PRODUCTO</div>
+        <div class="detail-section-label">Especificaciones de la Pieza</div>
         <ul class="detail-specs-list">
           
           <li>100% Autenticidad verificada por Solariluxury</li>
@@ -1312,14 +1702,14 @@
 
         <!-- Shipping note -->
         <div class="shipping-note">
-          <svg class="anim-float" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e60000" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          <span>Despacho prioritario asegurado y garantía de autenticidad verificada por Solariluxury.</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <span>Despacho prioritario asegurado y garantía de autenticidad verificada por SOLARY Archive.</span>
         </div>
 
         <!-- Prev / Next -->
         <div class="detail-nav">
-          <a href="../../productos/79/" class="detail-nav-btn">← ANTERIOR</a>
-          <a href="../../productos/81/" class="detail-nav-btn">SIGUIENTE →</a>
+          <a href="../../productos/79/" class="detail-nav-btn">← Anterior</a>
+          <a href="../../productos/81/" class="detail-nav-btn">Siguiente →</a>
         </div>
       </div>
     </div>
@@ -1329,54 +1719,54 @@
     <div class="related-section" style="margin-top: 80px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.08);">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
         <div>
-          <div style="font-family: 'Space Mono', monospace; font-size: 10px; color: #e60000; letter-spacing: 0.2em; text-transform: uppercase;">CATÁLOGO OFICIAL</div>
-          <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.05em; color: #fff;">PIEZAS RELACIONADAS</h2>
+          <div style="font-size: 11px; color: #86868b; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">COLECCIÓN ARCHIVE</div>
+          <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary, #fff);">Piezas Relacionadas</h2>
         </div>
-        <a href="../../productos/" style="font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); text-decoration: none;">VER CATÁLOGO COMPLETO →</a>
+        <a href="../../productos/" style="font-size: 13px; color: #0071e3; text-decoration: none; font-weight: 500;">Ver Catálogo Completo →</a>
       </div>
       <div class="related-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
         
-        <a href="../../productos/76/" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
-          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+        <a href="../../productos/76/" style="text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <img src="../../static/catalog/sudaderas_abrigos/nike-sportswear-tech-fleece-x-central-cee-joggers-blackmetal/imagen_1_principal.jpg" alt="Nike Sportswear Tech Fleece x Central Cee Joggers Black/Metallic Red Bronze" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
-          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">Sudaderas &amp; Abrigos</span>
-            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">Nike Sportswear Tech Fleece x Cent…</span>
-            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">$200000 CLP</span>
+          <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">Sudaderas &amp; Abrigos</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">Nike Sportswear Tech Fleece x Cent…</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">$200000 CLP</span>
           </div>
         </a>
         
-        <a href="../../productos/77/" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
-          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+        <a href="../../productos/77/" style="text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <img src="../../static/catalog/sudaderas_abrigos/nike-sportswear-tech-fleece-x-central-cee-syna-world-full-zi/imagen_1_principal.jpg" alt="Nike Sportswear Tech Fleece x Central Cee Syna World Full Zip Hoodie Black/Metallic Red Bronze" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
-          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">Sudaderas &amp; Abrigos</span>
-            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">Nike Sportswear Tech Fleece x Cent…</span>
-            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">$283000 CLP</span>
+          <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">Sudaderas &amp; Abrigos</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">Nike Sportswear Tech Fleece x Cent…</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">$283000 CLP</span>
           </div>
         </a>
         
-        <a href="../../productos/78/" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
-          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+        <a href="../../productos/78/" style="text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <img src="../../static/catalog/sudaderas_abrigos/nike-sportswear-x-central-cee-syna-world-tech-fleece-hoodie-/imagen_1_principal.jpg" alt="Nike Sportswear x Central Cee Syna World Tech Fleece Hoodie &amp; Joggers Set Black/Metallic Red Bronze" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
-          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">Sudaderas &amp; Abrigos</span>
-            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">Nike Sportswear x Central Cee Syna…</span>
-            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">$426000 CLP</span>
+          <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">Sudaderas &amp; Abrigos</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">Nike Sportswear x Central Cee Syna…</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">$426000 CLP</span>
           </div>
         </a>
         
-        <a href="../../productos/79/" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
-          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+        <a href="../../productos/79/" style="text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 20px;">
             <img src="../../static/catalog/sudaderas_abrigos/nike-x-syna-solo-swoosh-fleece-full-zip-hoodie-grey/imagen_1_principal.jpg" alt="Nike x Syna Solo Swoosh Fleece Full-Zip Hoodie Grey" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
-          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">Sudaderas &amp; Abrigos</span>
-            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">Nike x Syna Solo Swoosh Fleece Ful…</span>
-            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">$189000 CLP</span>
+          <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">Sudaderas &amp; Abrigos</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">Nike x Syna Solo Swoosh Fleece Ful…</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">$189000 CLP</span>
           </div>
         </a>
         
@@ -1492,7 +1882,7 @@ function toggleAutoSpin() {
   if (autoSpinTimer) {
     stopAutoSpin();
   } else {
-    if (btn) btn.textContent = '❚❚ PAUSAR';
+    if (btn) btn.innerHTML = '<span>❚❚</span> Pausar';
     autoSpinTimer = setInterval(() => {
       let nextIdx = (currentIndex + 1) % galleryImages.length;
       updateAngleView(nextIdx);
@@ -1505,7 +1895,7 @@ function stopAutoSpin() {
     clearInterval(autoSpinTimer);
     autoSpinTimer = null;
     const btn = document.getElementById('autoSpinBtn');
-    if (btn) btn.textContent = '▶ AUTO GIRO';
+    if (btn) btn.innerHTML = '<span>▶</span> Auto Giro';
   }
 }
 
@@ -1535,14 +1925,72 @@ function addToCartFromDetail() {
   const btn = document.getElementById('btnAddToCart');
   if (btn) {
     const origHtml = btn.innerHTML;
-    btn.innerHTML = '<span>✓ AGREGADO A LA BOLSA</span>';
-    btn.style.background = '#16a34a';
+    btn.innerHTML = '<span>✓ Añadido a la Bolsa</span>';
+    btn.style.background = '#34c759';
     setTimeout(() => {
       btn.innerHTML = origHtml;
       btn.style.background = '';
     }, 2000);
   }
 }
+
+function toggleDetailWishlist() {
+  const prodId = "80";
+  const name = "Nike x Syna Solo Swoosh Fleece Pants Grey";
+  const price = "$122000 CLP";
+  const priceUsd = "130.00";
+  const img = "../../static/catalog/sudaderas_abrigos/nike-x-syna-solo-swoosh-fleece-pants-grey/imagen_1_principal.jpg";
+  const url = window.location.pathname;
+
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('solari_wishlist') || '[]'); } catch(e) {}
+  const idx = list.findIndex(it => String(it.id) === String(prodId));
+
+  const btn = document.getElementById('detailWishBtn');
+  const icon = document.getElementById('detailWishIcon');
+  const txt = document.getElementById('detailWishText');
+
+  if (idx > -1) {
+    list.splice(idx, 1);
+    if (btn) {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }
+    if (icon) icon.textContent = '♡';
+    if (txt) txt.textContent = 'Guardar en Wishlist';
+    if (typeof showGlobalToast === 'function') showGlobalToast('Eliminado de tu Wishlist');
+  } else {
+    list.push({ id: prodId, name: name, price: price, priceUsd: priceUsd, img: img, url: url });
+    if (btn) {
+      btn.style.borderColor = '#ff3b30';
+      btn.style.color = '#ff3b30';
+    }
+    if (icon) icon.textContent = '♥';
+    if (txt) txt.textContent = 'Guardado en Wishlist';
+    if (typeof showGlobalToast === 'function') showGlobalToast(`Añadido a tu Wishlist: ${name}`);
+  }
+
+  try { localStorage.setItem('solari_wishlist', JSON.stringify(list)); } catch(e) {}
+  if (typeof updateGlobalWishlistBadges === 'function') updateGlobalWishlistBadges();
+}
+
+(function initDetailWishlistState() {
+  const prodId = "80";
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('solari_wishlist') || '[]'); } catch(e) {}
+  const exists = list.some(it => String(it.id) === String(prodId));
+  if (exists) {
+    const btn = document.getElementById('detailWishBtn');
+    const icon = document.getElementById('detailWishIcon');
+    const txt = document.getElementById('detailWishText');
+    if (btn) {
+      btn.style.borderColor = '#ff3b30';
+      btn.style.color = '#ff3b30';
+    }
+    if (icon) icon.textContent = '♥';
+    if (txt) txt.textContent = 'GUARDADO EN WISHLIST';
+  }
+})();
 </script>
 
     </main>
@@ -1571,10 +2019,6 @@ function addToCartFromDetail() {
     }
 
     function updateThemeLabels(theme) {
-      var labels = document.querySelectorAll('.theme-label-text');
-      labels.forEach(function(el) {
-        el.textContent = theme === 'dark' ? 'NOCHE' : 'DÍA';
-      });
       var btns = document.querySelectorAll('.theme-toggle-btn');
       btns.forEach(function(b) {
         b.setAttribute('title', theme === 'dark' ? 'Cambiar a Modo Día (Blanco)' : 'Cambiar a Modo Noche (Oscuro)');
@@ -1591,10 +2035,10 @@ function addToCartFromDetail() {
       if (!tray) return;
       const isCurrentlyOpen = tray.classList.contains('open');
 
-      document.querySelectorAll('.apple-expandable-tray.open').forEach(t => {
+      document.querySelectorAll('.apple-expandable-tray.open, .apple-user-popover.open').forEach(t => {
         if (t.id !== trayId) t.classList.remove('open');
       });
-      document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open').forEach(b => {
+      document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open, .user-pill-link.open').forEach(b => {
         if (b !== btn) b.classList.remove('open');
       });
 
@@ -1607,10 +2051,31 @@ function addToCartFromDetail() {
       }
     }
 
+    function toggleAppleUserMenu(popoverId, btn) {
+      const popover = document.getElementById(popoverId);
+      if (!popover) return;
+      const isCurrentlyOpen = popover.classList.contains('open');
+
+      document.querySelectorAll('.apple-user-popover.open, .apple-expandable-tray.open').forEach(p => {
+        if (p.id !== popoverId) p.classList.remove('open');
+      });
+      document.querySelectorAll('.user-pill-link.open, .header-panel-btn.open').forEach(b => {
+        if (b !== btn) b.classList.remove('open');
+      });
+
+      if (isCurrentlyOpen) {
+        popover.classList.remove('open');
+        if (btn) btn.classList.remove('open');
+      } else {
+        popover.classList.add('open');
+        if (btn) btn.classList.add('open');
+      }
+    }
+
     document.addEventListener('click', function (e) {
-      if (!e.target.closest('.header-panel-item') && !e.target.closest('.apple-control-wrap')) {
-        document.querySelectorAll('.apple-expandable-tray.open').forEach(t => t.classList.remove('open'));
-        document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open').forEach(b => b.classList.remove('open'));
+      if (!e.target.closest('.header-panel-item') && !e.target.closest('.header-user-item') && !e.target.closest('.apple-control-wrap')) {
+        document.querySelectorAll('.apple-expandable-tray.open, .apple-user-popover.open').forEach(t => t.classList.remove('open'));
+        document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open, .user-pill-link.open').forEach(b => b.classList.remove('open'));
       }
     });
     </script>
@@ -1650,6 +2115,114 @@ function addToCartFromDetail() {
         </div>
         <button type="button" class="cd-cta" onclick="checkoutGlobalCart()">PROCEDER AL PAGO →</button>
       </div>
+    </div>
+
+    <!-- Global Wishlist Drawer -->
+    <div class="cart-drawer wishlist-drawer" id="globalWishlistDrawer">
+      <div class="cd-head">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff3b30" stroke="#ff3b30" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <span class="cd-title">TU WISHLIST</span>
+        </div>
+        <button type="button" class="cd-close" onclick="closeGlobalWishlist()" aria-label="Cerrar Wishlist">✕</button>
+      </div>
+      <div class="cd-body" id="globalWishlistBody">
+        <div class="cd-empty" id="globalWishlistEmpty">
+          <span class="cd-empty-icon" style="color:#ff3b30; opacity:0.7;">♡</span>
+          <p>Tu wishlist está vacía.</p>
+          <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:6px;">Toca el corazón en cualquier prenda para guardarla.</p>
+        </div>
+        <div id="globalWishlistItems"></div>
+      </div>
+      <div class="cd-foot" id="globalWishlistFoot" style="display:none;">
+        <button type="button" class="cd-cta" onclick="moveAllGlobalWishToBag()">MOVER TODO A LA BOLSA →</button>
+      </div>
+    </div>
+
+    <!-- Global Apple Checkout Modal -->
+    <div class="apple-modal-overlay" id="globalCheckoutOverlay" style="display: none;" onclick="closeGlobalCheckoutModal()"></div>
+    <div class="apple-checkout-modal" id="globalCheckoutModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="globalCheckoutModalTitle">
+      <div class="acm-card">
+        <div class="acm-head">
+          <div>
+            <span class="acm-badge">ATELIER LA SERENA · CHILE</span>
+            <h2 class="acm-title" id="globalCheckoutModalTitle">FINALIZAR COMPRA</h2>
+          </div>
+          <button type="button" class="acm-close" onclick="closeGlobalCheckoutModal()" aria-label="Cerrar checkout">✕</button>
+        </div>
+        <div class="acm-body" id="globalCheckoutModalBody">
+          <!-- Order Summary -->
+          <div class="acm-summary-card">
+            <div class="acm-summary-head">
+              <span class="acm-summary-title">RESUMEN DEL PEDIDO</span>
+              <span class="acm-summary-count" id="globalCheckoutItemsCount">0 piezas</span>
+            </div>
+            <div class="acm-summary-items" id="globalCheckoutItemsList"></div>
+            <div class="acm-summary-total">
+              <span>TOTAL A PAGAR:</span>
+              <strong class="acm-total-val" id="globalCheckoutTotalVal">$0 CLP</strong>
+            </div>
+          </div>
+
+          <!-- Checkout Form -->
+          <form id="globalCheckoutForm" onsubmit="submitGlobalCheckoutOrder(event)">
+            <div class="acm-form-grid">
+              <div class="acm-field">
+                <label for="gcoNombre">Nombre y Apellido *</label>
+                <input type="text" id="gcoNombre" name="nombre" required placeholder="Ej. Benjamín Ávalos" value="Benjamín Ávalos">
+              </div>
+              <div class="acm-field">
+                <label for="gcoEmail">Correo Electrónico (para comprobante) *</label>
+                <input type="email" id="gcoEmail" name="email" required placeholder="avalosb758@gmail.com" value="avalosb758@gmail.com">
+              </div>
+              <div class="acm-field">
+                <label for="gcoTelefono">Teléfono / WhatsApp *</label>
+                <input type="tel" id="gcoTelefono" name="telefono" required placeholder="+56 9 1234 5678" value="+56 9 8765 4321">
+              </div>
+              <div class="acm-field">
+                <label for="gcoCiudad">Ciudad / Región *</label>
+                <input type="text" id="gcoCiudad" name="ciudad" required placeholder="Ej. La Serena, Coquimbo, Santiago" value="La Serena">
+              </div>
+              <div class="acm-field acm-full">
+                <label for="gcoDireccion">Dirección de Entrega *</label>
+                <input type="text" id="gcoDireccion" name="direccion" required placeholder="Av. del Mar / Cuatro Esquinas, Casa / Depto" value="Av. del Mar 4500, La Serena">
+              </div>
+              <div class="acm-field acm-full">
+                <label for="gcoNotas">Instrucciones o Notas Especiales (Opcional)</label>
+                <textarea id="gcoNotas" name="notas" rows="2" placeholder="Indicaciones para el conserje o entrega..."></textarea>
+              </div>
+            </div>
+
+            <div class="acm-payment-sec">
+              <div class="acm-sec-title">MÉTODO DE PAGO OFICIAL</div>
+              <label class="acm-pay-opt">
+                <input type="radio" name="payment_method" value="transfer" checked>
+                <div class="acm-pay-content">
+                  <strong>Transferencia Inmediata / Webpay Plus</strong>
+                  <span>Banco de Chile · Banco Santander · Débito / Crédito</span>
+                </div>
+                <span class="acm-opt-badge">0% RECARGO</span>
+              </label>
+            </div>
+
+            <div class="acm-trust-row">
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 100% Autenticidad Garantizada</span>
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> Despacho DHL Express Asegurado</span>
+            </div>
+
+            <button type="submit" class="acm-submit-btn" id="globalCheckoutSubmitBtn">
+              <span id="globalCheckoutSubmitText">CONFIRMAR PEDIDO Y RESERVAR →</span>
+              <span class="acm-spinner" id="globalCheckoutSpinner" style="display:none;"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Global Apple Toast Notification -->
+    <div class="solary-apple-toast" id="globalToast">
+      <span id="globalToastIcon">✓</span>
+      <span id="globalToastMsg">Mensaje</span>
     </div>
 
     <script>
@@ -1735,13 +2308,16 @@ function addToCartFromDetail() {
       const overlay = document.getElementById('globalCartOverlay');
       if (drawer) drawer.classList.add('open');
       if (overlay) overlay.classList.add('open');
+      closeGlobalWishlist();
     }
 
     function closeGlobalCart() {
       const drawer = document.getElementById('globalCartDrawer');
       const overlay = document.getElementById('globalCartOverlay');
       if (drawer) drawer.classList.remove('open');
-      if (overlay) overlay.classList.remove('open');
+      if (overlay && (!document.getElementById('globalWishlistDrawer') || !document.getElementById('globalWishlistDrawer').classList.contains('open'))) {
+        overlay.classList.remove('open');
+      }
     }
 
     function removeGlobalCartItem(idx) {
@@ -1756,19 +2332,309 @@ function addToCartFromDetail() {
       cart.push(item);
       saveGlobalCart(cart);
       openGlobalCart();
+      showGlobalToast(`Añadido a tu bolsa: ${item.name}`);
     }
 
-    function checkoutGlobalCart() {
-      const cart = getGlobalCart();
-      if (!cart.length) {
-        alert('Tu bolsa está vacía. Selecciona un producto para continuar.');
+    // ── GLOBAL WISHLIST CONTROLLER ─────────────────────────────────
+    function getWishlist() {
+      try {
+        return JSON.parse(localStorage.getItem('solari_wishlist') || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+    function saveWishlist(list) {
+      try {
+        localStorage.setItem('solari_wishlist', JSON.stringify(list));
+      } catch(e) {}
+      updateGlobalWishlistBadges();
+    }
+
+    function updateGlobalWishlistBadges() {
+      const list = getWishlist();
+      const count = list.length;
+      const bBadge = document.getElementById('globalWishlistBadge');
+      if (bBadge) bBadge.textContent = count;
+    }
+
+    function openGlobalWishlist() {
+      renderGlobalWishlist();
+      const drawer = document.getElementById('globalWishlistDrawer');
+      const overlay = document.getElementById('globalCartOverlay');
+      if (drawer) drawer.classList.add('open');
+      if (overlay) overlay.classList.add('open');
+      closeGlobalCart();
+    }
+
+    function closeGlobalWishlist() {
+      const drawer = document.getElementById('globalWishlistDrawer');
+      const overlay = document.getElementById('globalCartOverlay');
+      if (drawer) drawer.classList.remove('open');
+      if (overlay && (!document.getElementById('globalCartDrawer') || !document.getElementById('globalCartDrawer').classList.contains('open'))) {
+        overlay.classList.remove('open');
+      }
+    }
+
+    function renderGlobalWishlist() {
+      const list = getWishlist();
+      const itemsEl = document.getElementById('globalWishlistItems');
+      const emptyEl = document.getElementById('globalWishlistEmpty');
+      const footEl = document.getElementById('globalWishlistFoot');
+      updateGlobalWishlistBadges();
+
+      if (!list.length) {
+        if (emptyEl) emptyEl.style.display = 'block';
+        if (itemsEl) itemsEl.innerHTML = '';
+        if (footEl) footEl.style.display = 'none';
         return;
       }
-      window.location.href = '/informacion/#tracking';
+
+      if (emptyEl) emptyEl.style.display = 'none';
+      if (footEl) footEl.style.display = 'block';
+      if (itemsEl) {
+        itemsEl.innerHTML = list.map(item => `
+          <div class="cd-item">
+            <div class="cd-item-img"><img src="${item.img}" alt="${item.name}" onerror="this.src='../../static/img/logo_marca.png'"></div>
+            <div class="cd-item-info">
+              <div class="cd-item-name">${item.name}</div>
+              <div class="cd-item-price">${item.price}</div>
+              <div style="margin-top: 8px;">
+                <button type="button" class="wish-add-bag-btn" onclick="moveGlobalWishToBag('${item.id}')">AÑADIR A LA BOLSA →</button>
+              </div>
+            </div>
+            <button type="button" class="cd-item-rm" onclick="removeGlobalWishItem('${item.id}')" title="Eliminar de Wishlist">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function removeGlobalWishItem(prodId) {
+      let list = getWishlist();
+      list = list.filter(item => String(item.id) !== String(prodId));
+      saveWishlist(list);
+      renderGlobalWishlist();
+      showGlobalToast('Prenda eliminada de tu Wishlist');
+    }
+
+    function moveGlobalWishToBag(prodId) {
+      const list = getWishlist();
+      const item = list.find(it => String(it.id) === String(prodId));
+      if (!item) return;
+
+      addToGlobalCart({
+        id: item.id,
+        name: `${item.name} [TALLA M]`,
+        img: item.img,
+        price: item.price,
+        priceUsd: item.priceUsd,
+        size: 'M'
+      });
+      closeGlobalWishlist();
+    }
+
+    function moveAllGlobalWishToBag() {
+      const list = getWishlist();
+      if (!list.length) return;
+      list.forEach(item => {
+        const cart = getGlobalCart();
+        cart.push({
+          id: item.id,
+          name: `${item.name} [TALLA M]`,
+          img: item.img,
+          price: item.price,
+          priceUsd: item.priceUsd,
+          size: 'M'
+        });
+        saveGlobalCart(cart);
+      });
+      saveWishlist([]);
+      closeGlobalWishlist();
+      openGlobalCart();
+      showGlobalToast('¡Prendas agregadas a tu Bolsa!');
+    }
+
+    let globalToastTimeout = null;
+    function showGlobalToast(msg, icon = '✓') {
+      const toast = document.getElementById('globalToast');
+      if (!toast) return;
+      const toastMsg = document.getElementById('globalToastMsg');
+      const toastIcon = document.getElementById('globalToastIcon');
+      if (toastMsg) toastMsg.textContent = msg;
+      if (toastIcon) toastIcon.textContent = icon;
+      toast.classList.add('show');
+      clearTimeout(globalToastTimeout);
+      globalToastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2800);
+    }
+
+    // ── GLOBAL CHECKOUT CONTROLLER ─────────────────────────────────
+    function checkoutGlobalCart() {
+      openGlobalCheckoutModal();
+    }
+
+    function openGlobalCheckoutModal() {
+      const cart = getGlobalCart();
+      if (!cart || !cart.length) {
+        showGlobalToast('Tu bolsa está vacía. Añade piezas para continuar.', '○');
+        return;
+      }
+      closeGlobalCart();
+
+      const modal = document.getElementById('globalCheckoutModal');
+      const overlay = document.getElementById('globalCheckoutOverlay');
+      const listEl = document.getElementById('globalCheckoutItemsList');
+      const countEl = document.getElementById('globalCheckoutItemsCount');
+      const totalEl = document.getElementById('globalCheckoutTotalVal');
+
+      if (countEl) countEl.textContent = `${cart.length} ${cart.length === 1 ? 'pieza' : 'piezas'}`;
+
+      let totalNum = 0;
+      if (listEl) {
+        listEl.innerHTML = cart.map(item => {
+          const num = parseInt(String(item.price || '').replace(/\D/g, '')) || 0;
+          totalNum += num;
+          return `
+            <div class="acm-item-row">
+              <span class="acm-item-name">• ${item.name}</span>
+              <span class="acm-item-price">${item.price}</span>
+            </div>
+          `;
+        }).join('');
+      }
+      if (totalEl) totalEl.textContent = '$' + totalNum.toLocaleString('es-CL') + ' CLP';
+
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('open');
+      }
+      if (overlay) {
+        overlay.style.display = 'block';
+        overlay.classList.add('open');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGlobalCheckoutModal() {
+      const modal = document.getElementById('globalCheckoutModal');
+      const overlay = document.getElementById('globalCheckoutOverlay');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+      }
+      if (overlay) {
+        overlay.classList.remove('open');
+        overlay.style.display = 'none';
+      }
+      document.body.style.overflow = '';
+    }
+
+    async function submitGlobalCheckoutOrder(e) {
+      e.preventDefault();
+      const cart = getGlobalCart();
+      if (!cart || !cart.length) {
+        alert('Tu bolsa de compras está vacía.');
+        return;
+      }
+
+      const btn = document.getElementById('globalCheckoutSubmitBtn');
+      const txt = document.getElementById('globalCheckoutSubmitText');
+      const spnr = document.getElementById('globalCheckoutSpinner');
+
+      if (btn) btn.disabled = true;
+      if (txt) txt.textContent = 'PROCESANDO RESERVA EN ATELIER...';
+      if (spnr) spnr.style.display = 'inline-block';
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const payload = {
+        nombre: formData.get('nombre'),
+        email: formData.get('email'),
+        telefono: formData.get('telefono'),
+        ciudad: formData.get('ciudad'),
+        direccion: formData.get('direccion'),
+        notas: formData.get('notas'),
+        payment_method: formData.get('payment_method'),
+        items: cart
+      };
+
+      try {
+        const res = await fetch('/api/crear-preorden/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          saveGlobalCart([]);
+          renderGlobalCart();
+
+          const bodyEl = document.getElementById('globalCheckoutModalBody');
+          if (bodyEl) {
+            bodyEl.innerHTML = `
+              <div class="acm-success-card">
+                <div class="acm-check-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <h3 class="acm-success-title">¡PEDIDO CONFIRMADO CON ÉXITO!</h3>
+                <p class="acm-success-msg">
+                  Tu reserva de archivo ha sido registrada en el sistema oficial de <strong>SOLARY</strong>.<br>
+                  Hemos enviado tu comprobante y detalles a: <strong>${data.email || payload.email}</strong>.
+                </p>
+
+                <div class="acm-info-pill-box">
+                  <div class="acm-info-row">
+                    <span class="acm-info-label">CÓDIGO DE ORDEN:</span>
+                    <span class="acm-info-val" style="color:#0071e3; letter-spacing:0.06em;">#${data.codigo_orden}</span>
+                  </div>
+                  <div class="acm-info-row">
+                    <span class="acm-info-label">GUÍA DHL EXPRESS:</span>
+                    <span class="acm-info-val">${data.dhl_tracking || 'DHL-CL-2026'}</span>
+                  </div>
+                  <div class="acm-info-row">
+                    <span class="acm-info-label">MONTO TOTAL:</span>
+                    <span class="acm-info-val">${data.precio_fmt || '$0 CLP'}</span>
+                  </div>
+                  <div class="acm-info-row">
+                    <span class="acm-info-label">DESTINO:</span>
+                    <span class="acm-info-val">${payload.ciudad}, Chile</span>
+                  </div>
+                </div>
+
+                <div class="acm-action-btn-row">
+                  <a href="${data.tracking_url}" class="acm-action-track">
+                    RASTREAR PEDIDO EN VIVO (DHL TRACKING) →
+                  </a>
+                  <button type="button" class="acm-action-continue" onclick="closeGlobalCheckoutModal(); window.location.reload();">
+                    CONTINUAR EN SOLARY ARCHIVE
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+        } else {
+          alert('Error al procesar el pedido: ' + (data.error || 'Inténtalo nuevamente.'));
+          if (btn) btn.disabled = false;
+          if (txt) txt.textContent = 'CONFIRMAR PEDIDO Y RESERVAR →';
+          if (spnr) spnr.style.display = 'none';
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Ocurrió un inconveniente al conectar con el Atelier. Intenta nuevamente.');
+        if (btn) btn.disabled = false;
+        if (txt) txt.textContent = 'CONFIRMAR PEDIDO Y RESERVAR →';
+        if (spnr) spnr.style.display = 'none';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       updateGlobalCartBadges();
+      updateGlobalWishlistBadges();
     });
     </script>
 </body>

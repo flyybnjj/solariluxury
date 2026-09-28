@@ -55,6 +55,20 @@
     align-items: center;
     justify-content: center;
   }
+  @keyframes appleDotsMotion {
+    0% {
+      transform: rotate(0deg) scale(1);
+      filter: drop-shadow(0 0 3px rgba(175, 82, 222, 0.4)) hue-rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.04);
+      filter: drop-shadow(0 0 10px rgba(70, 193, 230, 0.6)) hue-rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      filter: drop-shadow(0 0 3px rgba(175, 82, 222, 0.4)) hue-rotate(360deg);
+    }
+  }
   .apple-dots-svg {
     position: absolute;
     top: 0;
@@ -62,6 +76,8 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    animation: appleDotsMotion 10s linear infinite;
+    transform-origin: center center;
   }
   .apple-static-logo {
     position: relative;
@@ -360,10 +376,10 @@
         <div style="width:48px; height:48px; border-radius:50%; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:22px;">
           ✓
         </div>
-        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.15em; color:#15803d; text-transform:uppercase; margin-bottom:4px;">
+        <div style="font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size:11px; font-weight:600; letter-spacing:0.08em; color:#15803d; text-transform:uppercase; margin-bottom:4px;">
           TICKET REGISTRADO CON ÉXITO
         </div>
-        <div id="ticketSuccessId" style="font-family:'Space Mono',monospace; font-size:22px; font-weight:700; color:#1d1d1f; margin-bottom:12px;">
+        <div id="ticketSuccessId" style="font-family:'SF Mono', Menlo, Monaco, Consolas, monospace; font-size:20px; font-weight:700; color:#1d1d1f; margin-bottom:12px;">
           #SL-TK-00000
         </div>
         <p style="font-size:13px; color:#6e6e73; line-height:1.5; margin-bottom:16px;">

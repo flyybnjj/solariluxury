@@ -616,10 +616,10 @@ EMAIL_TEMPLATES_CONFIG = {
     'cupon_bienvenida': {
         'nombre': '06 — Cupón de Bienvenida 15% OFF',
         'template': 'emails/email_cupon_bienvenida.html',
-        'asunto': 'SOLARY — Bienvenido a Solary Archive: Tu beneficio 15% OFF',
+        'asunto': 'SOLARY — Bienvenido a Solary Archive: Tu beneficio 15% OFF (SOLARY-8K92F)',
         'contexto': {
             'cliente_nombre': 'Test Test',
-            'cupon_codigo': 'SOLARY15',
+            'cupon_codigo': 'SOLARY-8K92F',
             'vigencia_dias': '30 días',
             'tienda_url': 'http://127.0.0.1:8000/',
         }

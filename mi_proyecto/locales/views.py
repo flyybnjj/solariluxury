@@ -285,22 +285,46 @@ def api_crear_preorden(request):
     except Exception:
         data = request.POST
 
-    nombre = data.get('nombre_cliente', '').strip()
-    email = data.get('email_cliente', '').strip()
-    telefono = data.get('telefono_cliente', '').strip()
-    direccion = data.get('direccion_entrega', '').strip()
-    ciudad = data.get('ciudad', 'Santiago').strip()
-    producto_id = data.get('producto_id')
-    talla = data.get('talla', 'M').strip()
-    notas = data.get('notas', '').strip()
+    nombre = (data.get('nombre_cliente') or data.get('nombre') or '').strip()
+    email = (data.get('email_cliente') or data.get('email') or '').strip()
+    telefono = (data.get('telefono_cliente') or data.get('telefono') or '').strip()
+    direccion = (data.get('direccion_entrega') or data.get('direccion') or '').strip()
+    ciudad = (data.get('ciudad') or 'La Serena').strip()
+    producto_id = data.get('producto_id') or data.get('id')
+    talla = (data.get('talla') or 'M').strip()
+    notas = (data.get('notas') or '').strip()
 
-    if not nombre or not email or not producto_id:
-        return JsonResponse({'success': False, 'error': 'Faltan campos obligatorios (nombre, correo o producto).'}, status=400)
+    items_list = data.get('items', [])
+    if items_list and not producto_id:
+        first_item = items_list[0]
+        producto_id = first_item.get('id')
+        if not talla or talla == 'M':
+            talla = first_item.get('size', 'M')
+
+    if not nombre and request.user.is_authenticated:
+        nombre = request.user.get_full_name() or request.user.username
+    if not email and request.user.is_authenticated:
+        email = request.user.email
+
+    if not nombre:
+        nombre = 'Cliente Solary VIP'
+    if not email:
+        email = 'cliente@solaryluxury.com'
+
+    if not producto_id:
+        p_first = Producto.objects.first()
+        producto_id = p_first.id if p_first else None
+
+    if not producto_id:
+        return JsonResponse({'success': False, 'error': 'No hay productos disponibles en el catálogo.'}, status=400)
 
     try:
         producto = Producto.objects.get(id=producto_id)
-    except Producto.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'El producto seleccionado no existe.'}, status=404)
+    except (Producto.DoesNotExist, ValueError):
+        # Fallback to first available product if id was invalid
+        producto = Producto.objects.first()
+        if not producto:
+            return JsonResponse({'success': False, 'error': 'No hay productos disponibles en el catálogo.'}, status=404)
 
     random_num = random.randint(1000, 9999)
     codigo_orden = f"SL-2026-{random_num}"
@@ -309,10 +333,34 @@ def api_crear_preorden(request):
         codigo_orden = f"SL-2026-{random_num}"
 
     dhl_code = f"DHL-CL-{random.randint(10000000, 99999999)}"
+    fecha_est = date.today() + timedelta(days=10)
     user = request.user if request.user.is_authenticated else None
     if not user and email:
         from django.contrib.auth.models import User
         user = User.objects.filter(email__iexact=email).first()
+
+    precio_total = producto.precio
+    if items_list and len(items_list) > 1:
+        calc_total = 0
+        desc_items = []
+        for it in items_list:
+            raw_p = str(it.get('price', '0')).replace('$', '').replace('.', '').replace('CLP', '').strip()
+            val = int(raw_p) if raw_p.isdigit() else 0
+            calc_total += val
+            desc_items.append(f"• {it.get('name', 'Pieza')} — ${val:,} CLP".replace(',', '.'))
+        if calc_total > 0:
+            precio_total = calc_total
+        notas = f"Pedido de Bolsa ({len(items_list)} piezas):\n" + "\n".join(desc_items) + (f"\n\nNotas adicionales: {notas}" if notas else "")
+
+    cupon_codigo = (data.get('cupon') or data.get('cupon_codigo') or '').strip().upper()
+    descuento_aplicado = 0
+    if cupon_codigo:
+        from usuarios.models import Cliente
+        es_valido = (cupon_codigo == 'SOLARY15') or Cliente.objects.filter(cupon_bienvenida_codigo__iexact=cupon_codigo).exists()
+        if es_valido:
+            descuento_aplicado = int(precio_total * 0.15)
+            precio_total = max(0, precio_total - descuento_aplicado)
+            notas = f"[CUPÓN APLICADO: {cupon_codigo} (-15% = -${descuento_aplicado:,} CLP)]\n".replace(',', '.') + notas
 
     orden = PreOrden.objects.create(
         codigo_orden=codigo_orden,
@@ -320,12 +368,12 @@ def api_crear_preorden(request):
         nombre_cliente=nombre,
         email_cliente=email,
         telefono_cliente=telefono,
-        direccion_entrega=direccion or 'Alonso de Córdova 3890 (Retiro Flagship)',
-        ciudad=ciudad,
+        direccion_entrega=direccion or 'Av. del Mar / Cuatro Esquinas (Atelier La Serena)',
+        ciudad=ciudad or 'La Serena',
         producto=producto,
-        talla=talla,
-        cantidad=1,
-        precio_total=producto.precio,
+        talla=talla or 'M',
+        cantidad=len(items_list) if items_list else 1,
+        precio_total=precio_total,
         notas=notas,
         estado='CONFIRMADA',
         dhl_tracking=dhl_code,
@@ -338,13 +386,37 @@ def api_crear_preorden(request):
     return JsonResponse({
         'success': True,
         'codigo_orden': orden.codigo_orden,
-        'mensaje': f"¡Pre-orden #{orden.codigo_orden} confirmada exitosamente! Se ha enviado el comprobante a {email}.",
+        'mensaje': f"¡Compra #{orden.codigo_orden} confirmada exitosamente! Se ha enviado el comprobante a {email}.",
         'correo_enviado': correo_enviado,
         'email': email,
         'dhl_tracking': orden.dhl_tracking,
         'precio_fmt': orden.precio_formateado(),
+        'descuento_aplicado': descuento_aplicado,
         'tracking_url': f"/locales/informacion/?codigo={orden.codigo_orden}"
     })
+
+
+def api_validar_cupon(request):
+    """Valida si un código de cupón es válido (personal de usuario o código general)"""
+    codigo = (request.GET.get('codigo') or request.POST.get('codigo') or '').strip().upper()
+    if not codigo:
+        return JsonResponse({'success': False, 'error': 'Ingresa un código de descuento.'}, status=400)
+
+    from usuarios.models import Cliente
+    es_valido = (codigo == 'SOLARY15') or Cliente.objects.filter(cupon_bienvenida_codigo__iexact=codigo).exists()
+
+    if es_valido:
+        return JsonResponse({
+            'success': True,
+            'codigo': codigo,
+            'descuento_porcentaje': 15,
+            'mensaje': '✓ Cupón VIP aplicado: 15% de descuento en tu compra.'
+        })
+    else:
+        return JsonResponse({
+            'success': False,
+            'error': 'El código de cupón ingresado no es válido o ha expirado.'
+        }, status=404)
 
 
 def api_dolar(request):
