@@ -1,6 +1,11 @@
 import json
 from django.test import TestCase, Client
 from django.core import mail
+from django.contrib.auth.hashers import make_password
+from django.test import override_settings
+from django.utils import timezone
+from datetime import timedelta
+from usuarios.models import OtpChallenge
 
 class Bug002OpenRelayTest(TestCase):
     def setUp(self):
@@ -32,9 +37,7 @@ class Bug008RateLimitingPinTest(TestCase):
         from datetime import timedelta
         self.user = User.objects.create_user(username="bruteforcer", email="brute@test.com", password="Password123!")
         self.cliente = self.user.cliente
-        self.cliente.access_pin = "765432"
-        self.cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
-        self.cliente.save()
+        OtpChallenge.objects.create(email=self.user.email, pin_hash=make_password('765432'), expires_at=timezone.now() + timedelta(minutes=10))
 
     def test_brute_force_pin_is_blocked_after_failed_attempts(self):
         """
@@ -56,7 +59,7 @@ class Bug008RateLimitingPinTest(TestCase):
             "pin": "000000"
         }), content_type='application/json')
         self.assertEqual(resp5.status_code, 429)
-        self.assertIn("bloqueado", resp5.json().get('error', '').lower())
+        self.assertIn("intentos", resp5.json().get('error', '').lower())
 
         # 6to intento (incluso con el PIN original correcto) debe responder 429
         resp6 = self.client.post('/api/validar-key/', data=json.dumps({
@@ -76,9 +79,7 @@ class Bug011SessionFlagsTest(TestCase):
         from django.utils import timezone
         from datetime import timedelta
         user = User.objects.create_user(username="vipuser", email="vip@solary.cl", password="Password123!")
-        user.cliente.access_pin = "112233"
-        user.cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
-        user.cliente.save()
+        OtpChallenge.objects.create(email=user.email, pin_hash=make_password('112233'), expires_at=timezone.now() + timedelta(minutes=10))
 
         # Simulamos sesión previa del paso 1
         s = self.client.session
@@ -117,3 +118,88 @@ class Bug010BrandOrthographyTest(TestCase):
 
 
 
+
+
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend', DEFAULT_FROM_EMAIL='SOLARY <no-reply@example.test>')
+class OtpLoginFlowTests(TestCase):
+    def issue_test_pin(self, email='new-customer@outlook.test', pin='123456', expires=None):
+        return OtpChallenge.objects.create(
+            email=email, pin_hash=make_password(pin),
+            expires_at=expires or timezone.now() + timedelta(minutes=10),
+        )
+
+    def test_new_email_is_emailed_before_customer_account_is_created(self):
+        from django.urls import reverse
+        response = self.client.post(reverse('solicitar_acceso'), {'email': 'new-customer@outlook.test'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertFalse(__import__('django.contrib.auth.models', fromlist=['User']).User.objects.filter(email='new-customer@outlook.test').exists())
+        challenge = OtpChallenge.objects.get(email='new-customer@outlook.test')
+        from django.contrib.auth.hashers import check_password
+        self.assertFalse(check_password('123456', challenge.pin_hash))
+
+    def test_delivery_failure_does_not_claim_success_or_leave_valid_pin(self):
+        from unittest.mock import patch
+        from smtplib import SMTPRecipientsRefused
+        from django.urls import reverse
+        with patch('usuarios.otp.send_mail', side_effect=SMTPRecipientsRefused({'private@example.test': (554, b'MessageRejected')})):
+            response = self.client.post(reverse('solicitar_acceso'), {'email': 'private@example.test'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No pudimos enviar el correo')
+        self.assertNotContains(response, 'Hemos enviado un código')
+        self.assertIsNotNone(OtpChallenge.objects.get(email='private@example.test').consumed_at)
+
+    def test_existing_customer_can_request_code(self):
+        from django.contrib.auth.models import User
+        from django.urls import reverse
+        User.objects.create_user(username='old-customer', email='old-customer@example.test')
+        response = self.client.post(reverse('solicitar_acceso'), {'email': 'old-customer@example.test'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(OtpChallenge.objects.get(email='old-customer@example.test').attempts, 0)
+
+    def test_valid_pin_logs_in_and_is_one_time(self):
+        email = 'new-customer@outlook.test'
+        self.issue_test_pin(email)
+        session = self.client.session
+        session['auth_otp_email'] = email
+        session.save()
+        response = self.client.post('/validar-pin/', {'pin': '123456'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(self.client.session.get('_auth_user_id'))
+        challenge = OtpChallenge.objects.get(email=email)
+        self.assertIsNotNone(challenge.consumed_at)
+
+    def test_expired_pin_is_rejected(self):
+        email = 'expired@example.test'
+        self.issue_test_pin(email, expires=timezone.now() - timedelta(seconds=1))
+        from usuarios.otp import verify_otp
+        valid, _, _ = verify_otp(email, '123456')
+        self.assertFalse(valid)
+
+    def test_reused_pin_is_rejected(self):
+        email = 'reuse@example.test'
+        self.issue_test_pin(email)
+        from usuarios.otp import verify_otp
+        self.assertTrue(verify_otp(email, '123456')[0])
+        self.assertFalse(verify_otp(email, '123456')[0])
+
+    def test_fifth_wrong_attempt_consumes_challenge(self):
+        email = 'tries@example.test'
+        self.issue_test_pin(email)
+        from usuarios.otp import verify_otp
+        for _ in range(4):
+            valid, remaining, _ = verify_otp(email, '000000')
+            self.assertFalse(valid)
+        self.assertEqual(remaining, 1)
+        valid, remaining, _ = verify_otp(email, '000000')
+        self.assertFalse(valid)
+        self.assertEqual(remaining, 0)
+        self.assertIsNotNone(OtpChallenge.objects.get(email=email).consumed_at)
+
+    def test_requests_are_limited_for_email_and_ip(self):
+        from usuarios.otp import issue_otp, OtpRateLimited
+        email = 'rate@example.test'
+        issue_otp(email, '192.0.2.10')
+        with self.assertRaises(OtpRateLimited):
+            issue_otp(email, '192.0.2.10')
