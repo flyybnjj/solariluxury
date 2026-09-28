@@ -119,18 +119,15 @@ def solicitar_key(request):
         user.save()
 
     cliente, _ = Cliente.objects.get_or_create(user=user)
-
     pin = f"{secrets.randbelow(900000) + 100000}"
     cliente.access_pin = pin
     cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
     cliente.save()
 
-
-
     request.session['auth_otp_email'] = email
 
     pin_spaced = f"{pin[:3]}   {pin[3:]}"
-    cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
+    cliente_nombre = user.get_full_name() or user.first_name or "Cliente"
     html_message = render_to_string('usuarios/email_pin_acceso.html', {
         'pin': pin,
         'pin_spaced': pin_spaced,
@@ -147,19 +144,20 @@ def solicitar_key(request):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             html_message=html_message,
-            fail_silently=False
+            fail_silently=False,
         )
+        logger.info(f"[SMTP OK] PIN enviado a {email}")
     except Exception as e:
-        logger.error(f"[ERROR SMTP GMAIL] Falló el despacho de correo: {e}")
+        logger.error(f"[SMTP ERROR] No se pudo enviar PIN a {email}: {e}")
         return JsonResponse({
             'success': False,
-            'error': f"Error al enviar correo por Gmail SMTP ({e}). Revisa tus credenciales en el archivo .env."
+            'error': f"No se pudo enviar el correo a {email}. Inténtalo nuevamente.",
         }, status=500)
 
     return JsonResponse({
         'success': True,
         'email': email,
-        'message': 'Hemos enviado un código PIN de 6 dígitos a tu correo. Revisa tu bandeja de entrada o spam e ingrésalo abajo.'
+        'message': f'Hemos enviado un código PIN de 6 dígitos a {email}. Revisa tu bandeja de entrada o spam.',
     })
 
 @csrf_exempt
