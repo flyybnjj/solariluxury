@@ -125,9 +125,7 @@ def solicitar_key(request):
     cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
     cliente.save()
 
-    user.access_pin = pin
-    user.pin_expires_at = cliente.pin_expires_at
-    user.save()
+
 
     request.session['auth_otp_email'] = email
 

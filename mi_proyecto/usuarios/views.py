@@ -401,7 +401,7 @@ EMAIL_TEMPLATES_CONFIG = {
             'iva': '$39.116 CLP',
             'direccion': 'Av. Nueva Costanera 4020, Depto 601',
             'comuna': 'Vitacura, Región Metropolitana',
-            'tracking_url': 'http://127.0.0.1:8000/locales/informacion/?codigo=SL-892104',
+            'tracking_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/locales/informacion/?codigo=SL-892104',
             'items': [
                 {
                     'nombre': 'Nike Air Force 1 Low × Syna World',
@@ -410,7 +410,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'FZ4210-001',
                     'cantidad': 1,
                     'precio_formateado': '$189.990 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
                 },
                 {
                     'nombre': 'Syna World OG Skull Beanie',
@@ -419,7 +419,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'SYNA-BN-01',
                     'cantidad': 1,
                     'precio_formateado': '$55.000 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
                 },
             ],
             'orden': {
@@ -438,7 +438,7 @@ EMAIL_TEMPLATES_CONFIG = {
                 'nombre': 'Nike Air Force 1 Low × Syna World',
                 'subtitulo': 'Central Cee Special Edition · Black / Optic Yellow',
                 'codigo_estilo': 'FZ4210-001',
-                'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
+                'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
             }
         }
     },
@@ -464,7 +464,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'SL-TECH-CC-09',
                     'cantidad': 1,
                     'precio_formateado': '$240.000 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/tech_fleece_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/tech_fleece_email.png',
                 },
                 {
                     'nombre': 'Syna World OG Skull Beanie',
@@ -473,7 +473,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'SYNA-BN-01',
                     'cantidad': 1,
                     'precio_formateado': '$55.000 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
                 }
             ],
             'orden': {
@@ -488,7 +488,7 @@ EMAIL_TEMPLATES_CONFIG = {
                 'nombre': 'Nike Sportswear Tech Fleece × Central Cee',
                 'subtitulo': 'Full-Zip Hoodie · Black / Metallic Edition',
                 'codigo_estilo': 'SL-TECH-CC-09',
-                'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/tech_fleece_email.png',
+                'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/tech_fleece_email.png',
             }
         }
     },
@@ -502,7 +502,7 @@ EMAIL_TEMPLATES_CONFIG = {
             'total_precio': '$244.990 CLP',
             'direccion': 'Av. Nueva Costanera 4020, Depto 601',
             'comuna': 'Vitacura, Santiago',
-            'detalles_url': 'http://127.0.0.1:8000/locales/informacion/?codigo=SL-892104',
+            'detalles_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/locales/informacion/?codigo=SL-892104',
             'items': [
                 {
                     'nombre': 'Nike Air Force 1 Low × Syna World',
@@ -511,7 +511,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'FZ4210-001',
                     'cantidad': 1,
                     'precio_formateado': '$189.990 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png',
                 },
                 {
                     'nombre': 'Syna World OG Skull Beanie',
@@ -520,7 +520,7 @@ EMAIL_TEMPLATES_CONFIG = {
                     'codigo_estilo': 'SYNA-BN-01',
                     'cantidad': 1,
                     'precio_formateado': '$55.000 CLP',
-                    'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
+                    'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
                 },
             ],
             'orden': {
@@ -532,12 +532,12 @@ EMAIL_TEMPLATES_CONFIG = {
                 'hora': '14:32 hrs',
                 'lugar': 'conserjería',
                 'firmado_por': 'Conserje de Turno',
-                'detalles_url': 'http://127.0.0.1:8000/locales/informacion/?codigo=SL-892104',
+                'detalles_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/locales/informacion/?codigo=SL-892104',
             },
             'producto': {
                 'nombre': 'Syna World OG Skull Beanie',
                 'subtitulo': 'Algodón Pesado Jacquard · Black / Neutral Edition',
-                'imagen_url': 'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
+                'imagen_url': 'https://raw.githubusercontent.com/flyybnjj/solariluxury/main/mi_proyecto/static/img/emails/beanie_email.png',
             }
         }
     },
@@ -570,11 +570,11 @@ EMAIL_TEMPLATES_CONFIG = {
             'total_cancelado': '$244.990 CLP',
             'rut': '18.492.102-K',
             'comuna': 'Vitacura, Santiago',
-            'factura_pdf_url': 'http://127.0.0.1:8000/locales/informacion/?codigo=SL-892104',
+            'factura_pdf_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/locales/informacion/?codigo=SL-892104',
             'factura': {
                 'numero': '892104',
                 'fecha': '27 de septiembre de 2026',
-                'pdf_url': 'http://127.0.0.1:8000/locales/informacion/?codigo=SL-892104',
+                'pdf_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/locales/informacion/?codigo=SL-892104',
             },
             'orden': {
                 'nombre_cliente': 'Test Test',
@@ -590,7 +590,7 @@ EMAIL_TEMPLATES_CONFIG = {
             'cliente_nombre': 'Test Test',
             'cupon_codigo': 'SOLARY-8K92F',
             'vigencia_dias': '30 días',
-            'tienda_url': 'http://127.0.0.1:8000/',
+            'tienda_url': 'http://ec2-32-193-109-160.compute-1.amazonaws.com/',
         }
     }
 }

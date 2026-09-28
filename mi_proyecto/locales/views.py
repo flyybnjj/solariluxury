@@ -22,9 +22,11 @@ def lista_locales(request):
 
 from django.template.loader import render_to_string
 
+SITE_URL = "http://ec2-32-193-109-160.compute-1.amazonaws.com"
+
 def enviar_correo_preorden(orden):
     fecha_entrega_str = orden.fecha_estimada_entrega.strftime('%d de %B de %Y') if orden.fecha_estimada_entrega else 'Por coordinar'
-    tracking_url = f"http://127.0.0.1:8000/locales/informacion/?codigo={orden.codigo_orden}"
+    tracking_url = f"{SITE_URL}/locales/informacion/?codigo={orden.codigo_orden}"
 
     total_val = orden.precio_total or (orden.producto.precio * orden.cantidad)
     neto_val = round(total_val / 1.19)
@@ -34,7 +36,7 @@ def enviar_correo_preorden(orden):
     iva_str = f"${iva_val:,.0f} CLP".replace(',', '.')
 
     img_rel = orden.producto.imagen.lstrip('/') if orden.producto.imagen else 'img/placeholder.jpg'
-    img_abs = f"http://127.0.0.1:8000/static/{img_rel}"
+    img_abs = f"{SITE_URL}/static/{img_rel}"
     codigo_estilo_val = orden.producto.codigo_estilo or f"SL-{orden.producto.id:04d}"
     color_val = orden.producto.color or "Black Edition"
 
