@@ -191,14 +191,15 @@
       </div>
       <div class="auth-field">
         <label class="auth-label">Contraseña</label>
-        {{ form.password }}
+        {{ form.password1 }}
       </div>
       <div class="auth-field">
         <label class="auth-label">Confirmar Contraseña</label>
-        {{ form.password_confirm }}
+        {{ form.password2 }}
       </div>
 
-      <button type="submit" class="auth-btn-submit">REGISTRARSE Y CONTINUAR →</button>
+      {% if form.errors %}<div class="auth-alert-error">{{ form.errors }}</div>{% endif %}
+      <button type="submit" class="auth-btn-submit">CREAR CUENTA →</button>
     </form>
 
     <div class="auth-footer">

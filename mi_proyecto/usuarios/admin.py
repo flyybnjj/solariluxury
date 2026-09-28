@@ -4,9 +4,9 @@ from .models import Cliente, TicketSoporte
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_email', 'access_pin', 'pin_expires_at')
-    search_fields = ('user__username', 'user__email', 'access_pin')
-    readonly_fields = ('access_pin', 'pin_expires_at')
+    list_display = ('user', 'get_email')
+    search_fields = ('user__username', 'user__email')
+    readonly_fields = ()
 
     def get_email(self, obj):
         return obj.user.email

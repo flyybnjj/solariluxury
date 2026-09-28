@@ -8681,7 +8681,7 @@
 <div class="private-gateway-screen" id="privateGatewayScreen">
   <div class="gateway-center-box">
     <!-- 1. Logo 3D Oficial Giratorio (GIF original limpio, sin esfera ni sombra) -->
-    <a href="javascript:void(0)" onclick="openVipModal()" title="SOLARY Official" class="gateway-logo-link">
+    <a href="{% url 'login' %}" title="SOLARY Official" class="gateway-logo-link">
       <img src="{% static 'img/logo_spin.gif' %}" alt="SOLARY 3D Logo" class="gateway-logo-img">
     </a>
 
@@ -8692,164 +8692,15 @@
 
     <!-- 3. Botón de Acceso / Login Centrado -->
     <div class="gateway-menu-stack">
-      <button type="button" class="gateway-boxed-btn primary-shop" id="gatewayEnterBtn" onclick="openVipModal()">
+      <a href="{% url 'login' %}" class="gateway-boxed-btn primary-shop" id="gatewayEnterBtn">
         <span>INICIAR SESIÓN</span>
         <svg class="anim-pulse" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-      </button>
+      </a>
     </div>
 
     <!-- 4. Text Rotation Animator (MagicUI blurInUp by character) -->
     <div class="gateway-words-rotator" id="gatewayWordsRotator">
       <span class="gateway-rotator-word" id="gatewayRotatorWord"></span>
-    </div>
-  </div>
-</div>
-
-<!-- VIP ACCESS AUTH MODAL (APPLE ID STYLE WITH STATIC BRAND LOGO & REAL GMAIL OTP BACKEND) -->
-<div class="vip-modal-backdrop" id="vipModalBackdrop" onclick="if(event.target === this) closeVipModal()">
-  <div class="vip-modal-card">
-    <button type="button" class="vip-modal-close" onclick="closeVipModal()" title="Cerrar">✕</button>
-
-    <!-- Constelación Halo Apple con Logo Estático de la Marca -->
-    <div class="apple-halo-badge">
-      <!-- SVG Dot Constellation (Rainbow pastel orbit dots) -->
-      <svg class="apple-dots-svg" viewBox="0 0 160 160" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
-  <g class="apple-dots-group">
-    <circle cx="112.0" cy="80.0" r="2.2" fill="#af52de" /> <circle cx="109.56" cy="92.25" r="2.2" fill="#cd4eb5" /> <circle cx="102.63" cy="102.63" r="2.2" fill="#eb4b8c" /> <circle cx="92.25" cy="109.56" r="2.2" fill="#f25570" /> <circle cx="80.0" cy="112.0" r="2.2" fill="#fa5f55" /> <circle cx="67.75" cy="109.56" r="2.2" fill="#fc7a3e" /> <circle cx="57.37" cy="102.63" r="2.2" fill="#ff9628" /> <circle cx="50.44" cy="92.25" r="2.2" fill="#faa723" /> <circle cx="48.0" cy="80.0" r="2.2" fill="#f5b91e" /> <circle cx="50.44" cy="67.75" r="2.2" fill="#b6c346" /> <circle cx="57.37" cy="57.37" r="2.2" fill="#78cd6e" /> <circle cx="67.75" cy="50.44" r="2.2" fill="#5fc7aa" /> <circle cx="80.0" cy="48.0" r="2.2" fill="#46c1e6" /> <circle cx="92.25" cy="50.44" r="2.2" fill="#519ef0" /> <circle cx="102.63" cy="57.37" r="2.2" fill="#5c7cfa" /> <circle cx="109.56" cy="67.75" r="2.2" fill="#8567ec" /> <circle cx="120.58" cy="85.83" r="2.6" fill="#b950cf" /> <circle cx="117.29" cy="97.03" r="2.6" fill="#cf4eb1" /> <circle cx="110.99" cy="106.85" r="2.6" fill="#e54b93" /> <circle cx="102.17" cy="114.49" r="2.6" fill="#ef507c" /> <circle cx="91.55" cy="119.34" r="2.6" fill="#f45769" /> <circle cx="80.0" cy="121.0" r="2.6" fill="#fa5f55" /> <circle cx="68.45" cy="119.34" r="2.6" fill="#fb7344" /> <circle cx="57.83" cy="114.49" r="2.6" fill="#fd8734" /> <circle cx="49.01" cy="106.85" r="2.6" fill="#fe9927" /> <circle cx="42.71" cy="97.03" r="2.6" fill="#faa523" /> <circle cx="39.42" cy="85.83" r="2.6" fill="#f6b21f" /> <circle cx="39.42" cy="74.17" r="2.6" fill="#debc2c" /> <circle cx="42.71" cy="62.97" r="2.6" fill="#b0c349" /> <circle cx="49.01" cy="53.15" r="2.6" fill="#83cb66" /> <circle cx="57.83" cy="45.51" r="2.6" fill="#6ac98e" /> <circle cx="68.45" cy="40.66" r="2.6" fill="#58c5ba" /> <circle cx="80.0" cy="39.0" r="2.6" fill="#46c1e6" /> <circle cx="91.55" cy="40.66" r="2.6" fill="#4ea7ed" /> <circle cx="102.17" cy="45.51" r="2.6" fill="#568ef4" /> <circle cx="110.99" cy="53.15" r="2.6" fill="#6378f7" /> <circle cx="117.29" cy="62.97" r="2.6" fill="#8168ed" /> <circle cx="120.58" cy="74.17" r="2.6" fill="#9f59e3" /> <circle cx="130.0" cy="80.0" r="2.8" fill="#af52de" /> <circle cx="128.75" cy="91.13" r="2.8" fill="#c050c6" /> <circle cx="125.05" cy="101.69" r="2.8" fill="#d14eaf" /> <circle cx="119.09" cy="111.17" r="2.8" fill="#e24c97" /> <circle cx="111.17" cy="119.09" r="2.8" fill="#ed4d84" /> <circle cx="101.69" cy="125.05" r="2.8" fill="#f15374" /> <circle cx="91.13" cy="128.75" r="2.8" fill="#f55964" /> <circle cx="80.0" cy="130.0" r="2.8" fill="#fa5f55" /> <circle cx="68.87" cy="128.75" r="2.8" fill="#fb6e48" /> <circle cx="58.31" cy="125.05" r="2.8" fill="#fc7e3b" /> <circle cx="48.83" cy="119.09" r="2.8" fill="#fe8e2e" /> <circle cx="40.91" cy="111.17" r="2.8" fill="#fd9b26" /> <circle cx="34.95" cy="101.69" r="2.8" fill="#faa523" /> <circle cx="31.25" cy="91.13" r="2.8" fill="#f7ae20" /> <circle cx="30.0" cy="80.0" r="2.8" fill="#f5b91e" /> <circle cx="31.25" cy="68.87" r="2.8" fill="#d1be34" /> <circle cx="34.95" cy="58.31" r="2.8" fill="#adc44b" /> <circle cx="40.91" cy="48.83" r="2.8" fill="#89ca62" /> <circle cx="48.83" cy="40.91" r="2.8" fill="#70cb7f" /> <circle cx="58.31" cy="34.95" r="2.8" fill="#62c7a1" /> <circle cx="68.87" cy="31.25" r="2.8" fill="#54c4c3" /> <circle cx="80.0" cy="30.0" r="2.8" fill="#46c1e6" /> <circle cx="91.13" cy="31.25" r="2.8" fill="#4cadeb" /> <circle cx="101.69" cy="34.95" r="2.8" fill="#5299f1" /> <circle cx="111.17" cy="40.91" r="2.8" fill="#5885f7" /> <circle cx="119.09" cy="48.83" r="2.8" fill="#6775f6" /> <circle cx="125.05" cy="58.31" r="2.8" fill="#7f6aee" /> <circle cx="128.75" cy="68.87" r="2.8" fill="#975de6" /> <circle cx="138.75" cy="85.44" r="2.5" fill="#b651d4" /> <circle cx="136.75" cy="96.15" r="2.5" fill="#c44fc1" /> <circle cx="132.81" cy="106.3" r="2.5" fill="#d24dad" /> <circle cx="127.08" cy="115.56" r="2.5" fill="#e04c9a" /> <circle cx="119.75" cy="123.6" r="2.5" fill="#eb4c88" /> <circle cx="111.06" cy="130.16" r="2.5" fill="#ef507b" /> <circle cx="101.31" cy="135.02" r="2.5" fill="#f2556e" /> <circle cx="90.84" cy="138.0" r="2.5" fill="#f65a61" /> <circle cx="80.0" cy="139.0" r="2.5" fill="#fa5f55" /> <circle cx="69.16" cy="138.0" r="2.5" fill="#fb6b4a" /> <circle cx="58.69" cy="135.02" r="2.5" fill="#fc783f" /> <circle cx="48.94" cy="130.16" r="2.5" fill="#fd8535" /> <circle cx="40.25" cy="123.6" r="2.5" fill="#fe922a" /> <circle cx="32.92" cy="115.56" r="2.5" fill="#fd9c26" /> <circle cx="27.19" cy="106.3" r="2.5" fill="#faa423" /> <circle cx="23.25" cy="96.15" r="2.5" fill="#f8ac21" /> <circle cx="21.25" cy="85.44" r="2.5" fill="#f6b41f" /> <circle cx="21.25" cy="74.56" r="2.5" fill="#e6bb27" /> <circle cx="23.25" cy="63.85" r="2.5" fill="#c8c03a" /> <circle cx="27.19" cy="53.7" r="2.5" fill="#abc44d" /> <circle cx="32.92" cy="44.44" r="2.5" fill="#8ec95f" /> <circle cx="40.25" cy="36.4" r="2.5" fill="#75cc75" /> <circle cx="48.94" cy="29.84" r="2.5" fill="#69c991" /> <circle cx="58.69" cy="24.98" r="2.5" fill="#5dc6ad" /> <circle cx="69.16" cy="22.0" r="2.5" fill="#51c3c9" /> <circle cx="80.0" cy="21.0" r="2.5" fill="#46c1e6" /> <circle cx="90.84" cy="22.0" r="2.5" fill="#4bb0ea" /> <circle cx="101.31" cy="24.98" r="2.5" fill="#50a0ef" /> <circle cx="111.06" cy="29.84" r="2.5" fill="#5590f4" /> <circle cx="119.75" cy="36.4" r="2.5" fill="#5a80f8" /> <circle cx="127.08" cy="44.44" r="2.5" fill="#6a74f5" /> <circle cx="132.81" cy="53.7" r="2.5" fill="#7e6aee" /> <circle cx="136.75" cy="63.85" r="2.5" fill="#9160e7" /> <circle cx="138.75" cy="74.56" r="2.5" fill="#a556e1" /> <circle cx="146.63" cy="87.0" r="1.8" fill="#b751d3" /> <circle cx="143.72" cy="100.7" r="1.8" fill="#c74fbd" /> <circle cx="138.02" cy="113.5" r="1.8" fill="#d74da7" /> <circle cx="129.79" cy="124.83" r="1.8" fill="#e74b91" /> <circle cx="119.38" cy="134.2" r="1.8" fill="#ee4f81" /> <circle cx="107.25" cy="141.21" r="1.8" fill="#f25472" /> <circle cx="93.93" cy="145.54" r="1.8" fill="#f65963" /> <circle cx="80.0" cy="147.0" r="1.8" fill="#fa5f55" /> <circle cx="66.07" cy="145.54" r="1.8" fill="#fb6d49" /> <circle cx="52.75" cy="141.21" r="1.8" fill="#fc7c3d" /> <circle cx="40.62" cy="134.2" r="1.8" fill="#fe8b31" /> <circle cx="30.21" cy="124.83" r="1.8" fill="#fe9827" /> <circle cx="21.98" cy="113.5" r="1.8" fill="#fba124" /> <circle cx="16.28" cy="100.7" r="1.8" fill="#f9ab22" /> <circle cx="13.37" cy="87.0" r="1.8" fill="#f6b41f" /> <circle cx="13.37" cy="73.0" r="1.8" fill="#e4bb28" /> <circle cx="16.28" cy="59.3" r="1.8" fill="#c3c13e" /> <circle cx="21.98" cy="46.5" r="1.8" fill="#a1c653" /> <circle cx="30.21" cy="35.17" r="1.8" fill="#80cb68" /> <circle cx="40.62" cy="25.8" r="1.8" fill="#6eca86" /> <circle cx="52.75" cy="18.79" r="1.8" fill="#60c7a6" /> <circle cx="66.07" cy="14.46" r="1.8" fill="#53c4c6" /> <circle cx="80.0" cy="13.0" r="1.8" fill="#46c1e6" /> <circle cx="93.93" cy="14.46" r="1.8" fill="#4baeeb" /> <circle cx="107.25" cy="18.79" r="1.8" fill="#519cf0" /> <circle cx="119.38" cy="25.8" r="1.8" fill="#5789f6" /> <circle cx="129.79" cy="35.17" r="1.8" fill="#6179f8" /> <circle cx="138.02" cy="46.5" r="1.8" fill="#776ef0" /> <circle cx="143.72" cy="59.3" r="1.8" fill="#8d62e9" /> <circle cx="146.63" cy="73.0" r="1.8" fill="#a357e1" />
-  </g>
-</svg>
-      <!-- Logo de la marca estrictamente estático (sin rotación / movimiento) -->
-      <img src="{% static 'img/logo_spin_frame0.png' %}" class="apple-static-logo" alt="SOLARY Luxury">
-    </div>
-
-    <!-- PASO 1: Sign in with SOLARY ID -->
-    <div id="vipStepRequest">
-      <h2 class="apple-id-title">Sign in with SOLARY ID</h2>
-
-      <div class="apple-input-box">
-        <input type="email" id="vipRequestEmail" class="apple-text-input" placeholder="SOLARY ID" autocomplete="email" required onkeydown="if(event.key === 'Enter') solicitarVipPin()">
-        <button type="button" class="apple-input-arrow-btn" id="vipSendPinBtn" onclick="solicitarVipPin()" aria-label="Continuar">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </button>
-      </div>
-
-      <div id="vipRequestError" class="apple-error-banner" style="display:none;"></div>
-
-      <div class="apple-checkbox-container">
-        <label class="apple-checkbox-label" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-          <input type="checkbox" id="keepSignedIn" class="apple-checkbox" checked>
-          <span class="apple-checkbox-text">Keep me signed in</span>
-        </label>
-      </div>
-
-
-    </div>
-
-    <!-- PASO 2: Two-Factor Authentication (6 Boxes idénticas a Apple ID) -->
-    <div id="vipStepValidate" style="display:none;">
-      <h2 class="apple-id-title" style="margin-bottom: 8px;">Two-Factor Authentication</h2>
-
-      <!-- 6 Cajas Separadas idénticas a la imagen de Apple 2FA -->
-      <div class="apple-2fa-grid" id="apple2faGrid">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="0" autofocus>
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="1">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="2">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="3">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="4">
-        <input type="text" class="apple-2fa-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-index="5">
-      </div>
-      <input type="hidden" id="vipPinInput" value="">
-
-      <div id="vipNoticeSent" class="apple-notice-box" style="margin-top: 12px; margin-bottom: 14px;">
-        Hemos enviado un código PIN de 6 dígitos a tu correo. Revisa tu bandeja de entrada o spam e ingrésalo abajo.
-      </div>
-
-      <div id="vipValidateError" class="apple-error-banner" style="display:none;"></div>
-
-      <button type="button" class="apple-pill-btn" id="vipConfirmPinBtn" onclick="validarVipPin()">
-        <span>Continue</span>
-      </button>
-
-      <div class="apple-action-links" style="margin-top: 16px; padding-top: 14px; gap: 8px;">
-        <!-- Reenviar código con cooldown de 1 minuto -->
-        <button type="button" id="vipResendBtn" onclick="reenviarVipPin()" class="apple-link-blue" disabled style="opacity: 0.55; cursor: not-allowed; color: #86868b;">
-          Reenviar código (60s)
-        </button>
-
-        <!-- ¿No tienes acceso a tu correo? -> Enlace a Soporte / Sistema de Tickets -->
-        <button type="button" onclick="openTicketModal()" class="apple-link-blue" style="color: #0066cc; font-size: 13.5px; font-weight: 500;">
-          ¿No tienes acceso a tu correo?
-        </button>
-
-        <button type="button" onclick="volverASolicitarPin()" class="apple-link-secondary" style="font-size: 12px; margin-top: 4px;">
-          ← Cambiar correo
-        </button>
-      </div>
-    </div>
-
-    <!-- PASO 3: Soporte & Sistema de Tickets de Acceso -->
-    <div id="vipStepTicket" style="display:none; text-align: left;">
-      <h2 class="apple-id-title" style="margin-bottom: 6px; text-align: center;">Soporte de Acceso</h2>
-      <p style="font-size: 13px; color: #6e6e73; margin: 0 0 16px; line-height: 1.45; text-align: center;">
-        Si no puedes acceder a tu correo o no recibes tu PIN, completa este ticket para recibir asistencia de nuestro equipo de Concierge:
-      </p>
-
-      <div id="ticketFormBox">
-        <div class="apple-input-box" style="margin-bottom: 10px;">
-          <input type="text" id="ticketNombre" class="apple-text-input" placeholder="Nombre completo" required>
-        </div>
-        <div class="apple-input-box" style="margin-bottom: 10px;">
-          <input type="email" id="ticketEmail" class="apple-text-input" placeholder="Correo de la cuenta / SOLARY ID" required>
-        </div>
-        <div class="apple-input-box" style="margin-bottom: 10px;">
-          <input type="text" id="ticketContacto" class="apple-text-input" placeholder="WhatsApp o correo alternativo" required>
-        </div>
-        <div class="apple-input-box" style="margin-bottom: 10px;">
-          <select id="ticketMotivo" class="apple-text-input" style="height: 46px; cursor: pointer;">
-            <option value="No tengo acceso a mi bandeja de correo">No tengo acceso a mi bandeja de correo</option>
-            <option value="El código PIN no llega a mi bandeja ni a spam">El código PIN no llega a mi bandeja ni a spam</option>
-            <option value="Cambio de correo o número registrado">Cambio de correo o número registrado</option>
-            <option value="Asistencia general de cuenta VIP">Asistencia general VIP</option>
-          </select>
-        </div>
-        <div class="apple-input-box" style="margin-bottom: 12px;">
-          <textarea id="ticketMensaje" class="apple-text-input" style="height: 60px; padding: 10px 14px; resize: none; font-family: inherit;" placeholder="Describe brevemente tu problema..." required></textarea>
-        </div>
-
-        <div id="ticketErrorBanner" class="apple-error-banner" style="display:none;"></div>
-
-        <button type="button" class="apple-pill-btn" id="ticketSubmitBtn" onclick="enviarTicketSoporte()">
-          <span>Enviar Ticket de Soporte</span>
-        </button>
-
-        <div class="apple-action-links" style="margin-top: 14px; padding-top: 12px;">
-          <button type="button" onclick="volverDeTicketAPin()" class="apple-link-secondary" style="font-size: 12px; margin: 0 auto; display: block;">
-            ← Volver a ingresar código PIN
-          </button>
-        </div>
-      </div>
-
-      <!-- Pantalla de confirmación del ticket -->
-      <div id="ticketSuccessBox" style="display:none; text-align:center; padding: 10px 0;">
-        <div style="width:48px; height:48px; border-radius:50%; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:22px;">
-          ✓
-        </div>
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size:11px; letter-spacing:0.15em; color:#15803d; text-transform:uppercase; margin-bottom:4px;">
-          TICKET REGISTRADO CON ÉXITO
-        </div>
-        <div id="ticketSuccessId" style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size:22px; font-weight:700; color:#1d1d1f; margin-bottom:12px;">
-          #SL-TK-00000
-        </div>
-        <p style="font-size:13px; color:#6e6e73; line-height:1.5; margin-bottom:16px;">
-          Un concierge de SOLARILUXURY ha recibido tu caso. Te contactaremos por tu teléfono o correo alternativo.
-        </p>
-        <a id="ticketWhatsappLink" href="#" target="_blank" class="apple-pill-btn" style="background:#25d366; color:#fff; text-decoration:none; margin-bottom:10px;">
-          <span>Hablar con Concierge por WhatsApp →</span>
-        </a>
-        <button type="button" onclick="volverDeTicketAPin()" class="apple-link-secondary" style="font-size:12px; display:block; margin:8px auto 0;">
-          Volver a la pantalla de PIN
-        </button>
-      </div>
     </div>
   </div>
 </div>
@@ -8983,10 +8834,10 @@
       </div>
     </div>
     {% else %}
-    <button type="button" class="nav-vip-pill-btn" onclick="openVipModal('login')">
+    <a href="{% url 'login' %}" class="nav-vip-pill-btn">
       <svg class="anim-pulse" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       <span class="vip-gradient-text">INICIAR SESIÓN</span>
-    </button>
+    </a>
     {% endif %}
   </div>
 </header>
@@ -9825,7 +9676,7 @@
         {% if request.user.is_authenticated %}
         <li><a href="{% url 'perfil' %}">Panel de Usuario</a></li>
         {% else %}
-        <li><a href="javascript:void(0)" onclick="openVipModal('login')">Iniciar Sesión</a></li>
+        <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
         {% endif %}
         {% if request.user.is_staff or request.user.is_superuser %}
         <li><a href="{% url 'admin:index' %}" target="_blank">Django Admin</a></li>
@@ -9846,7 +9697,7 @@
         <li><a href="https://wa.me/56991234567?text=Hola%20Solariluxury%2C%20quisiera%20consultar%20sobre%20la%20colecci%C3%B3n" target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
         <li><a href="https://www.instagram.com/solariluxury/" target="_blank" rel="noopener noreferrer">Instagram Oficial</a></li>
         <li><a href="#contact">Atelier &amp; Citas La Serena</a></li>
-        <li><a href="javascript:void(0)" onclick="openVipModal('key')">Solicitar VIP Key</a></li>
+        <li><a href="{% url 'registro' %}">Crear una cuenta</a></li>
       </ul>
     </div>
   </div>
@@ -10044,9 +9895,8 @@ renderRotatorWord(gatewayWords[0]);
 setInterval(rotateGatewayWords, 2800);
 
 function checkVipUnlockState() {
-  const isSessionUnlocked = sessionStorage.getItem('solariluxury_vip_unlocked') === 'true';
   const gateway = document.getElementById('privateGatewayScreen');
-  if (IS_DJANGO_UNLOCKED || isSessionUnlocked) {
+  if (IS_DJANGO_UNLOCKED) {
     if (gateway) gateway.classList.add('unlocked');
     document.body.classList.remove('store-locked');
   } else {
@@ -10060,271 +9910,7 @@ function checkVipUnlockState() {
 window.addEventListener('DOMContentLoaded', checkVipUnlockState);
 
 // Al salir o cerrar la página, limpiar tokens temporales para requerir nuevo acceso
-window.addEventListener('beforeunload', () => {
-  sessionStorage.removeItem('solariluxury_vip_unlocked');
-  localStorage.removeItem('solariluxury_vip_unlocked');
-});
 
-function openVipModal(tab = 'key') {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const modal = document.getElementById('vipModalBackdrop');
-  if (modal) modal.classList.add('open');
-  const step1 = document.getElementById('vipStepRequest');
-  const step2 = document.getElementById('vipStepValidate');
-  const err1 = document.getElementById('vipRequestError');
-  const err2 = document.getElementById('vipValidateError');
-  if (err1) err1.style.display = 'none';
-  if (err2) err2.style.display = 'none';
-  if (step1 && step2 && step2.style.display !== 'block') {
-    step1.style.display = 'block';
-    step2.style.display = 'none';
-  }
-  const emailInput = document.getElementById('vipRequestEmail');
-  if (emailInput && step1 && step1.style.display === 'block') {
-    setTimeout(() => emailInput.focus(), 150);
-  }
-}
-
-function closeVipModal() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const modal = document.getElementById('vipModalBackdrop');
-  if (modal) modal.classList.remove('open');
-}
-
-function volverASolicitarPin() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const step1 = document.getElementById('vipStepRequest');
-  const step2 = document.getElementById('vipStepValidate');
-  const err1 = document.getElementById('vipRequestError');
-  const err2 = document.getElementById('vipValidateError');
-  if (err1) err1.style.display = 'none';
-  if (err2) err2.style.display = 'none';
-  if (step1) step1.style.display = 'block';
-  if (step2) step2.style.display = 'none';
-  const emailInput = document.getElementById('vipRequestEmail');
-  if (emailInput) setTimeout(() => emailInput.focus(), 100);
-}
-
-async function solicitarVipPin(isResend) {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const emailInput = document.getElementById('vipRequestEmail');
-  const email = (emailInput ? emailInput.value : '').trim() || window._vipLastEmail || '';
-  const reqError = document.getElementById('vipRequestError');
-  const btn = document.getElementById('vipSendPinBtn');
-
-  if (!email || !email.includes('@') || !email.includes('.')) {
-    if (reqError) {
-      reqError.style.display = 'block';
-      reqError.textContent = 'Por favor ingresa un correo electrónico válido.';
-    }
-    return;
-  }
-
-  if (reqError) reqError.style.display = 'none';
-  if (!isResend && btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<span style="font-size:11px;">...</span>';
-  }
-
-  const isStaticSite = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-  if (isStaticSite) {
-    const step1 = document.getElementById('vipStepRequest');
-    const step2 = document.getElementById('vipStepValidate');
-    if (step1) step1.style.display = 'none';
-    if (step2) step2.style.display = 'block';
-    startResendCooldown(60);
-    init2FaBoxes();
-    const firstBox = document.querySelector('#apple2faGrid .apple-2fa-box');
-    if (firstBox) {
-      document.querySelectorAll('#apple2faGrid .apple-2fa-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
-      setTimeout(() => firstBox.focus(), 150);
-    }
-    const notice = document.getElementById('vipNoticeSent');
-    if (notice) {
-      notice.textContent = `Código enviado a ${email}. Revisa tu bandeja de entrada o spam.`;
-    }
-    const pinInput = document.getElementById('vipPinInput');
-    if (pinInput) {
-      pinInput.value = '';
-      setTimeout(() => pinInput.focus(), 150);
-    }
-    if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-    if (!isResend && btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
-    }
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/solicitar-key/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': (typeof DJANGO_CSRF !== 'undefined' ? DJANGO_CSRF : '') || (typeof getCookie === 'function' ? getCookie('csrftoken') : '')
-      },
-      body: JSON.stringify({ email: email })
-    });
-    let data;
-    try {
-      data = await res.json();
-    } catch (parseErr) {
-      data = { success: false, error: `Error en respuesta del servidor (${res.status}).` };
-    }
-    if (data.success || data.ok) {
-      window._vipLastEmail = email;
-      if (!isResend) {
-        const step1 = document.getElementById('vipStepRequest');
-        const step2 = document.getElementById('vipStepValidate');
-        if (step1) step1.style.display = 'none';
-        if (step2) step2.style.display = 'block';
-        startResendCooldown(60);
-        init2FaBoxes();
-        const firstBox = document.querySelector('#apple2faGrid .apple-2fa-box');
-        if (firstBox) {
-          document.querySelectorAll('#apple2faGrid .apple-2fa-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
-          setTimeout(() => firstBox.focus(), 150);
-        }
-      }
-      const notice = document.getElementById('vipNoticeSent');
-      if (notice) {
-        notice.textContent = `Hemos enviado un código PIN de 6 dígitos a ${email}. Revisa tu bandeja de entrada o spam.`;
-      }
-      const pinInput = document.getElementById('vipPinInput');
-      if (pinInput) {
-        pinInput.value = '';
-        if (!isResend) setTimeout(() => pinInput.focus(), 150);
-      }
-      if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-    } else {
-      if (reqError) {
-        reqError.style.display = 'block';
-        reqError.textContent = data.error || 'No se pudo enviar el correo. Verifica tu configuración.';
-      }
-    }
-  } catch (err) {
-    if (reqError) {
-      reqError.style.display = 'block';
-      reqError.textContent = 'Error de conexión con el servidor backend.';
-    }
-  } finally {
-    if (!isResend && btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
-    }
-  }
-}
-
-
-async function validarVipPin() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const emailInput = document.getElementById('vipRequestEmail');
-  const email = (emailInput ? emailInput.value : '').trim() || window._vipLastEmail || '';
-
-  const pinInput = document.getElementById('vipPinInput');
-  const pin = (pinInput ? pinInput.value : '').trim();
-  const valError = document.getElementById('vipValidateError');
-  const btn = document.getElementById('vipConfirmPinBtn');
-
-  if (!pin || pin.length < 6) {
-    if (valError) {
-      valError.style.display = 'block';
-      valError.textContent = 'Por favor ingresa el código PIN de 6 dígitos que recibiste en tu email.';
-    }
-    return;
-  }
-
-  if (valError) valError.style.display = 'none';
-  if (btn) {
-    btn.disabled = true;
-    btn.innerHTML = '<span>VERIFICANDO PIN EN SERVIDOR...</span> <span class="anim-spin">⟳</span>';
-  }
-
-  const isStaticSite = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-  if (isStaticSite) {
-    if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-    sessionStorage.setItem('solariluxury_vip_unlocked', 'true');
-    if (valError) {
-      valError.style.display = 'block';
-      valError.style.background = 'rgba(34,197,94,0.15)';
-      valError.style.borderColor = 'rgba(34,197,94,0.3)';
-      valError.style.color = '#15803d';
-      valError.innerHTML = '<strong>✓ ACCESO AUTORIZADO:</strong> Código verificado con éxito.';
-    }
-    setTimeout(() => {
-      closeVipModal();
-      const gateway = document.getElementById('privateGatewayScreen');
-      if (gateway) gateway.classList.add('unlocked');
-      document.body.classList.remove('store-locked');
-      window.location.reload();
-    }, 600);
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/validar-key/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': (typeof DJANGO_CSRF !== 'undefined' ? DJANGO_CSRF : '') || (typeof getCookie === 'function' ? getCookie('csrftoken') : '')
-      },
-      body: JSON.stringify({ email: email, key: pin, pin: pin })
-    });
-    let data;
-    try {
-      data = await res.json();
-    } catch (parseErr) {
-      data = { success: false, error: `Error en respuesta del servidor (${res.status}).` };
-    }
-    if (data.success || data.ok) {
-      if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-      sessionStorage.setItem('solariluxury_vip_unlocked', 'true');
-      if (valError) {
-        valError.style.display = 'block';
-        valError.style.background = 'rgba(34,197,94,0.15)';
-        valError.style.borderColor = 'rgba(34,197,94,0.3)';
-        valError.style.color = '#15803d';
-        valError.innerHTML = '<strong>✓ ACCESO AUTORIZADO:</strong> Código verificado con éxito.';
-      }
-      setTimeout(() => {
-        closeVipModal();
-        const gateway = document.getElementById('privateGatewayScreen');
-        if (gateway) gateway.classList.add('unlocked');
-        document.body.classList.remove('store-locked');
-        window.location.reload();
-      }, 600);
-      return;
-    } else {
-      if (valError) {
-        valError.style.display = 'block';
-        valError.style.background = 'rgba(239,68,68,0.08)';
-        valError.style.borderColor = 'rgba(239,68,68,0.25)';
-        valError.style.color = '#dc2626';
-        valError.textContent = data.error || 'PIN incorrecto o vencido. Solicita un nuevo código.';
-      }
-    }
-  } catch (err) {
-    if (valError) {
-      valError.style.display = 'block';
-      valError.style.background = 'rgba(239,68,68,0.08)';
-      valError.style.borderColor = 'rgba(239,68,68,0.25)';
-      valError.style.color = '#dc2626';
-      valError.textContent = 'Error de conexión al verificar el PIN. Intenta nuevamente.';
-    }
-  } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>VALIDAR PIN Y ENTRAR A LA TIENDA</span> <span>✓</span>';
-    }
-  }
-}
-
-// Aliases para compatibilidad
-window.solicitarVipKey = solicitarVipPin;
-window.validarVipKey = validarVipPin;
-window.solicitarVipPin = solicitarVipPin;
-window.validarVipPin = validarVipPin;
-window.volverASolicitarPin = volverASolicitarPin;
 
 function relockStore() {
   if (typeof SoundFX !== 'undefined') SoundFX.play('click');
@@ -11851,240 +11437,6 @@ function mostrarAyudaSolaryId() {
   alert('Tu SOLARY ID es tu correo electrónico. Si no recuerdas si tienes cuenta, escribe tu correo y el sistema te enviará tu código de acceso automáticamente.');
 }
 
-
-// ── 2FA 6-BOXES CONTROLLER & COOLDOWN & TICKET SUPPORT ────────
-let resendTimer = null;
-let resendCooldownSecs = 0;
-
-function startResendCooldown(seconds = 60) {
-  clearInterval(resendTimer);
-  resendCooldownSecs = seconds;
-  const btn = document.getElementById('vipResendBtn');
-  if (!btn) return;
-
-  btn.disabled = true;
-  btn.style.pointerEvents = 'none';
-  btn.style.opacity = '0.55';
-  btn.style.color = '#86868b';
-  btn.textContent = `Reenviar código (${resendCooldownSecs}s)`;
-
-  resendTimer = setInterval(() => {
-    resendCooldownSecs--;
-    if (resendCooldownSecs <= 0) {
-      clearInterval(resendTimer);
-      btn.disabled = false;
-      btn.style.pointerEvents = 'auto';
-      btn.style.opacity = '1';
-      btn.style.color = '#0066cc';
-      btn.textContent = 'Reenviar código';
-    } else {
-      btn.textContent = `Reenviar código (${resendCooldownSecs}s)`;
-    }
-  }, 1000);
-}
-
-async function reenviarVipPin() {
-  if (resendCooldownSecs > 0) return;
-  startResendCooldown(60);
-  const valError = document.getElementById('vipValidateError');
-  if (valError) {
-    valError.style.display = 'block';
-    valError.style.background = '#f0fdf4';
-    valError.style.borderColor = '#bbf7d0';
-    valError.style.color = '#15803d';
-    valError.textContent = 'Enviando un nuevo código a tu correo...';
-  }
-  await solicitarVipPin(true);
-}
-
-function init2FaBoxes() {
-  const container = document.getElementById('apple2faGrid');
-  if (!container) return;
-  const boxes = container.querySelectorAll('.apple-2fa-box');
-  const hiddenInput = document.getElementById('vipPinInput');
-
-  function updateHiddenPin() {
-    let pinVal = '';
-    boxes.forEach(b => pinVal += b.value);
-    if (hiddenInput) hiddenInput.value = pinVal;
-    return pinVal;
-  }
-
-  boxes.forEach((box, idx) => {
-    box.addEventListener('input', (e) => {
-      const val = box.value.replace(/\D/g, '');
-      box.value = val ? val[0] : '';
-      box.classList.toggle('filled', !!box.value);
-
-      const currentPin = updateHiddenPin();
-      if (box.value && idx < boxes.length - 1) {
-        boxes[idx + 1].focus();
-        boxes[idx + 1].select();
-      }
-
-      if (currentPin.length === 6) {
-        validarVipPin();
-      }
-    });
-
-    box.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace') {
-        if (!box.value && idx > 0) {
-          boxes[idx - 1].value = '';
-          boxes[idx - 1].classList.remove('filled');
-          boxes[idx - 1].focus();
-          updateHiddenPin();
-        } else {
-          box.value = '';
-          box.classList.remove('filled');
-          updateHiddenPin();
-        }
-      } else if (e.key === 'ArrowLeft' && idx > 0) {
-        boxes[idx - 1].focus();
-      } else if (e.key === 'ArrowRight' && idx < boxes.length - 1) {
-        boxes[idx + 1].focus();
-      } else if (e.key === 'Enter') {
-        validarVipPin();
-      }
-    });
-
-    box.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const paste = (e.clipboardData || window.clipboardData).getData('text').trim();
-      const digits = paste.replace(/\D/g, '').slice(0, 6);
-      digits.split('').forEach((d, i) => {
-        if (boxes[i]) {
-          boxes[i].value = d;
-          boxes[i].classList.add('filled');
-        }
-      });
-      const currentPin = updateHiddenPin();
-      if (boxes[digits.length] && digits.length < 6) {
-        boxes[digits.length].focus();
-      } else if (boxes[5]) {
-        boxes[5].focus();
-      }
-      if (currentPin.length === 6) {
-        validarVipPin();
-      }
-    });
-  });
-}
-
-function openTicketModal() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const stepValidate = document.getElementById('vipStepValidate');
-  const stepTicket = document.getElementById('vipStepTicket');
-  const reqEmail = document.getElementById('vipRequestEmail');
-  const ticketEmail = document.getElementById('ticketEmail');
-
-  if (stepValidate) stepValidate.style.display = 'none';
-  if (stepTicket) stepTicket.style.display = 'block';
-
-  if (ticketEmail && reqEmail && reqEmail.value) {
-    ticketEmail.value = reqEmail.value;
-  }
-  const formBox = document.getElementById('ticketFormBox');
-  const successBox = document.getElementById('ticketSuccessBox');
-  if (formBox) formBox.style.display = 'block';
-  if (successBox) successBox.style.display = 'none';
-
-  const err = document.getElementById('ticketErrorBanner');
-  if (err) err.style.display = 'none';
-}
-
-function volverDeTicketAPin() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const stepTicket = document.getElementById('vipStepTicket');
-  const stepValidate = document.getElementById('vipStepValidate');
-  if (stepTicket) stepTicket.style.display = 'none';
-  if (stepValidate) stepValidate.style.display = 'block';
-
-  const container = document.getElementById('apple2faGrid');
-  if (container) {
-    const firstBox = container.querySelector('.apple-2fa-box');
-    if (firstBox) setTimeout(() => firstBox.focus(), 100);
-  }
-}
-
-async function enviarTicketSoporte() {
-  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
-  const nombre = (document.getElementById('ticketNombre')?.value || '').trim();
-  const email = (document.getElementById('ticketEmail')?.value || '').trim();
-  const contacto = (document.getElementById('ticketContacto')?.value || '').trim();
-  const motivo = (document.getElementById('ticketMotivo')?.value || '').trim();
-  const mensaje = (document.getElementById('ticketMensaje')?.value || '').trim();
-  const errBanner = document.getElementById('ticketErrorBanner');
-  const submitBtn = document.getElementById('ticketSubmitBtn');
-
-  if (!nombre) {
-    if (errBanner) { errBanner.style.display = 'block'; errBanner.textContent = 'Por favor ingresa tu nombre completo.'; }
-    return;
-  }
-  if (!email || !email.includes('@')) {
-    if (errBanner) { errBanner.style.display = 'block'; errBanner.textContent = 'Por favor ingresa un correo de cuenta válido.'; }
-    return;
-  }
-  if (!mensaje) {
-    if (errBanner) { errBanner.style.display = 'block'; errBanner.textContent = 'Por favor detalla tu problema o motivo.'; }
-    return;
-  }
-
-  if (errBanner) errBanner.style.display = 'none';
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>ENVIANDO TICKET...</span>';
-  }
-
-  try {
-    const res = await fetch('/api/crear-ticket/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': (typeof DJANGO_CSRF !== 'undefined' ? DJANGO_CSRF : '') || (typeof getCookie === 'function' ? getCookie('csrftoken') : '')
-      },
-      body: JSON.stringify({
-        nombre: nombre,
-        email: email,
-        contacto_alternativo: contacto,
-        motivo: motivo,
-        mensaje: mensaje
-      })
-    });
-    const data = await res.json();
-    if (data.success) {
-      if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-      const formBox = document.getElementById('ticketFormBox');
-      const successBox = document.getElementById('ticketSuccessBox');
-      const ticketIdDisplay = document.getElementById('ticketSuccessId');
-      const waLink = document.getElementById('ticketWhatsappLink');
-
-      if (formBox) formBox.style.display = 'none';
-      if (successBox) successBox.style.display = 'block';
-      if (ticketIdDisplay) ticketIdDisplay.textContent = '#' + data.ticket_id;
-
-      if (waLink) {
-        const text = encodeURIComponent(`Hola Concierge SOLARILUXURY, generé el ticket #${data.ticket_id} para soporte de mi cuenta (${email}). ¿Podrían asistirme?`);
-        waLink.href = `https://wa.me/56991234567?text=${text}`;
-      }
-    } else {
-      if (errBanner) {
-        errBanner.style.display = 'block';
-        errBanner.textContent = data.error || 'No se pudo generar el ticket. Intenta de nuevo.';
-      }
-    }
-  } catch (err) {
-    if (errBanner) {
-      errBanner.style.display = 'block';
-      errBanner.textContent = 'Error de conexión con el servidor.';
-    }
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>Enviar Ticket de Soporte</span>';
-    }
-  }
-}
 
 async function handleAceternityContactSubmit(e) {
   e.preventDefault();

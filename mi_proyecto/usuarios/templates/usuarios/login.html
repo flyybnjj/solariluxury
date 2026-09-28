@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Sign in with SOLARY ID | SOLARY LUXURY ARCHIVE{% endblock %}
+{% block title %}Iniciar sesión | SOLARY LUXURY{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -246,7 +246,7 @@
       <img src="{% static 'img/logo_spin_frame0.png' %}" class="apple-static-logo" alt="SOLARY Luxury">
     </div>
 
-    <h1 class="apple-id-title">Admin &amp; Staff Login</h1>
+    <h1 class="apple-id-title">Iniciar sesión</h1>
 
     {% if messages %}
     <div class="apple-messages">
@@ -260,20 +260,21 @@
 
     <form method="POST" id="appleAdminLoginForm">
       {% csrf_token %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
       <div class="apple-field">
-        <input type="text" name="username" class="apple-text-input" placeholder="Username" required autofocus>
+        <input type="text" name="username" class="apple-text-input" placeholder="Correo electrónico o usuario" value="{{ form.username.value|default:'' }}" autocomplete="username" required autofocus>
+        {% for error in form.username.errors %}<div class="apple-alert apple-alert-error">{{ error }}</div>{% endfor %}
       </div>
       <div class="apple-field">
-        <input type="password" name="password" class="apple-text-input" placeholder="Password" required>
+        <input type="password" name="password" class="apple-text-input" placeholder="Contraseña" autocomplete="current-password" required>
+        {% for error in form.password.errors %}<div class="apple-alert apple-alert-error">{{ error }}</div>{% endfor %}
       </div>
-
-      <button type="submit" class="apple-pill-btn" id="appleAdminBtn">
-        <span>Sign In</span>
-      </button>
+      {% for error in form.non_field_errors %}<div class="apple-alert apple-alert-error">{{ error }}</div>{% endfor %}
+      <button type="submit" class="apple-pill-btn" id="appleAdminBtn"><span>Iniciar sesión</span></button>
     </form>
-
-    <div class="apple-action-links">
-      <a href="{% url 'solicitar_acceso' %}" class="apple-link-blue">Sign in with SOLARY ID (One-Time PIN) →</a>
+    <div class="apple-action-links" style="display:flex;flex-direction:column;gap:12px;margin-top:18px;">
+      <a href="{% url 'password_reset' %}" class="apple-link-blue">¿Olvidaste tu contraseña?</a>
+      <a href="{% url 'registro' %}" class="apple-link-blue">Crear una cuenta</a>
     </div>
 
   </div>

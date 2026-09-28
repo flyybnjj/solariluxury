@@ -1,131 +1,70 @@
 import logging
 import random
-import secrets
-from datetime import timedelta
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.http import JsonResponse
 import json
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from django.db import models
 from catalogo.models import PreOrden, Pedido, Tracker
 from .models import Cliente, TicketSoporte
-from .forms import LoginForm
+from .forms import LoginForm, RegistroForm
 from .utils import enviar_cupon_bienvenida
-from .otp import OtpDeliveryError, OtpRateLimited, issue_otp, verify_otp, complete_login
 
 logger = logging.getLogger(__name__)
 
-def generar_pin_otp():
-    return f"{secrets.randbelow(1_000_000):06d}"
+def legacy_pin_redirect(request):
+    messages.info(request, 'El acceso ahora es con correo o usuario y contraseña. Si no la recuerdas, usa “Recuperar contraseña”.')
+    return redirect('login')
 
-def _otp_ip(request):
-    return request.META.get('HTTP_X_REAL_IP') or request.META.get('REMOTE_ADDR', '')
-
-def solicitar_acceso_view(request):
-    if request.user.is_authenticated:
-        return redirect('inicio')
-    next_url = request.GET.get('next') or request.POST.get('next') or ''
-    if next_url:
-        request.session['auth_otp_next'] = next_url
-    if request.method == 'POST':
-        email = request.POST.get('email', '').strip().casefold()
-        try:
-            from django.core.validators import validate_email
-            validate_email(email)
-            issue_otp(email, _otp_ip(request))
-        except OtpRateLimited:
-            messages.error(request, 'Espera un minuto antes de solicitar otro código.')
-            return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
-        except Exception as exc:
-            if isinstance(exc, OtpDeliveryError):
-                messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
-            else:
-                from django.core.exceptions import ValidationError
-                if isinstance(exc, ValidationError):
-                    messages.error(request, 'Por favor introduce un correo electrónico válido.')
-                else:
-                    logger.error('OTP request failed: exception=%s', type(exc).__name__)
-                    messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
-            return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
-        request.session['auth_otp_email'] = email
-        messages.success(request, 'Si el correo puede recibir mensajes, enviaremos un código de acceso válido por 10 minutos.')
-        return redirect('validar_pin')
-    return render(request, 'usuarios/solicitar_acceso.html', {'next_url': next_url})
-
-def validar_pin_view(request):
-    if request.user.is_authenticated:
-        return redirect('inicio')
-    email = request.session.get('auth_otp_email') or request.GET.get('email') or request.POST.get('email')
-    if not email:
-        messages.warning(request, 'Ingresa tu correo para solicitar un código de acceso.')
-        return redirect('solicitar_acceso')
-    email = email.strip().casefold()
-    if request.method == 'POST':
-        valid, remaining, user = verify_otp(email, request.POST.get('pin', '').strip())
-        if not valid:
-            messages.error(request, 'El código no es válido, venció o alcanzó el límite de intentos. Solicita uno nuevo.' if remaining == 0 else f'Código incorrecto. Te quedan {remaining} intentos.')
-            return render(request, 'usuarios/validar_pin.html', {'email': email, 'pin_invalido': True, 'pin_expirado': remaining == 0, 'segundos_restantes': 0})
-        complete_login(request, email, user)
-        request.session.pop('auth_otp_email', None)
-        next_url = request.session.pop('auth_otp_next', None) or request.GET.get('next') or request.POST.get('next') or 'lista_productos'
-        messages.success(request, f'¡Acceso verificado! Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.')
-        return redirect(next_url)
-    return render(request, 'usuarios/validar_pin.html', {'email': email, 'segundos_restantes': 600})
-
-def reenviar_pin_view(request):
-    if request.method != 'POST':
-        return redirect('validar_pin')
-    email = request.session.get('auth_otp_email')
-    if not email:
-        return redirect('solicitar_acceso')
+def _establish_password_session(request, user):
+    login(request, user)
+    request.session['tienda_desbloqueada'] = True
+    request.session['vip_unlocked_email'] = user.email
     try:
-        issue_otp(email, _otp_ip(request))
-    except OtpRateLimited:
-        messages.error(request, 'Espera un minuto antes de solicitar otro código.')
+        enviar_cupon_bienvenida(user, email=user.email)
     except Exception as exc:
-        logger.error('OTP resend failed: exception=%s', type(exc).__name__)
-        messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
-    else:
-        messages.success(request, 'Si el correo puede recibir mensajes, enviaremos un nuevo código válido por 10 minutos.')
-    return redirect('validar_pin')
+        logger.error('Welcome email failed: exception=%s', type(exc).__name__)
+    if user.email:
+        PreOrden.objects.filter(email_cliente__iexact=user.email, usuario__isnull=True).update(usuario=user)
+        Pedido.objects.filter(email__iexact=user.email, usuario__isnull=True).update(usuario=user)
+        Tracker.objects.filter(email__iexact=user.email, usuario__isnull=True).update(usuario=user)
+
+def _safe_next(request, fallback='inicio'):
+    target = request.POST.get('next') or request.GET.get('next')
+    if target and url_has_allowed_host_and_scheme(target, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        return target
+    return fallback
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('inicio')
-
-    if request.GET.get('legacy') != '1':
-        return redirect('solicitar_acceso')
-
-    if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            try:
-                enviar_cupon_bienvenida(user, email=user.email)
-            except Exception as e:
-                logger.error(f"[ERROR CUPON BIENVENIDA] {e}")
-            messages.success(request, f"Bienvenido de nuevo, {user.username}.")
-            next_url = request.GET.get('next') or request.POST.get('next')
-            return redirect(next_url or 'inicio')
-        else:
-            messages.error(request, "Usuario o contraseña incorrectos.")
-    else:
-        form = LoginForm()
-
-    return render(request, 'usuarios/login.html', {'form': form})
+    form = LoginForm(request, data=request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.get_user()
+        _establish_password_session(request, user)
+        messages.success(request, f'Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.')
+        return redirect(_safe_next(request, 'lista_productos'))
+    return render(request, 'usuarios/login.html', {'form': form, 'next': request.GET.get('next', '')})
 
 def registro_view(request):
-    return redirect('solicitar_acceso')
+    if request.user.is_authenticated:
+        return redirect('inicio')
+    form = RegistroForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        _establish_password_session(request, user)
+        messages.success(request, 'Tu cuenta se creó y quedó guardada. ¡Bienvenido/a a SOLARY LUXURY!')
+        return redirect('inicio')
+    return render(request, 'usuarios/registro.html', {'form': form})
 
 def logout_view(request):
     logout(request)
@@ -135,7 +74,7 @@ def logout_view(request):
     response.delete_cookie('sessionid')
     return response
 
-@login_required(login_url='solicitar_acceso')
+@login_required(login_url='login')
 def perfil_view(request):
     if request.user.email:
         PreOrden.objects.filter(email_cliente__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
@@ -217,17 +156,6 @@ def crear_ticket_view(request):
     })
 
 EMAIL_TEMPLATES_CONFIG = {
-    'codigo_seguridad': {
-        'nombre': '05 — Código de Verificación (Solary ID)',
-        'template': 'usuarios/email_pin_acceso.html',
-        'asunto': 'Tu código de verificación de Solary: 482 910',
-        'contexto': {
-            'pin': '482910',
-            'pin_spaced': '4 8 2   9 1 0',
-            'cliente_nombre': 'Test Test',
-            'user': {'first_name': 'Test', 'last_name': 'Test'},
-        }
-    },
     'preparando_pedido': {
         'nombre': '01 — Estamos Preparando tu Pedido',
         'template': 'emails/email_preparando_pedido.html',
@@ -435,9 +363,9 @@ EMAIL_TEMPLATES_CONFIG = {
     }
 }
 
-def email_preview_view(request, plantilla='codigo_seguridad'):
+def email_preview_view(request, plantilla='preparando_pedido'):
     if plantilla not in EMAIL_TEMPLATES_CONFIG:
-        plantilla = 'codigo_seguridad'
+        plantilla = 'preparando_pedido'
 
     config = EMAIL_TEMPLATES_CONFIG[plantilla]
     html_rendered = render_to_string(config['template'], config['contexto'])

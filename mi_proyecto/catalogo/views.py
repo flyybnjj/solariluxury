@@ -13,7 +13,6 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from usuarios.models import Cliente
-from usuarios.otp import OtpDeliveryError, OtpRateLimited, issue_otp, verify_otp, complete_login
 from .models import Producto, Categoria, DetalleProducto, ImagenProducto, PreOrden, Pedido, Tracker
 
 logger = logging.getLogger(__name__)
@@ -91,49 +90,6 @@ def inicio(request):
         'vip_unlocked_email': request.session.get('vip_unlocked_email', ''),
     }
     return render(request, 'catalogo/inicio.html', context)
-
-def _otp_json_payload(request):
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-    except (ValueError, UnicodeDecodeError):
-        data = request.POST
-    return data
-
-def solicitar_key(request):
-    if request.method != 'POST':
-        return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
-    data = _otp_json_payload(request)
-    email = str(data.get('email', '')).strip().casefold()
-    try:
-        from django.core.validators import validate_email
-        validate_email(email)
-        issue_otp(email, request.META.get('HTTP_X_REAL_IP') or request.META.get('REMOTE_ADDR', ''))
-    except OtpRateLimited:
-        return JsonResponse({'success': False, 'error': 'Espera un minuto antes de solicitar otro código.'}, status=429)
-    except Exception as exc:
-        from django.core.exceptions import ValidationError
-        if isinstance(exc, ValidationError):
-            return JsonResponse({'success': False, 'error': 'Por favor ingresa un correo electrónico válido.'}, status=400)
-        logger.error('OTP request failed: exception=%s', type(exc).__name__)
-        return JsonResponse({'success': False, 'error': 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.'}, status=503)
-    request.session['auth_otp_email'] = email
-    return JsonResponse({'success': True, 'email': email, 'message': 'Si el correo puede recibir mensajes, enviaremos un código válido por 10 minutos.'})
-
-def validar_key(request):
-    if request.method != 'POST':
-        return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
-    data = _otp_json_payload(request)
-    email = str(data.get('email', '')).strip().casefold() or request.session.get('auth_otp_email', '')
-    pin = str(data.get('pin', '') or data.get('key', '')).strip()
-    if not email or len(pin) != 6 or not pin.isdigit():
-        return JsonResponse({'success': False, 'error': 'Código no válido o vencido. Solicita uno nuevo.'}, status=400)
-    valid, remaining, user = verify_otp(email, pin)
-    if not valid:
-        status = 429 if remaining == 0 else 400
-        return JsonResponse({'success': False, 'error': 'Código no válido, vencido o con demasiados intentos.' if remaining == 0 else f'Código incorrecto. Te quedan {remaining} intentos.'}, status=status)
-    complete_login(request, email, user)
-    request.session.pop('auth_otp_email', None)
-    return JsonResponse({'success': True, 'message': f'¡Acceso concedido! Bienvenido/a {user.first_name or user.username}. Desbloqueando tienda...'})
 
 def bloquear_tienda(request):
     from django.contrib.auth import logout
