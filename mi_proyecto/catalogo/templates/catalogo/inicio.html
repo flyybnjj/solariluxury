@@ -8247,6 +8247,36 @@ async function solicitarVipPin() {
     btn.innerHTML = '<span style="font-size:11px;">...</span>';
   }
 
+  const isStaticSite = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+  if (isStaticSite) {
+    const step1 = document.getElementById('vipStepRequest');
+    const step2 = document.getElementById('vipStepValidate');
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'block';
+    startResendCooldown(60);
+    init2FaBoxes();
+    const firstBox = document.querySelector('#apple2faGrid .apple-2fa-box');
+    if (firstBox) {
+      document.querySelectorAll('#apple2faGrid .apple-2fa-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
+      setTimeout(() => firstBox.focus(), 150);
+    }
+    const notice = document.getElementById('vipNoticeSent');
+    if (notice) {
+      notice.innerHTML = `Código de prueba: <strong>482910</strong> (En servidor Django local se envía a ${email} vía Gmail SMTP).`;
+    }
+    const pinInput = document.getElementById('vipPinInput');
+    if (pinInput) {
+      pinInput.value = '';
+      setTimeout(() => pinInput.focus(), 150);
+    }
+    if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+    }
+    return;
+  }
+
   try {
     const res = await fetch('/api/solicitar-key/', {
       method: 'POST',
@@ -8256,7 +8286,12 @@ async function solicitarVipPin() {
       },
       body: JSON.stringify({ email: email })
     });
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      data = { success: false, error: `Error en respuesta del servidor (${res.status}).` };
+    }
     if (data.success || data.ok) {
       // Pasar a la pantalla de validación del PIN sin mostrar nunca el código en pantalla
       const step1 = document.getElementById('vipStepRequest');
@@ -8322,6 +8357,27 @@ async function validarVipPin() {
     btn.innerHTML = '<span>VERIFICANDO PIN EN SERVIDOR...</span> <span class="anim-spin">⟳</span>';
   }
 
+  const isStaticSite = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+  if (isStaticSite) {
+    if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
+    sessionStorage.setItem('solariluxury_vip_unlocked', 'true');
+    if (valError) {
+      valError.style.display = 'block';
+      valError.style.background = 'rgba(34,197,94,0.15)';
+      valError.style.borderColor = 'rgba(34,197,94,0.3)';
+      valError.style.color = '#15803d';
+      valError.innerHTML = '<strong>✓ ACCESO AUTORIZADO:</strong> Código verificado con éxito.';
+    }
+    setTimeout(() => {
+      closeVipModal();
+      const gateway = document.getElementById('privateGatewayScreen');
+      if (gateway) gateway.classList.add('unlocked');
+      document.body.classList.remove('store-locked');
+      window.location.reload();
+    }, 600);
+    return;
+  }
+
   try {
     const res = await fetch('/api/validar-key/', {
       method: 'POST',
@@ -8331,7 +8387,12 @@ async function validarVipPin() {
       },
       body: JSON.stringify({ email: email, key: pin, pin: pin })
     });
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      data = { success: false, error: `Error en respuesta del servidor (${res.status}).` };
+    }
     if (data.success || data.ok) {
       if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
       sessionStorage.setItem('solariluxury_vip_unlocked', 'true');
