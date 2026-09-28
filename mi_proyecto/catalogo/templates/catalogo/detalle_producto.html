@@ -1,145 +1,854 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ prod.nombre }} | Solariluxury{% endblock %}
+{% block title %}{{ prod.nombre }} | Solariluxury Archive{% endblock %}
 
 {% block content %}
-<div class="trm-detail-layout">
+<style>
+  .detail-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text-primary);
+    padding: 100px 24px 80px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .detail-container {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+  .detail-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 36px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+  }
+  .detail-breadcrumb a {
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .detail-breadcrumb a:hover { color: #fff; }
+  .detail-breadcrumb-sep { opacity: 0.3; }
 
-    <!-- 1. Miniaturas Laterales (Thumbnails) -->
-    <div class="trm-thumbs-col">
-        <div class="trm-thumb-item" onclick="changeMainImage('{% static prod.imagen %}')" title="Vista Principal">
-            <img src="{% static prod.imagen %}" alt="{{ prod.nombre }}">
-        </div>
-        <div class="trm-thumb-item" onclick="changeMainImage('{% static 'img/logo_marca.png' %}')" title="Ilustración Oficial Solariluxury">
-            <img src="{% static 'img/logo_marca.png' %}" alt="Arte Solariluxury">
-        </div>
+  .detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* Gallery Column */
+  .detail-gallery-main {
+    position: sticky;
+    top: 80px;
+  }
+  .gallery-main-img {
+    width: 100%;
+    height: 480px;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 24px;
+    cursor: {% if es_360 %}ew-resize{% else %}default{% endif %};
+    user-select: none;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  }
+  .gallery-main-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.25s ease;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .gallery-main-img:hover img {
+    transform: scale(1.02);
+  }
+
+  /* 360 StockX Floating Badge */
+  .badge-360-overlay {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(230, 0, 0, 0.5);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #ff6b6b;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    backdrop-filter: blur(10px);
+    z-index: 5;
+  }
+
+  /* ======================================================
+     STOCKX 360 SLIDER CONTROL
+  ====================================================== */
+  .stockx-360-bar {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .stockx-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stockx-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: #e60000;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stockx-angle-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .stockx-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stockx-auto-spin-btn {
+    background: rgba(230, 0, 0, 0.15);
+    border: 1px solid rgba(230, 0, 0, 0.4);
+    color: #ff6b6b;
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+  .stockx-auto-spin-btn:hover {
+    background: #e60000;
+    color: #fff;
+    box-shadow: 0 0 16px rgba(230, 0, 0, 0.5);
+  }
+  .stockx-range {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.16);
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .stockx-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #e60000;
+    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    cursor: ew-resize;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .stockx-range::-webkit-slider-thumb:hover {
+    transform: scale(1.18);
+    background: #ff4d4d;
+  }
+  .stockx-range::-webkit-slider-thumb:active {
+    transform: scale(1.25);
+  }
+  .stockx-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #e60000;
+    box-shadow: 0 0 16px rgba(230, 0, 0, 0.7);
+    cursor: ew-resize;
+  }
+  .stockx-hint {
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.35);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+
+  /* Thumbnails Strip */
+  .gallery-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+  }
+  .gallery-thumb {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+  }
+  .gallery-thumb:hover, .gallery-thumb.active {
+    border-color: #e60000;
+    box-shadow: 0 0 14px rgba(230,0,0,0.45);
+    transform: translateY(-2px);
+  }
+  .gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Info Column */
+  .detail-info { padding-top: 4px; }
+  .detail-cat {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #e60000;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 12px;
+  }
+  .detail-title {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(34px, 4.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: #fff;
+    margin-bottom: 8px;
+    word-break: break-word;
+  }
+  .detail-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+
+  /* Status badge */
+  .detail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+  .detail-badge.available {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #4ade80;
+  }
+  .detail-badge.soldout {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.4);
+  }
+  .detail-badge.limited {
+    background: rgba(230,0,0,0.12);
+    border: 1px solid rgba(230,0,0,0.45);
+    color: #ff6b6b;
+  }
+
+  .detail-price {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(42px, 5vw, 64px);
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  .detail-price-usd {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 30px;
+  }
+
+  /* Size selector */
+  .detail-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 12px;
+  }
+  .sizes-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .size-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .size-btn:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
+  }
+  .size-btn.active {
+    background: #e60000;
+    border-color: #e60000;
+    color: #fff;
+    box-shadow: 0 0 16px rgba(230,0,0,0.5);
+  }
+
+  /* Action buttons */
+  .detail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .btn-add-cart {
+    width: 100%;
+    padding: 18px;
+    background: #e60000;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 30px rgba(230,0,0,0.35);
+  }
+  .btn-add-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(230,0,0,0.55);
+  }
+  .btn-add-cart:disabled {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.3);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-wishlist {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-wishlist:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+
+  /* Description & Specs */
+  .detail-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .detail-specs-list {
+    list-style: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 32px;
+  }
+  .detail-specs-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    font-family: 'Space Mono', monospace;
+  }
+  .detail-specs-list li::before {
+    content: '→';
+    color: #e60000;
+  }
+
+  .shipping-note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 36px;
+  }
+
+  .detail-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .detail-nav-btn {
+    padding: 10px 20px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .detail-nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .detail-grid { grid-template-columns: 1fr; gap: 36px; }
+    .detail-gallery-main { position: static; }
+    .gallery-main-img { height: 380px; }
+    .detail-price { font-size: 40px; }
+  }
+
+  /* Apple Light Mode Adaptations for Detail Page */
+  html[data-theme="light"] .detail-name {
+    color: #111827;
+  }
+  html[data-theme="light"] .detail-price {
+    color: #111827;
+  }
+  html[data-theme="light"] .detail-breadcrumb a,
+  html[data-theme="light"] .detail-breadcrumb span {
+    color: #6b7280;
+  }
+  html[data-theme="light"] .detail-desc {
+    color: #4b5563;
+  }
+  html[data-theme="light"] .size-chip {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #111827;
+  }
+  html[data-theme="light"] .detail-specs-table {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+  html[data-theme="light"] .spec-row {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+  html[data-theme="light"] .spec-label {
+    color: #6b7280;
+  }
+  html[data-theme="light"] .spec-value {
+    color: #111827;
+  }
+  html[data-theme="light"] .detail-nav-btn {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #4b5563;
+  }
+  html[data-theme="light"] .detail-nav-btn:hover {
+    background: #111827;
+    color: #ffffff;
+  }
+  html[data-theme="light"] .stockx-360-bar {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  html[data-theme="light"] .stockx-title {
+    color: #111827;
+  }
+  html[data-theme="light"] .stockx-angle-text {
+    color: #6b7280;
+  }
+  html[data-theme="light"] .stockx-auto-spin-btn {
+    background: #f3f4f6;
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #111827;
+  }
+</style>
+
+<div class="detail-page">
+  <div class="detail-container">
+
+    <!-- Breadcrumb -->
+    <div class="detail-breadcrumb">
+      <a href="{% url 'inicio' %}">PORTADA</a>
+      <span class="detail-breadcrumb-sep">/</span>
+      <a href="{% url 'lista_productos' %}">CATÁLOGO</a>
+      <span class="detail-breadcrumb-sep">/</span>
+      <span>{{ prod.nombre|truncatechars:35 }}</span>
     </div>
 
-    <!-- 2. Imagen Principal en Gran Formato -->
-    <div class="trm-main-img-box">
-        <img src="{% static prod.imagen %}" alt="{{ prod.nombre }}" id="mainProductImg">
-    </div>
+    <div class="detail-grid">
 
-    <!-- 3. Panel de Compra y Especificaciones Técnicas en Español -->
-    <div class="trm-detail-info">
-        
-        <!-- Título del Producto -->
-        <h1 class="trm-detail-title">{{ prod.nombre }}</h1>
-
-        <!-- Precio y Badge de Stock -->
-        <div class="trm-detail-price-row">
-            <span class="trm-detail-price">{{ prod.precio_formateado }} CLP (${{ prod.precio_usd }} USD)</span>
-            {% if prod.badge_estado == 'AGOTADO' %}
-                <span class="trm-product-badge-soldout" style="position: static;">AGOTADO</span>
-            {% else %}
-                <span class="trm-product-badge-soldout" style="position: static; border-color: #000; background: #000; color: #fff;">DISPONIBLE</span>
-            {% endif %}
-        </div>
-        <p class="trm-tax-included">IVA E IMPUESTOS DE IMPORTACIÓN INCLUIDOS.</p>
-
-        <!-- Selector de Tallas / Medidas -->
-        <div class="trm-size-label">TALLA / MEDIDA</div>
-        <div class="trm-size-selector">
-            {% for talla in prod.tallas %}
-            <button type="button" class="trm-size-btn {% if forloop.first %}active{% endif %}" onclick="selectSize(this)">
-                {{ talla }}
-            </button>
-            {% endfor %}
+      <!-- Gallery Column -->
+      <div class="detail-gallery-main">
+        <div class="gallery-main-img" id="mainImgWrap">
+          {% if es_360 %}
+          <div class="badge-360-overlay"><svg class="anim-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg> STOCKX 360° VIEW</div>
+          {% endif %}
+          <img src="{% static prod.imagen %}" alt="{{ prod.nombre }}" id="mainDetailImg">
         </div>
 
-        <!-- Guía de Tallas -->
-        <a href="#sizeChartModal" data-bs-toggle="modal" class="trm-size-chart-link">
-            VER GUÍA DE TALLAS 📐
-        </a>
-
-        <!-- Botón Principal de Compra / Carrito -->
-        {% if prod.badge_estado == 'AGOTADO' %}
-            <button type="button" class="trm-btn-soldout-lg" disabled>
-                PRODUCTO AGOTADO (${{ prod.precio_usd }} USD)
+        {% if es_360 %}
+        <!-- STOCKX 360 INTERACTIVE SLIDER -->
+        <div class="stockx-360-bar">
+          <div class="stockx-header-row">
+            <span class="stockx-title">
+              <span style="display:inline-flex; align-items:center; vertical-align:middle; margin-right:4px;"><svg class="anim-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e60000" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg></span> ROTACIÓN 360° TIPO STOCKX
+            </span>
+            <span class="stockx-angle-text" id="angleDeg">0° / ÁNGULO 1</span>
+          </div>
+          <div class="stockx-controls-row">
+            <button type="button" class="stockx-auto-spin-btn" id="autoSpinBtn" onclick="toggleAutoSpin()">
+              ▶ AUTO GIRO
             </button>
-        {% else %}
-            <button type="button" class="trm-btn-add-cart py-3 mb-2" onclick="addToCartLive('{{ prod.nombre }}', '{{ prod.precio_formateado }}')">
-                AGREGAR AL CARRITO • {{ prod.precio_formateado }} CLP
-            </button>
+            <input type="range" 
+                   id="stockxSlider" 
+                   class="stockx-range" 
+                   min="0" 
+                   max="{{ galeria|length|add:'-1' }}" 
+                   value="0" 
+                   step="1" 
+                   oninput="onSliderMove(this.value)">
+          </div>
+          <div class="stockx-hint">↔ ARRASTRA EL SLIDER O DESLIZA SOBRE LA ZAPATILLA PARA GIRARLA</div>
+        </div>
         {% endif %}
 
-        <!-- Botón Express de Pago Seguro -->
-        <button type="button" class="trm-btn-paypal" onclick="alert('Iniciando pasarela de pago seguro Webpay Plus / PayPal...')">
-            Pagar con <span style="font-weight: 900; font-style: italic;">Webpay</span> / PayPal Express
-        </button>
+        {% if not es_360 and galeria|length > 1 %}
+        <!-- Thumbnails Strip for non-360 products -->
+        <div class="gallery-thumbs" id="thumbsStrip">
+          {% for img_path in galeria %}
+          <div class="gallery-thumb {% if forloop.first %}active{% endif %}" 
+               data-index="{{ forloop.counter0 }}" 
+               onclick="switchImgToIndex({{ forloop.counter0 }})" 
+               title="Vista {{ forloop.counter }}">
+            <img src="{% static img_path %}" alt="{{ prod.nombre }} - Vista {{ forloop.counter }}" loading="lazy">
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
 
-        <!-- Navegación Anterior / Siguiente -->
-        <div class="trm-prev-next-row">
-            <a href="{% url 'detalle_producto' prev_id %}" class="trm-btn-nav-arrow">&lt; ANTERIOR</a>
-            <a href="{% url 'detalle_producto' next_id %}" class="trm-btn-nav-arrow">SIGUIENTE &gt;</a>
+      <!-- Info Column -->
+      <div class="detail-info">
+        <div class="detail-cat">{{ prod.categoria.nombre|default:"STREETWEAR" }}</div>
+        <h1 class="detail-title">{{ prod.nombre }}</h1>
+        <p class="detail-subtitle">{{ prod.subtitulo }}</p>
+
+        {% if prod.badge_estado == "AGOTADO" %}
+        <div class="detail-badge soldout">AGOTADO</div>
+        {% elif prod.badge_estado == "LIMITED DROP" %}
+        <div class="detail-badge limited"><svg class="anim-flame" width="12" height="12" viewBox="0 0 24 24" fill="#ff4500" stroke="#ff8c00" stroke-width="1.5" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg> LIMITED DROP</div>
+        {% else %}
+        <div class="detail-badge available">● DISPONIBLE EN STOCK</div>
+        {% endif %}
+
+        <div class="detail-price">${{ prod.precio|floatformat:"0" }} CLP</div>
+        <div class="detail-price-usd">≈ ${{ prod.precio_usd }} USD (Precio Internacional de Referencia)</div>
+
+        <!-- Sizes -->
+        {% if tallas %}
+        <div class="detail-section-label">SELECCIONAR TALLA</div>
+        <div class="sizes-flex">
+          {% for talla in tallas %}
+          <button type="button" class="size-btn {% if forloop.first %}active{% endif %}" onclick="selectSize(this)">{{ talla.nombre }}</button>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="detail-actions">
+          {% if prod.badge_estado == "AGOTADO" %}
+          <button class="btn-add-cart" disabled>PRODUCTO AGOTADO</button>
+          {% else %}
+          <button class="btn-add-cart" id="btnAddToCart" onclick="addToCartFromDetail()">
+            AGREGAR AL CARRITO — ${{ prod.precio|floatformat:"0" }} CLP
+          </button>
+          {% endif %}
+          <button class="btn-wishlist" onclick="this.textContent = this.textContent.includes('✓') ? '♡ GUARDAR EN WISHLIST' : '♥ GUARDADO EN WISHLIST'; this.style.borderColor = this.textContent.includes('♥') ? '#e60000' : ''; this.style.color = this.textContent.includes('♥') ? '#ff6b6b' : '';">
+            ♡ GUARDAR EN WISHLIST
+          </button>
         </div>
 
-        <!-- Ficha Técnica y Especificaciones -->
-        <div class="border-top border-dark pt-3 mt-2 font-mono">
-            <h4 class="fs-6 fw-bold text-uppercase mb-2">{{ prod.nombre }}</h4>
-            <p class="text-muted small mb-3">{{ prod.descripcion }}</p>
-            <ul class="trm-specs-list">
-                {% for detalle in prod.detalles %}
-                    <li>{{ detalle }}</li>
-                {% endfor %}
-            </ul>
+        <!-- Description -->
+        <p class="detail-desc">{{ prod.descripcion }}</p>
+
+        <!-- Specs -->
+        {% if detalles %}
+        <div class="detail-section-label">ESPECIFICACIONES DEL PRODUCTO</div>
+        <ul class="detail-specs-list">
+          {% for d in detalles %}
+          <li>{{ d.texto }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Shipping note -->
+        <div class="shipping-note">
+          <svg class="anim-float" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e60000" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <span>Despacho prioritario asegurado y garantía de autenticidad verificada por Solariluxury.</span>
         </div>
 
+        <!-- Prev / Next -->
+        <div class="detail-nav">
+          <a href="{% url 'detalle_producto' prev_id %}" class="detail-nav-btn">← ANTERIOR</a>
+          <a href="{% url 'detalle_producto' next_id %}" class="detail-nav-btn">SIGUIENTE →</a>
+        </div>
+      </div>
     </div>
 
-</div>
-
-<!-- Modal Guía de Tallas (Size Chart) en Español -->
-<div class="modal fade" id="sizeChartModal" tabindex="-1" aria-labelledby="sizeChartLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-0 border border-dark">
-            <div class="modal-header border-bottom border-dark">
-                <h5 class="modal-title font-mono fw-bold text-uppercase" id="sizeChartLabel">GUÍA DE TALLAS OFICIAL — SOLARILUXURY</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body font-mono small">
-                <div class="table-responsive">
-                    <table class="table table-bordered text-center mb-0" style="min-width: 320px; font-size: 0.76rem;">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>TALLA</th>
-                                <th>PECHO / US</th>
-                                <th>LARGO / PLANTILLA</th>
-                                <th>MANGA / ANCHO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>S / US 8</td><td>58 cm / 26.0 cm</td><td>70 cm</td><td>62 cm</td></tr>
-                            <tr><td>M / US 9</td><td>61 cm / 27.0 cm</td><td>72 cm</td><td>64 cm</td></tr>
-                            <tr><td>L / US 10</td><td>64 cm / 28.0 cm</td><td>75 cm</td><td>66 cm</td></tr>
-                            <tr><td>XL / US 11</td><td>68 cm / 29.0 cm</td><td>78 cm</td><td>68 cm</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="mt-3 mb-0 text-muted" style="font-size: 0.72rem;">* Medidas oficiales estándar para calzado y confección streetwear oversize.</p>
-            </div>
+    <!-- Related items -->
+    {% if relacionados %}
+    <div class="related-section" style="margin-top: 80px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.08);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div>
+          <div style="font-family: 'Space Mono', monospace; font-size: 10px; color: #e60000; letter-spacing: 0.2em; text-transform: uppercase;">CATÁLOGO OFICIAL</div>
+          <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.05em; color: #fff;">PIEZAS RELACIONADAS</h2>
         </div>
+        <a href="{% url 'lista_productos' %}" style="font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); text-decoration: none;">VER CATÁLOGO COMPLETO →</a>
+      </div>
+      <div class="related-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
+        {% for r in relacionados %}
+        <a href="{% url 'detalle_producto' r.id %}" style="text-decoration: none; background: #0c0c10; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease;">
+          <div style="height: 220px; overflow: hidden; position: relative; background: #08080a; display: flex; align-items: center; justify-content: center; padding: 14px;">
+            <img src="{% static r.imagen %}" alt="{{ r.nombre }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
+          </div>
+          <div style="padding: 16px; display: flex; flex-direction: column; flex: 1;">
+            <span style="font-family: 'Space Mono', monospace; font-size: 9px; color: #e60000; letter-spacing: 0.15em; margin-bottom: 4px;">{{ r.categoria.nombre|default:"STREETWEAR" }}</span>
+            <span style="font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #fff; line-height: 1.1; margin-bottom: 8px;">{{ r.nombre|truncatechars:35 }}</span>
+            <span style="font-family: 'Space Mono', monospace; font-size: 13px; color: #fff; margin-top: auto; font-weight: 700;">${{ r.precio|floatformat:"0" }} CLP</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
     </div>
-</div>
-{% endblock %}
+    {% endif %}
 
-{% block extra_scripts %}
+  </div>
+</div>
+
 <script>
-    function changeMainImage(src) {
-        document.getElementById('mainProductImg').src = src;
-    }
+// Gallery Images Array
+const galleryImages = [
+  {% for img_path in galeria %}
+  "{% static img_path %}"{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
 
-    function selectSize(btn) {
-        document.querySelectorAll('.trm-size-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
+let currentIndex = 0;
+let autoSpinTimer = null;
+const is360 = {{ es_360|yesno:"true,false" }};
 
-    function addToCartLive(nombre, precio) {
-        const cartBadge = document.querySelector('.trm-cart-badge');
-        let current = parseInt(cartBadge.textContent || '0');
-        cartBadge.textContent = current + 1;
-        alert(`✓ ${nombre} (${precio} CLP) ha sido agregado exitosamente a tu bolsa de compras.`);
+function updateAngleView(index) {
+  if (index < 0) index = 0;
+  if (index >= galleryImages.length) index = galleryImages.length - 1;
+  currentIndex = index;
+
+  const mainImg = document.getElementById('mainDetailImg');
+  if (mainImg) mainImg.src = galleryImages[index];
+
+  const slider = document.getElementById('stockxSlider');
+  if (slider) slider.value = index;
+
+  const angleDeg = document.getElementById('angleDeg');
+  if (angleDeg && galleryImages.length > 1) {
+    const deg = Math.round((index / (galleryImages.length - 1)) * 360);
+    angleDeg.textContent = `${deg}° / ÁNGULO ${index + 1}`;
+  }
+
+  // Update thumbs
+  const thumbs = document.querySelectorAll('.gallery-thumb');
+  thumbs.forEach((t, i) => {
+    t.classList.toggle('active', i === index);
+  });
+}
+
+function onSliderMove(val) {
+  stopAutoSpin();
+  updateAngleView(parseInt(val, 10));
+}
+
+function switchImgToIndex(idx) {
+  stopAutoSpin();
+  updateAngleView(idx);
+}
+
+// Interactive Dragging directly on the main image
+const wrap = document.getElementById('mainImgWrap');
+if (wrap && is360 && galleryImages.length > 1) {
+  let isDragging = false;
+  let startX = 0;
+  let startIndex = 0;
+
+  wrap.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startIndex = currentIndex;
+    stopAutoSpin();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - startX;
+    const step = 20; // Pixels per frame
+    const stepsShift = Math.floor(deltaX / step);
+    let newIndex = (startIndex + stepsShift) % galleryImages.length;
+    if (newIndex < 0) newIndex += galleryImages.length;
+    updateAngleView(newIndex);
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  // Touch support for mobile
+  wrap.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startIndex = currentIndex;
+      stopAutoSpin();
     }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - startX;
+    const step = 16;
+    const stepsShift = Math.floor(deltaX / step);
+    let newIndex = (startIndex + stepsShift) % galleryImages.length;
+    if (newIndex < 0) newIndex += galleryImages.length;
+    updateAngleView(newIndex);
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+}
+
+// Auto-spin toggle
+function toggleAutoSpin() {
+  const btn = document.getElementById('autoSpinBtn');
+  if (autoSpinTimer) {
+    stopAutoSpin();
+  } else {
+    if (btn) btn.textContent = '❚❚ PAUSAR';
+    autoSpinTimer = setInterval(() => {
+      let nextIdx = (currentIndex + 1) % galleryImages.length;
+      updateAngleView(nextIdx);
+    }, 280);
+  }
+}
+
+function stopAutoSpin() {
+  if (autoSpinTimer) {
+    clearInterval(autoSpinTimer);
+    autoSpinTimer = null;
+    const btn = document.getElementById('autoSpinBtn');
+    if (btn) btn.textContent = '▶ AUTO GIRO';
+  }
+}
+
+function selectSize(btn) {
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addToCartFromDetail() {
+  const activeSize = document.querySelector('.size-btn.active');
+  const size = activeSize ? activeSize.textContent.trim() : 'ÚNICA';
+  const name = "{{ prod.nombre|escapejs }}";
+  const price = "{{ prod.precio|floatformat:0 }}";
+  const img = "{% static prod.imagen %}";
+  const prodId = "{{ prod.id }}";
+
+  if (typeof addToGlobalCart === 'function') {
+    addToGlobalCart({
+      id: prodId,
+      name: `${name} [TALLA ${size}]`,
+      price: price,
+      img: img,
+      size: size
+    });
+  }
+
+  const btn = document.getElementById('btnAddToCart');
+  if (btn) {
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = '<span>✓ AGREGADO A LA BOLSA</span>';
+    btn.style.background = '#16a34a';
+    setTimeout(() => {
+      btn.innerHTML = origHtml;
+      btn.style.background = '';
+    }, 2000);
+  }
+}
 </script>
 {% endblock %}

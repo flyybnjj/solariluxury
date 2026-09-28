@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview Correos Apple Style — Solary Luxury</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0c0c0e;
+      color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Studio Bar */
+    .studio-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(18, 18, 22, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .brand-badge {
+      font-size: 10px;
+      font-family: "SF Mono", monospace;
+      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 980px;
+      color: #a1a1a6;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px;
+      border-radius: 980px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 6px 14px;
+      border-radius: 980px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      color: #86868b;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: #ffffff;
+    }
+    .tab-btn.active {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Device Toggles & Actions */
+    .actions-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .device-switcher {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .device-btn {
+      background: transparent;
+      border: none;
+      color: #86868b;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .device-btn.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .dispatch-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .email-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #ffffff;
+      outline: none;
+      width: 190px;
+    }
+    .email-input:focus {
+      border-color: #2997ff;
+    }
+    .send-btn {
+      background: #2997ff;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .send-btn:hover {
+      background: #0077ed;
+    }
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Stage Canvas */
+    .preview-stage {
+      flex: 1;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background: radial-gradient(circle at 50% 20%, #1a1a24 0%, #0c0c0e 80%);
+    }
+
+    .frame-container {
+      width: 100%;
+      max-width: 680px;
+      transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      background: #f5f5f7;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .frame-container.mobile-mode {
+      max-width: 395px;
+      border-radius: 44px;
+      padding: 12px;
+      background: #1c1c1e;
+      border: 3px solid #3a3a3c;
+    }
+    .frame-container.mobile-mode .device-notch {
+      display: block;
+      width: 120px;
+      height: 20px;
+      background: #000000;
+      border-radius: 20px;
+      margin: 0 auto 10px auto;
+    }
+    .device-notch {
+      display: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 920px;
+      border: none;
+      background: #f5f5f7;
+      border-radius: 24px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(28, 28, 30, 0.94);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Studio Bar -->
+  <header class="studio-bar">
+    <div class="brand-section">
+      <span class="brand-title">SOLARY ARCHIVE</span>
+      <span class="brand-badge">EMAIL DESIGN SYSTEM</span>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <a href="/emails/preparando_pedido/" class="tab-btn {% if plantilla_actual == 'preparando_pedido' %}active{% endif %}">01 Preparando</a>
+      <a href="/emails/pedido_despachado/" class="tab-btn {% if plantilla_actual == 'pedido_despachado' %}active{% endif %}">02 Despachado</a>
+      <a href="/emails/pedido_entregado/" class="tab-btn {% if plantilla_actual == 'pedido_entregado' %}active{% endif %}">03 Entregado</a>
+      <a href="/emails/recibo_compra/" class="tab-btn {% if plantilla_actual == 'recibo_compra' %}active{% endif %}">04 Recibo</a>
+      <a href="/emails/codigo_seguridad/" class="tab-btn {% if plantilla_actual == 'codigo_seguridad' %}active{% endif %}">05 Solary ID</a>
+      <a href="/emails/cupon_bienvenida/" class="tab-btn {% if plantilla_actual == 'cupon_bienvenida' %}active{% endif %}">06 Cupón 15%</a>
+    </nav>
+
+    <!-- Actions & Dispatch -->
+    <div class="actions-section">
+      <div class="device-switcher">
+        <button type="button" class="device-btn active" id="btnDesktop" onclick="setDevice('desktop')">PC Desktop</button>
+        <button type="button" class="device-btn" id="btnMobile" onclick="setDevice('mobile')">iPhone</button>
+      </div>
+
+      <div class="dispatch-input-wrap">
+        <input type="email" id="testEmailInput" class="email-input" value="avalosb758@gmail.com" placeholder="correo@ejemplo.com" />
+        <button type="button" id="btnSendTest" class="send-btn" onclick="sendTestEmail()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          <span>Enviar Prueba</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Preview Stage -->
+  <main class="preview-stage">
+    <div class="frame-container" id="frameContainer">
+      <div class="device-notch"></div>
+      <iframe id="emailFrame" src="/emails/{{ plantilla_actual }}/?raw=1" title="Vista previa de correo"></iframe>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    function setDevice(type) {
+      const container = document.getElementById('frameContainer');
+      const btnDesktop = document.getElementById('btnDesktop');
+      const btnMobile = document.getElementById('btnMobile');
+
+      if (type === 'mobile') {
+        container.classList.add('mobile-mode');
+        btnMobile.classList.add('active');
+        btnDesktop.classList.remove('active');
+      } else {
+        container.classList.remove('mobile-mode');
+        btnDesktop.classList.add('active');
+        btnMobile.classList.remove('active');
+      }
+    }
+
+    function showToast(msg, isError) {
+      const toast = document.getElementById('toast');
+      toast.style.borderColor = isError ? 'rgba(255, 69, 58, 0.4)' : 'rgba(52, 199, 89, 0.4)';
+      toast.innerHTML = (isError ? '⚠️ ' : '✅ ') + msg;
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 5000);
+    }
+
+    async function sendTestEmail() {
+      const email = document.getElementById('testEmailInput').value.trim();
+      if (!email) {
+        showToast('Ingresa un correo de destino.', true);
+        return;
+      }
+
+      const btn = document.getElementById('btnSendTest');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'Enviando...';
+
+      try {
+        const res = await fetch('/api/enviar-email-prueba/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            plantilla: '{{ plantilla_actual }}'
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, false);
+        } else {
+          showToast(data.error || 'Error al enviar correo.', true);
+        }
+      } catch (err) {
+        showToast('Error de red al despachar el correo.', true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+  </script>
+</body>
+</html>

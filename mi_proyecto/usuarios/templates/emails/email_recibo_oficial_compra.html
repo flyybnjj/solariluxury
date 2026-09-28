@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Recibo de tu compra — SOLARY LUXURY</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; padding: 24px 18px !important; }
+      .grid-stack { display: block !important; width: 100% !important; margin-bottom: 16px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #111111;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f7; padding: 40px 10px;">
+    <tr>
+      <td align="center">
+        <table class="email-container" width="580" cellpadding="0" cellspacing="0" border="0" style="width: 580px; max-width: 580px; background-color: #ffffff; border-radius: 18px; border: 1px solid #e5e5ea; padding: 44px 36px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="padding-bottom: 24px; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" style="font-size: 13px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #111111;">
+                    SOLARY LUXURY
+                  </td>
+                  <td align="right" style="font-size: 11px; font-family: monospace; color: #707072; letter-spacing: 0.05em;">
+                    RECIBO FISCAL N.° {{ factura.numero|default:"892104" }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Title -->
+          <tr>
+            <td style="padding-top: 28px;">
+              <h1 style="margin: 0 0 6px; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; color: #111111;">
+                RECIBO DE TU COMPRA
+              </h1>
+              <p style="margin: 0 0 28px; font-size: 13px; color: #707072;">
+                Fecha de emisión: <strong style="color: #111111;">{{ factura.fecha|default:"27 de septiembre de 2026" }}</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Items Table -->
+          <tr>
+            <td style="padding-bottom: 20px; border-bottom: 1px solid #e5e5ea;">
+              <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #707072; margin-bottom: 14px;">
+                ARTÍCULOS ADQUIRIDOS
+              </div>
+
+              {% if items %}
+                {% for item in items %}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #e5e5ea;">
+                  <tr>
+                    <td align="left">
+                      <strong style="color: #111111;">{{ item.nombre }}</strong><br>
+                      <span style="color: #707072; font-size: 12px;">
+                        Talla {{ item.talla|default:"Única" }} · Cantidad: {{ item.cantidad|default:"1" }}
+                        {% if item.codigo_estilo %} · {{ item.codigo_estilo }}{% elif item.subtitulo %} · {{ item.subtitulo }}{% endif %}
+                      </span>
+                    </td>
+                    <td align="right" valign="top" style="font-weight: 700; color: #111111; white-space: nowrap; padding-left: 12px;">
+                      {{ item.precio_formateado }}
+                    </td>
+                  </tr>
+                </table>
+                {% endfor %}
+              {% else %}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; margin-bottom: 12px;">
+                  <tr>
+                    <td align="left">
+                      <strong style="color: #111111;">{{ item1_nombre|default:"Nike Air Force 1 Low × Syna Central Cee" }}</strong><br>
+                      <span style="color: #707072; font-size: 12px;">Talla 9.5 US · N.° Serie: SL-AF1-042</span>
+                    </td>
+                    <td align="right" style="font-weight: 700; color: #111111;">{{ item1_precio|default:"$189.990 CLP" }}</td>
+                  </tr>
+                </table>
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px;">
+                  <tr>
+                    <td align="left">
+                      <strong style="color: #111111;">{{ item2_nombre|default:"Syna World OG Skull Beanie" }}</strong><br>
+                      <span style="color: #707072; font-size: 12px;">Talla Única · Black Edition</span>
+                    </td>
+                    <td align="right" style="font-weight: 700; color: #111111;">{{ item2_precio|default:"$55.000 CLP" }}</td>
+                  </tr>
+                </table>
+              {% endif %}
+            </td>
+          </tr>
+
+          <!-- Tax & Total Breakdown -->
+          <tr>
+            <td style="padding: 20px 0; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #707072; line-height: 1.8;">
+                <tr>
+                  <td align="left">Subtotal neto</td>
+                  <td align="right" style="color: #111111;">$205.874 CLP</td>
+                </tr>
+                <tr>
+                  <td align="left">IVA (19%)</td>
+                  <td align="right" style="color: #111111;">$39.116 CLP</td>
+                </tr>
+                <tr>
+                  <td align="left">Costo de despacho asegurado</td>
+                  <td align="right" style="color: #111111;">$0 CLP</td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
+                    Total Cancelado
+                  </td>
+                  <td align="right" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
+                    $244.990 CLP
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Billing Info -->
+          <tr>
+            <td style="padding: 24px 0; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="grid-stack" width="50%" align="left" valign="top" style="font-size: 12px; color: #707072; line-height: 1.5;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 6px;">
+                      Facturado a
+                    </div>
+                    <div style="color: #111111; font-weight: 600;">{{ cliente_nombre|default:orden.nombre_cliente|default:"Test Test" }}</div>
+                    <div>RUT: {{ orden.rut|default:"18.492.102-K" }}</div>
+                    <div>Vitacura, Santiago</div>
+                  </td>
+                  <td class="grid-stack" width="50%" align="left" valign="top" style="font-size: 12px; color: #707072; line-height: 1.5;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 6px;">
+                      Método de cobro
+                    </div>
+                    <div style="color: #111111; font-weight: 600;">Apple Pay (Mastercard •••• 4242)</div>
+                    <div>ID Transacción: TXN-89210-AUTH</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- PDF Download Button -->
+          <tr>
+            <td align="center" style="padding-top: 28px;">
+              <a href="{{ factura.pdf_url|default:'#' }}" style="display: block; width: 100%; box-sizing: border-box; background-color: #111111; color: #ffffff; text-decoration: none; padding: 16px 24px; border-radius: 9999px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-align: center;">
+                DESCARGAR FACTURA EN PDF
+              </a>
+              <div style="margin-top: 16px; font-size: 12px; color: #707072;">
+                ¿Dudas con tu facturación? <a href="#" style="color: #707072; text-decoration: underline;">Centro de ayuda y soporte tributario</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top: 36px; border-top: 1px solid #e5e5ea; margin-top: 28px; font-size: 11px; color: #8e8e93; line-height: 1.6;">
+              SOLARY LUXURY CHILE SPA · RUT: 77.892.401-9<br>
+              Documento tributario electrónico generado conforme a la normativa legal vigente.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

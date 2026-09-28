@@ -1,58 +1,95 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Contact & Stores | Solariluxury{% endblock %}
+{% block title %}Stores & Flagships | Solariluxury Archive{% endblock %}
+
+{% block extra_head %}
+<style>
+  .stores-page {
+    min-height: calc(100vh - 120px);
+    background: #000;
+    padding: 120px 24px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stores-empty-box {
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 60px 36px;
+    backdrop-filter: blur(20px);
+  }
+  .stores-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: rgba(230, 0, 0, 0.1);
+    border: 1px solid rgba(230, 0, 0, 0.3);
+    color: var(--accent, #e60000);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .stores-empty-title {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .stores-empty-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+  .stores-empty-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .stores-empty-action:hover {
+    background: #e60000;
+    border-color: #e60000;
+    box-shadow: 0 0 25px rgba(230, 0, 0, 0.5);
+    transform: translateY(-2px);
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4 py-md-5 px-3" style="max-width: 1100px;">
-    
-    <!-- Encabezado Limpio Estilo TRM -->
-    <div class="text-center mb-4 mb-md-5 pb-3 border-bottom border-dark">
-        <h1 class="font-mono fw-bold text-uppercase fs-3 fs-md-2 mb-2">CONTACT &amp; EXPERIENCE STORES ({{ total_locales }})</h1>
-        <p class="text-muted font-mono small mb-0" style="font-size: 0.76rem;">ATENCIÓN PRESENCIAL • RETIRO INMEDIATO EN LA SERENA • PRUEBA DE TALLAS</p>
-    </div>
-
-    <!-- Grid de Sucursales Enmarcadas -->
-    <div class="row g-3 g-md-4 mb-4 mb-md-5">
-        {% for loc in locales %}
-        <div class="col-md-6">
-            <div class="border border-dark p-3 p-md-4 bg-white h-100 d-flex flex-column">
-                <div class="mb-3 overflow-hidden border border-dark" style="height: 200px; max-height: 240px;">
-                    <img src="{% static loc.imagen %}" alt="{{ loc.nombre }}" class="w-100 h-100" style="object-fit: cover;">
-                </div>
-                
-                <span class="badge bg-black text-white font-mono rounded-0 p-2 mb-2 d-inline-block align-self-start" style="font-size: 0.68rem;">
-                    {{ loc.badge_tipo }}
-                </span>
-                
-                <h3 class="font-mono fw-bold text-uppercase fs-5 fs-md-4 mb-1">{{ loc.nombre }}</h3>
-                <p class="text-muted small mb-3" style="font-size: 0.78rem;">{{ loc.tipo_tienda }}</p>
-
-                <div class="p-3 border border-dark mb-3 bg-light font-mono small" style="font-size: 0.76rem;">
-                    <p class="mb-2"><strong>DIRECCIÓN:</strong> {{ loc.direccion }}</p>
-                    <p class="mb-2"><strong>HORARIO:</strong> {{ loc.horario }}</p>
-                    <p class="mb-0"><strong>TELÉFONO:</strong> {{ loc.telefono }}</p>
-                </div>
-
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top border-dark">
-                    <span class="font-mono small text-muted" style="font-size: 0.72rem;">{{ loc.estado }}</span>
-                    <a href="tel:{{ loc.telefono }}" class="trm-btn-boxed d-inline-flex" style="width: auto; padding: 6px 18px; min-height: 38px; font-size: 0.75rem;">
-                        CONTACTAR
-                    </a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <!-- Banner Inferior de Asesoría -->
-    <div class="border border-dark p-3 p-md-4 text-center bg-white">
-        <h4 class="font-mono fw-bold text-uppercase fs-5 mb-2">¿TIENES DUDAS CON TU PEDIDO O TALLA?</h4>
-        <p class="text-muted font-mono small mb-3" style="font-size: 0.78rem;">Escríbenos directamente o visita nuestras tiendas oficiales en La Serena.</p>
-        <a href="{% url 'lista_productos' %}" class="trm-btn-boxed d-inline-flex mx-auto" style="width: auto; padding: 10px 28px; font-size: 0.78rem;">
-            VOLVER AL SHOP &rarr;
-        </a>
-    </div>
-
+<div class="stores-page">
+  <div class="stores-empty-box">
+    <span class="stores-badge">ESPACIO DISPONIBLE / EN RENOVACIÓN</span>
+    <h1 class="stores-empty-title">LOCALES & ESPACIOS</h1>
+    <p class="stores-empty-desc">
+      Esta sección se encuentra temporalmente vacía y lista para nuevas integraciones y locaciones oficiales.
+    </p>
+    <a href="{% url 'lista_productos' %}" class="stores-empty-action">
+      EXPLORAR VAULT DE PRODUCTOS →
+    </a>
+  </div>
 </div>
 {% endblock %}

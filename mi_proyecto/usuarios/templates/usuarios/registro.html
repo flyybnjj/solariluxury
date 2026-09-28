@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Cuenta | SOLARILUXURY ARCHIVE{% endblock %}
+
+{% block extra_head %}
+<style>
+  .auth-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 80px;
+    background: radial-gradient(circle at 50% 30%, rgba(230,0,0,0.08) 0%, rgba(0,0,0,0.95) 70%);
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 460px;
+    background: rgba(15, 15, 20, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 44px 36px;
+    backdrop-filter: blur(24px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(230,0,0,0.12);
+  }
+  .auth-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .auth-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--accent, #e60000);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .auth-title {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: 38px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin: 0;
+  }
+  .auth-subtitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 6px;
+  }
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .auth-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .auth-input {
+    width: 100%;
+    padding: 13px 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.25s ease;
+    outline: none;
+  }
+  .auth-input:focus {
+    border-color: #e60000;
+    background: rgba(230, 0, 0, 0.04);
+    box-shadow: 0 0 16px rgba(230, 0, 0, 0.25);
+  }
+  .auth-btn-submit {
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    background: #e60000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(230, 0, 0, 0.4);
+  }
+  .auth-btn-submit:hover {
+    background: #ff1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 26px rgba(230, 0, 0, 0.6);
+  }
+  .auth-footer {
+    margin-top: 28px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .auth-link {
+    color: #e60000;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .auth-link:hover {
+    color: #ff4d4d;
+    text-decoration: underline;
+  }
+  .auth-messages {
+    margin-bottom: 20px;
+  }
+  .auth-alert-error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 8px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-eyebrow">NUEVO MIEMBRO</div>
+      <h1 class="auth-title">CREAR CUENTA</h1>
+      <p class="auth-subtitle">Únete a Solariluxury para drops exclusivos y seguimiento</p>
+    </div>
+
+    {% if messages %}
+    <div class="auth-messages">
+      {% for message in messages %}
+      <div class="auth-alert-error">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="auth-form">
+      {% csrf_token %}
+      <div class="auth-field">
+        <label class="auth-label">Usuario</label>
+        {{ form.username }}
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Correo Electrónico</label>
+        {{ form.email }}
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Contraseña</label>
+        {{ form.password }}
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Confirmar Contraseña</label>
+        {{ form.password_confirm }}
+      </div>
+
+      <button type="submit" class="auth-btn-submit">REGISTRARSE Y CONTINUAR →</button>
+    </form>
+
+    <div class="auth-footer">
+      ¿Ya eres miembro? <a href="{% url 'login' %}" class="auth-link">Inicia sesión</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

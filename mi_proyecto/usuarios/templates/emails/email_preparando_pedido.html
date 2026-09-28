@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Estamos preparando tu pedido — SOLARY</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; padding: 24px 18px !important; }
+      .grid-stack { display: block !important; width: 100% !important; margin-bottom: 16px !important; }
+      .headline { font-size: 22px !important; }
+      .prod-image { max-width: 240px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #111111;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f7; padding: 40px 10px;">
+    <tr>
+      <td align="center">
+        <!-- Main Card -->
+        <table class="email-container" width="580" cellpadding="0" cellspacing="0" border="0" style="width: 580px; max-width: 580px; background-color: #ffffff; border-radius: 18px; border: 1px solid #e5e5ea; padding: 44px 36px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="padding-bottom: 24px; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" style="font-size: 13px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #111111;">
+                    SOLARY
+                  </td>
+                  <td align="right" style="font-size: 11px; font-family: monospace; color: #707072; letter-spacing: 0.05em;">
+                    N.° DE PEDIDO {{ orden.codigo_orden|default:"SL-892104" }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding-top: 28px;">
+              <h1 class="headline" style="margin: 0 0 8px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: #111111; line-height: 1.15;">
+                ESTAMOS PREPARANDO TU PEDIDO
+              </h1>
+              <p style="margin: 0 0 28px; font-size: 14px; color: #707072; line-height: 1.5;">
+                Llegada estimada: <strong style="color: #111111; font-weight: 600;">{{ orden.fecha_estimada|default:"Viernes, 3 de oct. – Lunes, 6 de oct." }}</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Progress Bar (Preparando - 100% Email Client Proof) -->
+          <tr>
+            <td style="padding-bottom: 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px;">
+                <tr>
+                  <td width="24%" style="padding-right: 4px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td height="5" style="background-color: #111111; border-radius: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="24%" style="padding-right: 4px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td height="5" style="background-color: #111111; border-radius: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="24%" style="padding-right: 4px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td height="5" style="background-color: #e5e5ea; border-radius: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="24%">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td height="5" style="background-color: #e5e5ea; border-radius: 4px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 11px; color: #707072; font-weight: 500;">
+                <tr>
+                  <td width="25%" align="left" style="color: #111111;">Confirmado</td>
+                  <td width="25%" align="center" style="color: #111111; font-weight: 700;">Preparando</td>
+                  <td width="25%" align="center">En camino</td>
+                  <td width="25%" align="right">Entregado</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Product / Items Section -->
+          <tr>
+            <td style="padding-bottom: 24px;">
+              {% if items %}
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #707072; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid #f0f0f2;">
+                  Artículos del pedido ({{ items|length }})
+                </div>
+                {% for item in items %}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e5e5ea;">
+                  <tr>
+                    <td width="88" valign="top" style="padding-right: 14px;">
+                      <div style="background-color: #f6f6f6; border-radius: 12px; padding: 10px; text-align: center;">
+                        <img src="{{ item.imagen_url|default:'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png' }}" alt="{{ item.nombre }}" style="width: 68px; height: 68px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.06));">
+                      </div>
+                    </td>
+                    <td align="left" valign="top">
+                      <div style="font-size: 15px; font-weight: 700; color: #111111; margin-bottom: 2px;">
+                        {{ item.nombre }}
+                      </div>
+                      {% if item.subtitulo %}
+                      <div style="font-size: 12px; color: #707072; margin-bottom: 6px;">
+                        {{ item.subtitulo }}
+                      </div>
+                      {% endif %}
+                      <div style="font-size: 12px; color: #707072; line-height: 1.5;">
+                        Talla: <span style="color: #111111; font-weight: 600;">{{ item.talla|default:"Única" }}</span>
+                        {% if item.codigo_estilo %} · Estilo: <span style="color: #111111; font-weight: 600; font-family: monospace;">{{ item.codigo_estilo }}</span>{% endif %}
+                        <br>
+                        Cantidad: <span style="color: #111111; font-weight: 600;">{{ item.cantidad|default:"1" }}</span>
+                      </div>
+                    </td>
+                    <td align="right" valign="top" style="font-size: 15px; font-weight: 700; color: #111111; white-space: nowrap; padding-left: 12px;">
+                      {{ item.precio_formateado }}
+                    </td>
+                  </tr>
+                </table>
+                {% endfor %}
+              {% else %}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f6f6f6; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 20px;">
+                  <tr>
+                    <td align="center">
+                      <img class="prod-image" src="{{ producto.imagen_url|default:'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png' }}" alt="Producto Solary Luxury" style="max-width: 300px; width: 100%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06);">
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 10px; font-weight: 600; color: #707072; letter-spacing: 0.06em; text-transform: uppercase;">
+                        <tr>
+                          <td align="left">EDICIÓN EXCLUSIVA OFICIAL</td>
+                          <td align="right">AUTENTICIDAD NFC VERIFICADA</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding-bottom: 20px; border-bottom: 1px solid #e5e5ea;">
+                  <tr>
+                    <td align="left" valign="top">
+                      <div style="font-size: 16px; font-weight: 700; color: #111111; margin-bottom: 3px;">
+                        {{ producto.nombre|default:"Nike Air Force 1 Low × Syna World" }}
+                      </div>
+                      <div style="font-size: 13px; color: #707072; margin-bottom: 8px;">
+                        {{ producto.subtitulo|default:"Central Cee Special Edition · Black / Optic Yellow" }}
+                      </div>
+                      <div style="font-size: 12px; color: #707072; line-height: 1.5;">
+                        Talla: <span style="color: #111111; font-weight: 500;">{{ orden.talla|default:"9.5 US / 42.5 EU" }}</span><br>
+                        Estilo: <span style="color: #111111; font-weight: 500; font-family: monospace;">{{ producto.codigo_estilo|default:"FZ4210-001" }}</span><br>
+                        Cantidad: <span style="color: #111111; font-weight: 500;">{{ orden.cantidad|default:"1" }}</span>
+                      </div>
+                    </td>
+                    <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #111111;">
+                      {{ orden.precio_formateado|default:"$189.990 CLP" }}
+                    </td>
+                  </tr>
+                </table>
+              {% endif %}
+            </td>
+          </tr>
+
+          <!-- Price Summary Breakdown -->
+          <tr>
+            <td style="padding: 20px 0; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #707072; line-height: 1.8;">
+                <tr>
+                  <td align="left">Subtotal</td>
+                  <td align="right" style="color: #111111;">{{ orden.subtotal|default:"$189.990 CLP" }}</td>
+                </tr>
+                <tr>
+                  <td align="left">Envío asegurado</td>
+                  <td align="right" style="color: #111111;">Gratuito</td>
+                </tr>
+                <tr>
+                  <td align="left">Impuestos incluidos (IVA 19%)</td>
+                  <td align="right" style="color: #111111;">{{ orden.iva|default:"$30.334 CLP" }}</td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
+                    Total
+                  </td>
+                  <td align="right" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
+                    {{ orden.total|default:"$189.990 CLP" }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Shipping and Payment Details -->
+          <tr>
+            <td style="padding: 24px 0; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td class="grid-stack" width="50%" align="left" valign="top" style="font-size: 12px; color: #707072; line-height: 1.5;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 6px;">
+                      Dirección de entrega
+                    </div>
+                    <div style="color: #111111; font-weight: 600;">{{ cliente_nombre|default:orden.nombre_cliente|default:"Test Test" }}</div>
+                    <div>{{ orden.direccion|default:"Av. Nueva Costanera 4020, Depto 601" }}</div>
+                    <div>{{ orden.ciudad|default:"Vitacura, Región Metropolitana" }}</div>
+                    <div>Chile</div>
+                  </td>
+                  <td class="grid-stack" width="50%" align="left" valign="top" style="font-size: 12px; color: #707072; line-height: 1.5;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 6px;">
+                      Método de pago
+                    </div>
+                    <div style="color: #111111; font-weight: 600;">{{ orden.metodo_pago|default:"Apple Pay (Mastercard •••• 4242)" }}</div>
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin: 12px 0 4px;">
+                      Mensajería prioritaria
+                    </div>
+                    <div>DHL Express On-Demand Delivery</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Primary Call to Action Button (Apple / Nike Pill Button) -->
+          <tr>
+            <td align="center" style="padding-top: 28px;">
+              <a href="{{ tracking_url|default:'#' }}" style="display: block; width: 100%; box-sizing: border-box; background-color: #111111; color: #ffffff; text-decoration: none; padding: 16px 24px; border-radius: 9999px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-align: center;">
+                VER ESTADO DEL PEDIDO
+              </a>
+              <div style="margin-top: 16px; font-size: 12px; color: #707072;">
+                ¿Necesitas ayuda con este pedido? <a href="mailto:soporte@solaryluxury.com" style="color: #707072; text-decoration: underline;">Contactar a asistencia</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top: 36px; border-top: 1px solid #e5e5ea; margin-top: 28px; font-size: 11px; color: #8e8e93; line-height: 1.6;">
+              SOLARY LUXURY ARCHIVE · ALONSO DE CÓRDOVA 3890, VITACURA, SANTIAGO<br>
+              Recibes este correo porque realizaste una reserva o compra oficial en Solary Luxury.<br>
+              <a href="#" style="color: #707072; text-decoration: underline;">Política de Privacidad</a> · 
+              <a href="#" style="color: #707072; text-decoration: underline;">Términos del Servicio</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

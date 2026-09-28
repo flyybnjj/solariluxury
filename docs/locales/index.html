@@ -2,332 +2,1008 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta name="view-transition" content="same-origin">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact & Stores | Solariluxury</title>
-    <!-- Librerías locales obligatorias INACAP -->
-    <link rel="stylesheet" href="/solariluxury/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/solariluxury/static/css/luxury.css?v=2.5">
+    <title>Stores & Flagships | Solariluxury Archive</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+      (function() {
+        var saved = localStorage.getItem('solari_theme');
+        var theme = saved ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+
+      // SOLARI GLOBAL CART INITIALIZER (HEAD LEVEL)
+      window.getGlobalCart = function() {
+        try {
+          return JSON.parse(localStorage.getItem('solari_cart')) || [];
+        } catch(e) {
+          return [];
+        }
+      };
+      window.saveGlobalCart = function(cart) {
+        try {
+          localStorage.setItem('solari_cart', JSON.stringify(cart));
+        } catch(e) {}
+        if (typeof window.updateGlobalCartBadges === 'function') {
+          window.updateGlobalCartBadges();
+        }
+        if (typeof window.renderGlobalCart === 'function') {
+          window.renderGlobalCart();
+        }
+      };
+      window.addToGlobalCart = function(item) {
+        const cart = window.getGlobalCart();
+        cart.push(item);
+        window.saveGlobalCart(cart);
+        if (typeof window.openGlobalCart === 'function') {
+          window.openGlobalCart();
+        }
+      };
+    </script>
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      
+      :root, html[data-theme="dark"] {
+        --bg: #070709;
+        --bg-surface: #0e0e12;
+        --bg-card: #131318;
+        --bg-card-hover: #191922;
+        --bg-card-glass: rgba(19, 19, 24, 0.75);
+        --card-gradient: linear-gradient(180deg, #101015 0%, #08080a 100%);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --text-muted: rgba(255, 255, 255, 0.42);
+        --border: rgba(255, 255, 255, 0.1);
+        --border-hover: rgba(255, 255, 255, 0.28);
+        --accent: #ff2a2a;
+        --accent-glow: rgba(255, 42, 42, 0.35);
+        --notch-bg: rgba(14, 14, 18, 0.88);
+        --notch-border: rgba(255, 255, 255, 0.12);
+        --notch-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
+        --footer-bg: #050507;
+        --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.6);
+        --toggle-btn-bg: rgba(255, 255, 255, 0.08);
+        --toggle-btn-border: rgba(255, 255, 255, 0.15);
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --font-mono: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+
+      html[data-theme="light"] {
+        --bg: #f8f9fa;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f1f2f6;
+        --bg-card-glass: rgba(255, 255, 255, 0.88);
+        --card-gradient: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #6b7280;
+        --border: rgba(0, 0, 0, 0.09);
+        --border-hover: rgba(0, 0, 0, 0.22);
+        --accent: #d90429;
+        --accent-glow: rgba(217, 4, 41, 0.2);
+        --notch-bg: rgba(255, 255, 255, 0.9);
+        --notch-border: rgba(0, 0, 0, 0.12);
+        --notch-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+        --footer-bg: #ebebf0;
+        --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.08);
+        --toggle-btn-bg: rgba(0, 0, 0, 0.06);
+        --toggle-btn-border: rgba(0, 0, 0, 0.12);
+        --input-bg: rgba(0, 0, 0, 0.035);
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Apple Light Mode adjustments */
+      html[data-theme="light"] .sub-brand img {
+        filter: invert(1);
+      }
+      html[data-theme="light"] .sub-nav a {
+        color: rgba(0, 0, 0, 0.65);
+      }
+      html[data-theme="light"] .sub-nav a:hover,
+      html[data-theme="light"] .sub-nav a.active {
+        color: #000;
+        background: rgba(0, 0, 0, 0.07);
+      }
+      html[data-theme="light"] .sub-notch-divider {
+        background: rgba(0, 0, 0, 0.12);
+      }
+      html[data-theme="light"] .sub-footer {
+        background: var(--footer-bg);
+        border-top-color: var(--border);
+      }
+      html[data-theme="light"] .sub-footer a {
+        color: var(--text-secondary);
+      }
+      html[data-theme="light"] .sub-footer a:hover {
+        color: var(--text-primary);
+      }
+      html[data-theme="light"] .apple-tray-inner {
+        background: #ffffff;
+        border-color: rgba(0, 0, 0, 0.12);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+      }
+      html[data-theme="light"] .header-panel-group-title {
+        color: rgba(0, 0, 0, 0.45);
+      }
+      html[data-theme="light"] .apple-crud-item {
+        background: #f4f4f7;
+        color: #111;
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+      html[data-theme="light"] .header-panel-full-link {
+        background: #f4f4f7;
+        color: #111;
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+
+      /* Theme Toggle Button Styling */
+      .theme-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 10px;
+        border-radius: 100px;
+        background: var(--toggle-btn-bg);
+        border: 1px solid var(--toggle-btn-border);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .theme-toggle-btn:hover {
+        background: var(--border-hover);
+        border-color: var(--text-secondary);
+        transform: scale(1.04);
+      }
+      .theme-toggle-btn:active {
+        transform: scale(0.96);
+      }
+      html[data-theme="dark"] .theme-icon-sun {
+        display: inline-flex;
+        color: #fbbf24;
+      }
+      html[data-theme="dark"] .theme-icon-moon {
+        display: none;
+      }
+      html[data-theme="light"] .theme-icon-sun {
+        display: none;
+      }
+      html[data-theme="light"] .theme-icon-moon {
+        display: inline-flex;
+        color: #4f46e5;
+      }
+
+      /* Animated Red-Orange Gradient Text */
+      .vip-gradient-text {
+        background: linear-gradient(90deg, #ff1a1a, #ff7a00, #ff2a2a, #ff8c00);
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShine 3s ease infinite;
+        font-weight: 700;
+      }
+      @keyframes gradientShine {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      /* Apple Dynamic Island / Notch Navigation */
+      .sub-header {
+        position: fixed;
+        top: 14px; left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        max-width: 95vw;
+        z-index: 1000;
+        background: rgba(12, 12, 16, 0.88);
+        backdrop-filter: blur(40px) saturate(210%);
+        -webkit-backdrop-filter: blur(40px) saturate(210%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        border-radius: 100px;
+        padding: 5px 8px 5px 14px;
+        height: 48px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .sub-header:hover {
+        border-color: rgba(255, 255, 255, 0.22);
+        background: rgba(16, 16, 22, 0.96);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 22px rgba(230, 0, 0, 0.2);
+        transform: translateX(-50%) scale(1.015);
+      }
+      .sub-brand {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .sub-brand img {
+        height: 24px; width: auto;
+        filter: drop-shadow(0 0 6px rgba(230,0,0,0.5));
+        transition: transform 0.3s ease;
+      }
+      .sub-brand:hover img {
+        transform: scale(1.08);
+      }
+      .sub-notch-divider {
+        width: 1px;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .sub-nav { display: inline-flex; gap: 4px; list-style: none; align-items: center; }
+      .sub-nav a {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 6px 13px;
+        border-radius: 100px; font-size: 10.5px; font-weight: 600;
+        color: rgba(255,255,255,0.65); text-decoration: none;
+        font-family: var(--font-body); letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+      }
+      .sub-nav a:hover, .sub-nav a.active {
+        color: #fff;
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      .nav-vip-pill-btn {
+        background: rgba(230,0,0,0.12) !important;
+        border: 1px solid rgba(230,0,0,0.45) !important;
+        box-shadow: 0 0 16px rgba(230,0,0,0.25);
+      }
+      .nav-vip-pill-btn:hover {
+        background: rgba(230,0,0,0.25) !important;
+        box-shadow: 0 0 24px rgba(230,0,0,0.45);
+        border-color: #ff3333 !important;
+      }
+
+      /* Animated SVG Icons */
+      .anim-icon-pulse {
+        animation: iconPulse 2s infinite ease-in-out;
+      }
+      @keyframes iconPulse {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(230,0,0,0.4)); }
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(255,100,0,0.8)); }
+      }
+      .anim-icon-spin {
+        animation: iconSpin 8s infinite linear;
+      }
+      @keyframes iconSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Header Panel Button & Dropdown in base */
+      .header-panel-item { position: relative; list-style: none; }
+      .header-panel-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 15px;
+        border-radius: 100px;
+        border: 1px solid rgba(230,0,0,0.4);
+        background: rgba(230,0,0,0.12);
+        color: #ff6b6b;
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+      }
+      .header-panel-btn:hover, .header-panel-btn.open {
+        background: #e60000;
+        color: #fff;
+        border-color: #e60000;
+        box-shadow: 0 0 20px rgba(230,0,0,0.4);
+      }
+      .apple-chevron {
+        font-size: 8px;
+        color: rgba(255, 255, 255, 0.5);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .header-panel-btn.open .apple-chevron {
+        transform: rotate(180deg);
+        color: #fff;
+      }
+      .apple-expandable-tray {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-8px) scale(0.98);
+        transform-origin: top right;
+        transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.35s ease,
+                    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      }
+      .apple-expandable-tray.open {
+        max-height: 400px;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+      }
+      .header-panel-tray {
+        position: absolute;
+        top: calc(100% + 14px);
+        right: 0;
+        z-index: 10002;
+        width: 310px;
+      }
+      .header-panel-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-radius: 20px;
+        background: rgba(12, 12, 16, 0.96) !important;
+        backdrop-filter: blur(40px) saturate(200%);
+        -webkit-backdrop-filter: blur(40px) saturate(200%);
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 25px rgba(230, 0, 0, 0.15);
+        padding: 16px 18px !important;
+      }
+      .header-panel-group-title {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .header-panel-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .apple-crud-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-family: var(--font-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border: 1px solid;
+        transition: all 0.25s ease;
+      }
+      .apple-crud-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+      .apple-crud-add {
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(34, 197, 94, 0.35);
+        color: #4ade80;
+      }
+      .apple-crud-add:hover { background: rgba(34, 197, 94, 0.22); }
+      .apple-crud-edit {
+        background: rgba(59, 130, 246, 0.12);
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #60a5fa;
+      }
+      .apple-crud-edit:hover { background: rgba(59, 130, 246, 0.22); }
+      .apple-crud-del {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.35);
+        color: #f87171;
+      }
+      .apple-crud-del:hover { background: rgba(239, 68, 68, 0.22); }
+      .header-panel-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 6px 0;
+      }
+      .header-panel-full-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 14px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-family: var(--font-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .header-panel-full-link:hover {
+        background: rgba(230, 0, 0, 0.2);
+        border-color: rgba(230, 0, 0, 0.5);
+        color: #ff6b6b;
+      }
+
+      main { padding-top: 86px; min-height: 85vh; }
+
+      /* Sub-footer */
+      .sub-footer {
+        border-top: 1px solid var(--border);
+        padding: 60px 24px 40px;
+        background: #050505;
+        text-align: center;
+      }
+      .sub-footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+      .sub-footer a {
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        font-family: var(--font-body);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      .sub-footer a:hover { color: #fff; }
+      .sub-footer p {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        letter-spacing: 0.05em;
+      }
+
+      /* Global Cart & Header Bag Button */
+      .header-bag-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 100px;
+        background: var(--toggle-btn-bg);
+        border: 1px solid var(--toggle-btn-border);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .header-bag-btn:hover {
+        background: rgba(230, 0, 0, 0.15);
+        border-color: #ff3333;
+        color: #ff4d4d;
+        transform: scale(1.04);
+      }
+      .bag-counter-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 17px;
+        height: 17px;
+        padding: 0 4px;
+        border-radius: 100px;
+        background: #e60000;
+        color: #ffffff;
+        font-size: 9px;
+        font-weight: 800;
+        font-family: var(--font-mono);
+        box-shadow: 0 0 10px rgba(230,0,0,0.5);
+      }
+
+      /* Floating Cart Button (Bottom Right) */
+      .floating-bag-btn {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        z-index: 8990;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #0a0a0c;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(230, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .floating-bag-btn:hover {
+        transform: translateY(-4px) scale(1.08);
+        border-color: #e60000;
+        background: #141418;
+        box-shadow: 0 16px 45px rgba(230, 0, 0, 0.45);
+      }
+      .floating-bag-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 4px;
+        border-radius: 100px;
+        background: #e60000;
+        color: #ffffff;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 12px rgba(230,0,0,0.8);
+        border: 2px solid var(--bg);
+      }
+
+      /* Cart Drawer & Overlay in base.html */
+      .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9500; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+      .overlay.open { opacity: 1; pointer-events: auto; }
+      .cart-drawer {
+        position: fixed; top: 0; right: 0;
+        width: 420px; max-width: 90vw; height: 100vh;
+        background: var(--bg-surface); border-left: 1px solid var(--border);
+        z-index: 9501; transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        display: flex; flex-direction: column;
+        color: var(--text-primary);
+        box-shadow: -15px 0 50px rgba(0, 0, 0, 0.4);
+      }
+      .cart-drawer.open { transform: translateX(0); }
+      .cd-head {
+        padding: 24px 24px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .cd-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; color: var(--text-primary); }
+      .cd-close {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: var(--toggle-btn-bg); border: 1px solid var(--border);
+        color: var(--text-primary); font-size: 15px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+      }
+      .cd-close:hover { background: var(--border-hover); transform: rotate(90deg); }
+      .cd-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+      .cd-empty { text-align: center; padding: 64px 0; color: var(--text-muted); }
+      .cd-empty-icon { font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.35; }
+      .cd-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
+      .cd-item-img { width: 72px; height: 72px; border-radius: 10px; overflow: hidden; background: var(--bg-card); flex-shrink: 0; border: 1px solid var(--border); }
+      .cd-item-img img { width: 100%; height: 100%; object-fit: contain; }
+      .cd-item-info { flex: 1; min-width: 0; }
+      .cd-item-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .cd-item-price { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+      .cd-item-rm { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 6px; transition: color 0.2s; }
+      .cd-item-rm:hover { color: #e60000; }
+      .cd-foot { padding: 20px 24px 32px; border-top: 1px solid var(--border); background: var(--bg); }
+      .cd-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+      .cd-total-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-secondary); }
+      .cd-total-val { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.03em; color: var(--text-primary); }
+      .cd-cta {
+        width: 100%; padding: 16px; background: #e60000; border: none; border-radius: 12px;
+        color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+        text-transform: uppercase; cursor: pointer;
+        transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(230,0,0,0.25);
+      }
+      .cd-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230,0,0,0.45); background: #ff1a1a; }
+
+      @media (max-width: 768px) {
+        .sub-header { width: calc(100% - 20px); top: 10px; padding: 0 14px; }
+        .sub-nav { display: none; }
+      }
+    </style>
+
+    
+<style>
+  .stores-page {
+    min-height: calc(100vh - 120px);
+    background: #000;
+    padding: 120px 24px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stores-empty-box {
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 60px 36px;
+    backdrop-filter: blur(20px);
+  }
+  .stores-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: rgba(230, 0, 0, 0.1);
+    border: 1px solid rgba(230, 0, 0, 0.3);
+    color: var(--accent, #e60000);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .stores-empty-title {
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .stores-empty-desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+  .stores-empty-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  .stores-empty-action:hover {
+    background: #e60000;
+    border-color: #e60000;
+    box-shadow: 0 0 25px rgba(230, 0, 0, 0.5);
+    transform: translateY(-2px);
+  }
+</style>
+
 </head>
 <body>
+    <!-- Sub-page header -->
+    <header class="sub-header">
+      <a href="../index.html" class="sub-brand">
+        <img src="../static/img/logo_marca.png" alt="Solariluxury Logo">
+      </a>
+      <div class="sub-notch-divider"></div>
+      <nav>
+        <ul class="sub-nav">
+          <li><a href="../index.html" >CAMPAIGN</a></li>
+          <li><a href="../productos/" >VAULT / SHOP</a></li>
+          <li><a href="../locales/informacion/" >PREVENTA &amp; LOGÍSTICA</a></li>
+          
+          
 
-    <!-- 1. Marquesina Superior Oficial (Negra con GIF en movimiento continuo) -->
-    <div class="trm-marquee-bar">
-        <div class="trm-marquee-track">
-            <!-- Bloque 1 de texto y logos -->
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>SOLARILUXURY STREETWEAR &amp; SNEAKERS</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>PREVENTAS Y DROPS EXCLUSIVOS</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>TIENDAS OFICIALES LA SERENA</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span class="trm-arabic-text">سولاري لكجري</span>
-                <span>CALZADO 100% ORIGINAL EN CAJA</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>ENVÍOS A TODO CHILE Y RETIRO INMEDIATO</span>
-            </div>
-            <!-- Bloque duplicado para bucle infinito continuo -->
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>SOLARILUXURY STREETWEAR &amp; SNEAKERS</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>PREVENTAS Y DROPS EXCLUSIVOS</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>TIENDAS OFICIALES LA SERENA</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span class="trm-arabic-text">سولاري لكجري</span>
-                <span>CALZADO 100% ORIGINAL EN CAJA</span>
-            </div>
-            <div class="trm-marquee-item">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="TRM Logo" class="trm-marquee-gif">
-                <span>ENVÍOS A TODO CHILE Y RETIRO INMEDIATO</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Navbar Principal con Logo GIF en Rotación 3D -->
-    <header class="trm-navbar">
-        <div class="trm-nav-logo-box">
-            <a href="/solariluxury/" title="Solariluxury Inicio">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="Solariluxury Logo 3D" class="trm-nav-logo-gif">
+          
+          <li>
+            <a href="../login/" class="nav-vip-pill-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5" class="anim-icon-pulse"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span class="vip-gradient-text">INICIAR SESIÓN</span>
             </a>
-        </div>
+          </li>
+          
+        </ul>
+      </nav>
+      <div class="sub-notch-divider"></div>
+      
+      <!-- BOTÓN CARRITO / BAG EN EL NOTCH -->
+      <button type="button" class="header-bag-btn" id="globalBagBtn" onclick="openGlobalCart()" title="Ver Bolsa / Carrito de Compras" aria-label="Carrito de compras">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="bag-label">BAG</span>
+        <span class="bag-counter-badge" id="globalBagBadge">0</span>
+      </button>
 
-        <nav>
-            <ul class="trm-nav-links" id="desktopNavLinks">
-                <li><a href="/solariluxury/productos/" class="">TIENDA</a></li>
-                <li><a href="/solariluxury/locales/" class="active">CONTACTO</a></li>
-                <li><a href="/solariluxury/productos/">LOOKBOOK</a></li>
-                <li><a href="/solariluxury/locales/informacion/" class="">ESTADO DE PREVENTA</a></li>
-                <li><a href="/solariluxury/locales/informacion/">SEGUIR PEDIDO</a></li>
-            </ul>
-        </nav>
-
-        <div class="trm-nav-icons">
-            <button class="trm-nav-icon-btn" title="Buscar Producto" onclick="toggleSearchBox()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
-            <button class="trm-nav-icon-btn" title="Mi Cuenta" onclick="alert('Acceso a membresía Solariluxury La Serena')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-            </button>
-            <button class="trm-nav-icon-btn position-relative" title="Bolsa de Compras" onclick="alert('Tu bolsa de compras actual está lista para checkout.')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                </svg>
-                <span class="trm-cart-badge">0</span>
-            </button>
-            <!-- Botón Menú Móvil -->
-            <button class="trm-mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir Menú">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-        </div>
+      <div class="sub-notch-divider"></div>
+      <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Modo Día / Noche" aria-label="Cambiar tema">
+        <span class="theme-icon theme-icon-sun">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </span>
+        <span class="theme-icon theme-icon-moon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+        <span class="theme-label-text">NOCHE</span>
+      </button>
     </header>
 
-    <!-- Menú Desplegable Móvil Elegante (Drawer TRM) -->
-    <div id="mobileDrawerMenu" class="trm-mobile-drawer">
-        <div class="trm-drawer-header">
-            <div class="d-flex align-items-center gap-2">
-                <img src="/solariluxury/static/img/logo_spin.gif" alt="Solariluxury" style="height: 36px; width: auto;">
-                <span class="font-mono fw-bold text-uppercase" style="letter-spacing: 0.12em; font-size: 0.9rem;">SOLARILUXURY</span>
-            </div>
-            <button type="button" class="btn-close" onclick="toggleMobileMenu()" aria-label="Cerrar Menú" style="font-size: 1.1rem;"></button>
-        </div>
-
-        <!-- Barra de Búsqueda Rápida en Móvil -->
-        <div class="mb-4">
-            <form onsubmit="event.preventDefault(); window.location.href='/solariluxury/productos/';" class="d-flex">
-                <input type="text" placeholder="BUSCAR ZAPATILLAS O DROPS..." class="form-control rounded-0 border-dark font-mono text-uppercase" style="font-size: 0.78rem; padding: 10px 12px;">
-                <button type="submit" class="btn btn-dark rounded-0 px-3 fw-bold font-mono" style="font-size: 0.78rem;">IR</button>
-            </form>
-        </div>
-
-        <ul class="trm-drawer-links">
-            <li>
-                <a href="/solariluxury/productos/" class="">
-                    <span>TIENDA (CATÁLOGO COMPLETO)</span>
-                    <span>&rarr;</span>
-                </a>
-            </li>
-            <li>
-                <a href="/solariluxury/locales/" class="active">
-                    <span>CONTACTO &amp; SUCURSALES LA SERENA</span>
-                    <span>&rarr;</span>
-                </a>
-            </li>
-            <li>
-                <a href="/solariluxury/productos/">
-                    <span>LOOKBOOK UNDERGROUND</span>
-                    <span>&rarr;</span>
-                </a>
-            </li>
-            <li>
-                <a href="/solariluxury/locales/informacion/" class="">
-                    <span>ESTADO DE PREVENTA &amp; DÓLAR</span>
-                    <span>&rarr;</span>
-                </a>
-            </li>
-            <li>
-                <a href="/solariluxury/locales/informacion/">
-                    <span>SEGUIR MI PEDIDO</span>
-                    <span>&rarr;</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="trm-drawer-footer text-center">
-            <p class="font-mono small text-muted mb-3">TIENDA OFICIAL STREETWEAR &amp; SNEAKERS • LA SERENA, CHILE</p>
-            <div class="trm-social-row">
-                <a href="https://instagram.com" target="_blank" rel="noopener" class="trm-social-icon" title="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
-                </a>
-                <a href="https://wa.me/56991234567" target="_blank" rel="noopener" class="trm-social-icon" title="WhatsApp">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Reloj Digital en Tiempo Real -->
-    <div class="trm-live-clock-wrapper" id="liveTimestamp">
-        3/9/2026 12:24:58 PM
-    </div>
-
-    <!-- 4. Contenido Central Dinámico -->
     <main>
         
-<div class="container py-4 py-md-5 px-3" style="max-width: 1100px;">
-    
-    <!-- Encabezado Limpio Estilo TRM -->
-    <div class="text-center mb-4 mb-md-5 pb-3 border-bottom border-dark">
-        <h1 class="font-mono fw-bold text-uppercase fs-3 fs-md-2 mb-2">CONTACT &amp; EXPERIENCE STORES (2)</h1>
-        <p class="text-muted font-mono small mb-0" style="font-size: 0.76rem;">ATENCIÓN PRESENCIAL • RETIRO INMEDIATO EN LA SERENA • PRUEBA DE TALLAS</p>
-    </div>
-
-    <!-- Grid de Sucursales Enmarcadas -->
-    <div class="row g-3 g-md-4 mb-4 mb-md-5">
-        
-        <div class="col-md-6">
-            <div class="border border-dark p-3 p-md-4 bg-white h-100 d-flex flex-column">
-                <div class="mb-3 overflow-hidden border border-dark" style="height: 200px; max-height: 240px;">
-                    <img src="/solariluxury/static/img/local1.jpg" alt="Sucursal Mall Plaza La Serena" class="w-100 h-100" style="object-fit: cover;">
-                </div>
-                
-                <span class="badge bg-black text-white font-mono rounded-0 p-2 mb-2 d-inline-block align-self-start" style="font-size: 0.68rem;">
-                    SOLARILUXURY FLAGSHIP
-                </span>
-                
-                <h3 class="font-mono fw-bold text-uppercase fs-5 fs-md-4 mb-1">Sucursal Mall Plaza La Serena</h3>
-                <p class="text-muted small mb-3" style="font-size: 0.78rem;">Tienda Principal de Experiencia y Retiro</p>
-
-                <div class="p-3 border border-dark mb-3 bg-light font-mono small" style="font-size: 0.76rem;">
-                    <p class="mb-2"><strong>DIRECCIÓN:</strong> Av. Alberto Solari 1400, La Serena</p>
-                    <p class="mb-2"><strong>HORARIO:</strong> 10:00 - 20:30 hrs</p>
-                    <p class="mb-0"><strong>TELÉFONO:</strong> +56 9 1234 5678</p>
-                </div>
-
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top border-dark">
-                    <span class="font-mono small text-muted" style="font-size: 0.72rem;">Abierto hoy • Retiro inmediato</span>
-                    <a href="tel:+56 9 1234 5678" class="trm-btn-boxed d-inline-flex" style="width: auto; padding: 6px 18px; min-height: 38px; font-size: 0.75rem;">
-                        CONTACTAR
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6">
-            <div class="border border-dark p-3 p-md-4 bg-white h-100 d-flex flex-column">
-                <div class="mb-3 overflow-hidden border border-dark" style="height: 200px; max-height: 240px;">
-                    <img src="/solariluxury/static/img/local2.jpg" alt="Sucursal Centro La Serena" class="w-100 h-100" style="object-fit: cover;">
-                </div>
-                
-                <span class="badge bg-black text-white font-mono rounded-0 p-2 mb-2 d-inline-block align-self-start" style="font-size: 0.68rem;">
-                    SOLARILUXURY SHOWROOM
-                </span>
-                
-                <h3 class="font-mono fw-bold text-uppercase fs-5 fs-md-4 mb-1">Sucursal Centro La Serena</h3>
-                <p class="text-muted small mb-3" style="font-size: 0.78rem;">Showroom Exclusivo y Entrega de Calzado / Streetwear</p>
-
-                <div class="p-3 border border-dark mb-3 bg-light font-mono small" style="font-size: 0.76rem;">
-                    <p class="mb-2"><strong>DIRECCIÓN:</strong> Calle Balmaceda 450, La Serena</p>
-                    <p class="mb-2"><strong>HORARIO:</strong> 09:30 - 19:30 hrs</p>
-                    <p class="mb-0"><strong>TELÉFONO:</strong> +56 9 8765 4321</p>
-                </div>
-
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top border-dark">
-                    <span class="font-mono small text-muted" style="font-size: 0.72rem;">Abierto hoy • Retiro inmediato</span>
-                    <a href="tel:+56 9 8765 4321" class="trm-btn-boxed d-inline-flex" style="width: auto; padding: 6px 18px; min-height: 38px; font-size: 0.75rem;">
-                        CONTACTAR
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <!-- Banner Inferior de Asesoría -->
-    <div class="border border-dark p-3 p-md-4 text-center bg-white">
-        <h4 class="font-mono fw-bold text-uppercase fs-5 mb-2">¿TIENES DUDAS CON TU PEDIDO O TALLA?</h4>
-        <p class="text-muted font-mono small mb-3" style="font-size: 0.78rem;">Escríbenos directamente o visita nuestras tiendas oficiales en La Serena.</p>
-        <a href="/solariluxury/productos/" class="trm-btn-boxed d-inline-flex mx-auto" style="width: auto; padding: 10px 28px; font-size: 0.78rem;">
-            VOLVER AL SHOP &rarr;
-        </a>
-    </div>
-
+<div class="stores-page">
+  <div class="stores-empty-box">
+    <span class="stores-badge">ESPACIO DISPONIBLE / EN RENOVACIÓN</span>
+    <h1 class="stores-empty-title">LOCALES & ESPACIOS</h1>
+    <p class="stores-empty-desc">
+      Esta sección se encuentra temporalmente vacía y lista para nuevas integraciones y locaciones oficiales.
+    </p>
+    <a href="../productos/" class="stores-empty-action">
+      EXPLORAR VAULT DE PRODUCTOS →
+    </a>
+  </div>
 </div>
 
     </main>
 
-    <!-- Footer Minimalista Oficial -->
-    <footer class="border-top border-dark py-4 text-center bg-white font-mono mt-auto">
-        <div class="container">
-            <p class="mb-0 text-dark fw-bold text-uppercase" style="letter-spacing: 0.18em; font-size: 0.82rem;">SOLARILUXURY &copy; 2026 • TODOS LOS DERECHOS RESERVADOS</p>
-        </div>
+    <footer class="sub-footer">
+      <div class="sub-footer-links">
+        <a href="../index.html">CAMPAÑA</a>
+        <a href="../productos/">CATÁLOGO</a>
+        <a href="../locales/informacion/">PREVENTA &amp; RASTREO</a>
+        
+        <a href="../login/">INICIAR SESIÓN</a>
+        
+        
+      </div>
+      <p>© 2026 SOLARILUXURY ARCHIVE • OFFICIAL CATALOG STOREFRONT</p>
     </footer>
 
-    <!-- Scripts Locales y Actualización del Reloj -->
-    <script src="/solariluxury/static/js/bootstrap.bundle.min.js"></script>
-    <script src="/solariluxury/static/js/gsap.min.js"></script>
     <script>
-        function updateLiveClock() {
-            const now = new Date();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
-            const year = now.getFullYear();
-            
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            
-            const clockText = `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
-            const clockEl = document.getElementById('liveTimestamp');
-            if (clockEl) {
-                clockEl.textContent = clockText;
-            }
-            const gatewayClockEl = document.getElementById('gatewayClock');
-            if (gatewayClockEl) {
-                gatewayClockEl.textContent = clockText;
-            }
-        }
-        setInterval(updateLiveClock, 1000);
-        updateLiveClock();
+    function toggleTheme() {
+      var current = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('solari_theme', next);
+      updateThemeLabels(next);
+      window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
+    }
 
-        function toggleMobileMenu() {
-            const drawer = document.getElementById('mobileDrawerMenu');
-            if (drawer) {
-                drawer.classList.toggle('active');
-                if (drawer.classList.contains('active')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = '';
-                }
-            }
-        }
+    function updateThemeLabels(theme) {
+      var labels = document.querySelectorAll('.theme-label-text');
+      labels.forEach(function(el) {
+        el.textContent = theme === 'dark' ? 'NOCHE' : 'DÍA';
+      });
+      var btns = document.querySelectorAll('.theme-toggle-btn');
+      btns.forEach(function(b) {
+        b.setAttribute('title', theme === 'dark' ? 'Cambiar a Modo Día (Blanco)' : 'Cambiar a Modo Noche (Oscuro)');
+      });
+    }
 
-        function toggleSearchBox() {
-            const query = prompt('Buscar zapatillas o streetwear (ej: Jordan 4, Nike TN, Hoodie):');
-            if (query) {
-                window.location.href = '/solariluxury/productos/';
-            }
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+      var current = document.documentElement.getAttribute('data-theme') || 'dark';
+      updateThemeLabels(current);
+    });
+
+    function toggleAppleTray(trayId, btn) {
+      const tray = document.getElementById(trayId);
+      if (!tray) return;
+      const isCurrentlyOpen = tray.classList.contains('open');
+
+      document.querySelectorAll('.apple-expandable-tray.open').forEach(t => {
+        if (t.id !== trayId) t.classList.remove('open');
+      });
+      document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open').forEach(b => {
+        if (b !== btn) b.classList.remove('open');
+      });
+
+      if (isCurrentlyOpen) {
+        tray.classList.remove('open');
+        btn.classList.remove('open');
+      } else {
+        tray.classList.add('open');
+        btn.classList.add('open');
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.header-panel-item') && !e.target.closest('.apple-control-wrap')) {
+        document.querySelectorAll('.apple-expandable-tray.open').forEach(t => t.classList.remove('open'));
+        document.querySelectorAll('.header-panel-btn.open, .apple-pill-btn.open').forEach(b => b.classList.remove('open'));
+      }
+    });
     </script>
-    
+    <!-- Floating Cart Button -->
+    <button type="button" class="floating-bag-btn" id="floatingBagBtn" onclick="openGlobalCart()" title="Bolsa de compra" aria-label="Abrir bolsa de compras">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="floating-bag-badge" id="floatingBagBadge">0</span>
+    </button>
+
+    <!-- Cart Overlay & Drawer in base.html -->
+    <div class="overlay" id="globalCartOverlay" onclick="closeGlobalCart()"></div>
+
+    <div class="cart-drawer" id="globalCartDrawer">
+      <div class="cd-head">
+        <span class="cd-title">YOUR BAG</span>
+        <button type="button" class="cd-close" onclick="closeGlobalCart()" title="Cerrar bolsa">✕</button>
+      </div>
+      <div class="cd-body" id="globalCartBody">
+        <div class="cd-empty" id="globalCartEmpty">
+          <span class="cd-empty-icon">○</span>
+          <p>Tu bolsa de compras está vacía.</p>
+        </div>
+        <div id="globalCartItems"></div>
+      </div>
+      <div class="cd-foot">
+        <div class="cd-total">
+          <span class="cd-total-label">TOTAL</span>
+          <span class="cd-total-val" id="globalCartTotal">$0 CLP</span>
+        </div>
+        <div class="cd-total-usd-row" id="globalCartTotalUsd" style="display:flex; justify-content:space-between; align-items:center; margin: 6px 0 14px; padding: 7px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); font-size: 11px;">
+          <span style="color: var(--text-muted); font-size: 10px; letter-spacing:0.04em;">CONVERSIÓN EN VIVO:</span>
+          <span style="color: #4ade80; font-weight: 700;" id="globalCartUsdVal">≈ $0.00 USD</span>
+        </div>
+        <button type="button" class="cd-cta" onclick="checkoutGlobalCart()">PROCEDER AL PAGO →</button>
+      </div>
+    </div>
+
+    <script>
+    // GLOBAL CART CONTROLLER
+    function getGlobalCart() {
+      try {
+        return JSON.parse(localStorage.getItem('solari_cart')) || [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveGlobalCart(cart) {
+      try {
+        localStorage.setItem('solari_cart', JSON.stringify(cart));
+      } catch(e) {}
+      updateGlobalCartBadges();
+    }
+
+    function updateGlobalCartBadges() {
+      const cart = getGlobalCart();
+      const count = cart.length;
+      const hBadge = document.getElementById('globalBagBadge');
+      const fBadge = document.getElementById('floatingBagBadge');
+      if (hBadge) hBadge.textContent = count;
+      if (fBadge) fBadge.textContent = count;
+    }
+
+    let LIVE_USD_EXCHANGE = 965.71;
+    fetch('/api/dolar/').then(r => r.json()).then(data => {
+      if (data && data.dolar) LIVE_USD_EXCHANGE = data.dolar;
+      renderGlobalCart();
+    }).catch(() => {});
+
+    function renderGlobalCart() {
+      const cart = getGlobalCart();
+      updateGlobalCartBadges();
+      const emptyEl = document.getElementById('globalCartEmpty');
+      const itemsEl = document.getElementById('globalCartItems');
+      const totalEl = document.getElementById('globalCartTotal');
+      const usdEl = document.getElementById('globalCartUsdVal');
+
+      if (!cart.length) {
+        if (emptyEl) emptyEl.style.display = 'block';
+        if (itemsEl) itemsEl.innerHTML = '';
+        if (totalEl) totalEl.textContent = '$0 CLP';
+        if (usdEl) usdEl.textContent = '≈ $0.00 USD';
+        return;
+      }
+
+      if (emptyEl) emptyEl.style.display = 'none';
+      let total = 0;
+      if (itemsEl) {
+        itemsEl.innerHTML = cart.map((item, idx) => {
+          const numPrice = parseInt(String(item.price).replace(/\D/g, '')) || 0;
+          total += numPrice;
+          const fmtPrice = '$' + numPrice.toLocaleString('es-CL') + ' CLP';
+          return `
+            <div class="cd-item">
+              <div class="cd-item-img">
+                <img src="${item.img || ''}" alt="${item.name || 'Producto'}">
+              </div>
+              <div class="cd-item-info">
+                <div class="cd-item-name">${item.name || 'Producto'}</div>
+                <div class="cd-item-price">${fmtPrice}</div>
+              </div>
+              <button type="button" class="cd-item-rm" onclick="removeGlobalCartItem(${idx})" title="Eliminar producto">✕</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (totalEl) totalEl.textContent = '$' + total.toLocaleString('es-CL') + ' CLP';
+      if (usdEl) {
+        const usd = (total / (LIVE_USD_EXCHANGE || 965.71)).toFixed(2);
+        usdEl.textContent = `≈ $${usd} USD`;
+      }
+    }
+
+    function openGlobalCart() {
+      renderGlobalCart();
+      const drawer = document.getElementById('globalCartDrawer');
+      const overlay = document.getElementById('globalCartOverlay');
+      if (drawer) drawer.classList.add('open');
+      if (overlay) overlay.classList.add('open');
+    }
+
+    function closeGlobalCart() {
+      const drawer = document.getElementById('globalCartDrawer');
+      const overlay = document.getElementById('globalCartOverlay');
+      if (drawer) drawer.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+    }
+
+    function removeGlobalCartItem(idx) {
+      const cart = getGlobalCart();
+      cart.splice(idx, 1);
+      saveGlobalCart(cart);
+      renderGlobalCart();
+    }
+
+    function addToGlobalCart(item) {
+      const cart = getGlobalCart();
+      cart.push(item);
+      saveGlobalCart(cart);
+      openGlobalCart();
+    }
+
+    function checkoutGlobalCart() {
+      const cart = getGlobalCart();
+      if (!cart.length) {
+        alert('Tu bolsa está vacía. Selecciona un producto para continuar.');
+        return;
+      }
+      window.location.href = '/informacion/#tracking';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateGlobalCartBadges();
+    });
+    </script>
 </body>
 </html>

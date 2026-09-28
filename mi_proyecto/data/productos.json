@@ -1,171 +1,375 @@
-﻿[
+[
   {
     "id": 1,
-    "nombre": "AIR JORDAN 4 RETRO 'BLACK CAT'",
-    "subtitulo": "SILUETA ICÓNICA RETRO VINTAGE",
-    "precio": 189990,
-    "precio_usd": "200.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "Edición clásica Air Jordan 4 en gamuza nubuck negro mate con herrajes a tono y cámara Air visible.",
-    "detalles": ["CUERO NUBUCK DE PRIMERA CALIDAD", "AMORTIGUACIÓN AIR EN TALÓN Y ANTEPIÉ", "HERRAJES EN NEGRO MATE", "CÓDIGO DE ESTILO: CU1110-010", "STOCK FÍSICO VERIFICADO EN LA SERENA"],
-    "badge_estado": "AGOTADO",
-    "tallas": ["US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 11"],
-    "imagen": "img/jordan.jpg"
+    "nombre": "TRAPSTAR LONDON X CENTRAL CEE — DECODED 2.0 PUFFER 'HYPERDRIVE'",
+    "subtitulo": "PIEZA MAESTRA CAMPAÑA OFICIAL 2026",
+    "precio": 379990,
+    "precio_usd": "395.00",
+    "categoria": "CAMPERAS Y PUFFERS",
+    "descripcion": "Chaqueta acolchada de plumón 700-fill con ribetes reflectantes 3M Scotchlite y bordado arqueado Trapstar en chenille de alta densidad sobre el pecho. Usada por Central Cee en la campaña oficial de Londres.",
+    "detalles": [
+      "RELLENO 700-FILL RDS GOOSE DOWN TÉRMICO",
+      "BORDADO ARQUEADO GÓTICO TRAPSTAR EN CHENILLE 3D",
+      "RIBETES REFLECTANTES 3M SCOTCHLITE DE ALTA VISIBILIDAD",
+      "FORRO INTERIOR DE SATÉN ACOLCHADO CON BOLSILLO SECRETO",
+      "CIERRE CROMADO BIDIRECCIONAL CON TIRADOR 'T' STAR",
+      "CHIP NFC DE AUTENTICIDAD INTEGRADO EN LA MANGA"
+    ],
+    "badge_estado": "LIMITED DROP",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "imagen": "img/trapstar_puffer_hero.jpg",
+    "imagen_3m": "img/trapstar_3m_flash.jpg",
+    "imagen_open": "img/trapstar_puffer_open.jpg",
+    "imagen_macro": "img/trapstar_chenille_texture.jpg"
   },
   {
     "id": 2,
-    "nombre": "TRAVIS SCOTT X AIR JORDAN 1 LOW 'REVERSE MOCHA'",
-    "subtitulo": "EDICIÓN LIMITADA DE COLECCIÓN",
-    "precio": 329990,
-    "precio_usd": "350.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "Colaboración exclusiva de Travis Scott con swoosh invertido en tono crema y gamuza mocha premium.",
-    "detalles": ["GAMUZA Y CUERO PREMIUM", "SWOOSH INVERTIDO CACTUS JACK", "SUELA SAIL VINTAGE", "INCLUYE CORDONES ADICIONALES", "CÓDIGO DE ESTILO: DM7866-162"],
-    "badge_estado": "AGOTADO",
-    "tallas": ["US 8.5", "US 9", "US 9.5", "US 10"],
-    "imagen": "img/jordan1_travis.jpg"
+    "nombre": "TRAPSTAR LONDON X CENTRAL CEE — SHOOTERS CHENILLE TRACKSUIT",
+    "subtitulo": "CONJUNTO HOODIE Y SWEATPANTS HEATHER GREY",
+    "precio": 249990,
+    "precio_usd": "260.00",
+    "categoria": "TRACKSUITS",
+    "descripcion": "Conjunto oficial de chándal en algodón pesado 450 GSM con bordado bouclé en relieve 'Trapstar Shooters' en negro y contorno rojo fuego. Silueta clásica de drill londinense.",
+    "detalles": [
+      "ALGODÓN RÚSTICO PREMIUM 450 GSM DE ALTA DENSIDAD",
+      "APLIQUE TRAPSTAR SHOOTERS EN CHENILLE BICOLOR",
+      "PANTALÓN CON CINTURA ELASTICADA Y HERRAJES METÁLICOS",
+      "CAPUCHA DOBLE CAPA DE CAÍDA ESTRUCTURADA",
+      "EDICIÓN ESPECIAL CENTRAL CEE TOUR FIT"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "imagen": "img/trapstar_tracksuit.jpg",
+    "imagen_3m": "img/trapstar_tracksuit.jpg",
+    "imagen_open": "img/trapstar_tracksuit.jpg",
+    "imagen_macro": "img/trapstar_chenille_texture.jpg"
   },
   {
     "id": 3,
-    "nombre": "AIR JORDAN 1 HIGH OG 'CHICAGO LOST & FOUND'",
-    "subtitulo": "HERENCIA ORIGINAL RETRO 1985",
-    "precio": 219990,
-    "precio_usd": "235.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "La silueta más legendaria de la historia del calzado con acabado envejecido vintage en caja original de los 80.",
-    "detalles": ["CUERO CRAQUELADO PREMIUM", "COLORWAY OFICIAL CHICAGO (VARSITY RED / BLACK)", "CAJA Y FACTURA VINTAGE DE COLECCIÓN", "CÓDIGO DE ESTILO: DZ5485-612"],
-    "badge_estado": "DISPONIBLE",
-    "tallas": ["US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 10.5", "US 11"],
-    "imagen": "img/jordan1_chicago.jpg"
-  },
-  {
-    "id": 4,
-    "nombre": "NIKE AIR MAX PLUS TN 'TRIPLE BLACK'",
-    "subtitulo": "AMORTIGUACIÓN TUNED AIR VISIBLE",
-    "precio": 149990,
-    "precio_usd": "160.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "Zapatillas urbanas de alto rendimiento con caja de soporte termoplástica y malla transpirable con detalles reflectantes.",
-    "detalles": ["SISTEMA TUNED AIR EN ANTEPIÉ Y TALÓN", "MALLA TRANSPIRABLE CON DETALLES 3M", "SUELA DE GOMA DE MÁXIMA TRACCIÓN", "CÓDIGO DE ESTILO: 604133-050", "DISPONIBLE PARA RETIRO INMEDIATO"],
-    "badge_estado": "DISPONIBLE",
-    "tallas": ["US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 10.5"],
-    "imagen": "img/tn.jpg"
-  },
-  {
-    "id": 5,
-    "nombre": "NIKE DUNK LOW RETRO 'PANDA'",
-    "subtitulo": "CALZADO CLÁSICO BICOLOR",
-    "precio": 119990,
-    "precio_usd": "125.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "Silueta clásica de básquetbol de los 80 en combinación monocromática blanco y negro con suela acolchada.",
-    "detalles": ["CUERO SUAVE RESISTENTE", "SUELA DE GOMA COSIDA", "DISEÑO VERSÁTIL BICOLOR", "CÓDIGO DE ESTILO: DD1391-100", "EL PAR MÁS POPULAR DE LA TEMPORADA"],
-    "badge_estado": "DISPONIBLE",
-    "tallas": ["US 7.5", "US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 11"],
-    "imagen": "img/dunk_panda.jpg"
-  },
-  {
-    "id": 6,
-    "nombre": "AIR JORDAN 4 RETRO 'MILITARY BLACK'",
-    "subtitulo": "EDICIÓN ESPECIAL CONTRASTE",
-    "precio": 199990,
-    "precio_usd": "210.00",
-    "categoria": "ZAPATILLAS (SNEAKERS)",
-    "descripcion": "Bloques de color negro y blanco con puntera en gamuza gris claro y detalles de malla lateral.",
-    "detalles": ["CUERO LISO BLANCO Y GAMUZA GRIS", "HERRAJES EN NEGRO MATE", "AMORTIGUACIÓN AIR EN LA ENTRESUELA", "CÓDIGO DE ESTILO: DH6927-111"],
-    "badge_estado": "AGOTADO",
-    "tallas": ["US 8.5", "US 9", "US 9.5", "US 10", "US 10.5"],
-    "imagen": "img/jordan4_military.jpg"
-  },
-  {
-    "id": 7,
-    "nombre": "BEAST ZIP HOODIE",
-    "subtitulo": "POLERÓN PESADO CON CIERRE COMPLETO",
-    "precio": 89990,
-    "precio_usd": "95.00",
+    "nombre": "POLERÓN TRAPSTAR LONDON CHENILLE DECODED 'BLACK/BLUE'",
+    "subtitulo": "HOODIE CLÁSICO EMBLEMÁTICO",
+    "precio": 139990,
+    "precio_usd": "145.00",
     "categoria": "POLERONES (HOODIES)",
-    "descripcion": "80% algodón orgánico peinado de 480 GSM con corte boxy streetwear y cierre metálico YKK reforzado.",
-    "detalles": ["ALGODÓN PESADO 480 GSM", "80% ALGODÓN ORGÁNICO, 20% POLIÉSTER", "COLOR: NEGRO PROFUNDO", "CORTE BOXY / OVERSIZE", "CIERRE METÁLICO PERSONALIZADO"],
-    "badge_estado": "AGOTADO",
-    "tallas": ["S", "M", "L", "XL"],
-    "imagen": "img/beast_zip.jpg"
-  },
-  {
-    "id": 8,
-    "nombre": "BLACK CAMO CURB HOODIE",
-    "subtitulo": "POLERÓN CANGURO DE ALTO GRAMAJE",
-    "precio": 94990,
-    "precio_usd": "100.00",
-    "categoria": "POLERONES (HOODIES)",
-    "descripcion": "Hoodie pullover de corte ancho con capucha doble capa sin cordón y textura afelpada interna de 500 GSM.",
-    "detalles": ["ALGODÓN FLEECE PESADO 500 GSM", "CAPUCHA DOBLE FORRADA", "COLOR: NEGRO TOTAL", "BOLSILLO CANGURO CON COSTURAS REFORZADAS", "EDICIÓN LIMITADA LA SERENA"],
+    "descripcion": "El icónico hoodie de Trapstar London en felpa de algodón grueso negro con el parche Decoded en relieve chenille celeste hielo y detalles reflectantes.",
+    "detalles": [
+      "ALGODÓN ORGÁNICO 400 GSM",
+      "LOGO DECODED EN CHENILLE CELESTE",
+      "BOLSILLO DE CANGURO REFORZADO",
+      "PUÑOS Y CINTURA ACANALADOS DE MÁXIMO AJUSTE"
+    ],
     "badge_estado": "DISPONIBLE",
-    "tallas": ["S", "M", "L", "XL"],
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
     "imagen": "img/camo_hoodie.jpg"
   },
   {
-    "id": 9,
-    "nombre": "BLACK BEAST T-SHIRT",
-    "subtitulo": "POLERA STREETWEAR OVERSIZED",
-    "precio": 39990,
-    "precio_usd": "45.00",
-    "categoria": "POLERAS",
-    "descripcion": "100% algodón peinado 260 GSM con hombros caídos y cuello reforzado de alta durabilidad.",
-    "detalles": ["100% ALGODÓN PESADO 260 GSM", "CUELLO DE RIB REFORZADO", "COLOR: NEGRO LAVADO", "CORTE OVERSIZE DROP SHOULDER", "ACABADO SUAVE AL TACTO"],
+    "id": 4,
+    "nombre": "POLERÓN TRAPSTAR LONDON ZIP-UP 'BEAST REFLECTIVE'",
+    "subtitulo": "CHAQUETA CON CIERRE METÁLICO Y GRAFISMOS TÁCTICOS",
+    "precio": 154990,
+    "precio_usd": "165.00",
+    "categoria": "POLERONES (HOODIES)",
+    "descripcion": "Polerón con cremallera completa, estampados reflectantes 3M en mangas y espalda, y capucha con corte pasamontañas integrado.",
+    "detalles": [
+      "CIERRE METÁLICO YKK DOBLE VÍA",
+      "ESTAMPADO REFLECTANTE 3M RESISTENTE A LAVADOS",
+      "CORTE OVERSIZED STREETWEAR",
+      "BOLSILLOS CON CIERRES OCULTOS"
+    ],
     "badge_estado": "DISPONIBLE",
-    "tallas": ["S", "M", "L", "XL"],
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "imagen": "img/beast_zip.jpg"
+  },
+  {
+    "id": 5,
+    "nombre": "CENTRAL CEE 'SYNA WORLD' X TRAPSTAR CAMPAIGN T-SHIRT",
+    "subtitulo": "POLERA STREETWEAR OVERSIZED EDICIÓN LONDRES",
+    "precio": 54990,
+    "precio_usd": "58.00",
+    "categoria": "POLERAS",
+    "descripcion": "Polera de algodón peinado 280 GSM con diseño de la colaboración entre Trapstar London y el colectivo Syna World de Central Cee.",
+    "detalles": [
+      "100% ALGODÓN PESADO 280 GSM",
+      "CUELLO DE RIB REFORZADO 3.5 CM",
+      "CORTE CAÍDO DROP SHOULDER",
+      "SERIGRAFÍA TÁCTIL DE ALTA RESOLUCIÓN"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
     "imagen": "img/beast_tshirt.jpg"
   },
   {
-    "id": 10,
-    "nombre": "FLARED SWEATPANTS BLACK",
-    "subtitulo": "PANTALÓN DEPORTIVO CORTE FLARED",
-    "precio": 69990,
-    "precio_usd": "75.00",
-    "categoria": "PANTALONES FLARED",
-    "descripcion": "Pantalón de corte acampanado con caída recta diseñada para lucir zapatillas high-top y low-top.",
-    "detalles": ["ALGODÓN RÚSTICO PESADO 420 GSM", "CORTE FLARED ACAMPANADO", "BOLSILLOS LATERALES PROFUNDOS", "CINTURA ELÁSTICA CON CORDÓN INTERNO"],
-    "badge_estado": "DISPONIBLE",
-    "tallas": ["S", "M", "L", "XL"],
-    "imagen": "img/flared_pants.jpg"
-  },
-  {
-    "id": 11,
-    "nombre": "SOLARILUXURY BALACLAVA 3M",
-    "subtitulo": "PASAMONTAÑAS TÁCTICO REFLECTANTE",
-    "precio": 29990,
-    "precio_usd": "32.00",
-    "categoria": "PASAMONTAÑAS",
-    "descripcion": "Pasamontañas de punto técnico transpirable con ajuste elástico y logotipo reflectante 3M.",
-    "detalles": ["TEJIDO ELÁSTICO TRANSPIRABLE", "ESTAMPILLA 3M REFLECTANTE", "AJUSTE ERGONÓMICO CONFORTABLE", "COLOR: NEGRO TÁCTICO", "TALLA ÚNICA AJUSTABLE"],
-    "badge_estado": "DISPONIBLE",
-    "tallas": ["TALLA ÚNICA"],
-    "imagen": "img/balaclava_black.jpg"
-  },
-  {
-    "id": 12,
-    "nombre": "CROSSBODY BAG TACTICAL",
-    "subtitulo": "MORRAL BANDOLERA URBANA",
-    "precio": 44990,
-    "precio_usd": "48.00",
+    "id": 6,
+    "nombre": "MORRAL CRUZADO TRAPSTAR LONDON 'IRON GATE' CROSSBODY",
+    "subtitulo": "BANDOLERA TÁCTICA DE SEGURIDAD",
+    "precio": 79990,
+    "precio_usd": "85.00",
     "categoria": "BOLSOS Y MORRALES",
-    "descripcion": "Morral bandolera de nylon ripstop impermeable con correa ajustable y múltiples compartimentos de seguridad.",
-    "detalles": ["NYLON CORDURA RIPSTOP IMPERMEABLE", "CORREA AJUSTABLE CON HEBILLA METÁLICA", "3 COMPARTIMENTOS CON CIERRE", "LOGOTIPO EN RELIEVE GOMA"],
+    "descripcion": "La infaltable riñonera/bandolera cruzada Trapstar Iron Gate con hebilla táctica Cobra, nylon balístico repelente al agua y parche de goma en relieve.",
+    "detalles": [
+      "NYLON CORDURA RIPSTOP IMPERMEABLE",
+      "CORREA AJUSTABLE JACQUARD CON TEXTO 'IT\\'S A SECRET'",
+      "HERRAJES METÁLICOS MATE Y MOSQUETÓN DESMONTABLE",
+      "BOLSILLO INTERIOR CON PROTECCIÓN RFID"
+    ],
     "badge_estado": "DISPONIBLE",
-    "tallas": ["TALLA ÚNICA"],
+    "tallas": [
+      "TALLA ÚNICA"
+    ],
     "imagen": "img/bag_trapstar.jpg"
   },
   {
-    "id": 13,
-    "nombre": "UTILITY NECK POUCH",
-    "subtitulo": "PORTA ACCESORIOS Y TARJETERA",
-    "precio": 24990,
-    "precio_usd": "28.00",
-    "categoria": "ACCESORIOS",
-    "descripcion": "Estuche porta documentos y accesorios de cuello con cordón técnico y mosquetón desmontable.",
-    "detalles": ["MATERIAL RESISTENTE AL AGUA", "CORDÓN AJUSTABLE AL CUELLO", "VENTANA TRANSPARENTE TRASERA", "COLOR: NEGRO"],
+    "id": 7,
+    "nombre": "PASAMONTAÑAS TRAPSTAR KNIT TACTICAL BALACLAVA",
+    "subtitulo": "PASAMONTAÑAS TÉCNICO DE PUNTO CON LOGO 3M",
+    "precio": 39990,
+    "precio_usd": "42.00",
+    "categoria": "PASAMONTAÑAS",
+    "descripcion": "Máscara pasamontañas de tejido técnico ultra suave y elástico, con orificio ocular ergonómico y aplique reflectante 3M con la insignia T-Star.",
+    "detalles": [
+      "TEJIDO TRANSPIRABLE TERMO-REGULADOR",
+      "LOGOTIPO TRAPSTAR REFLECTANTE 3M",
+      "COSTURAS PLANAS ANTI-ROCES",
+      "PIEZA ESENCIAL DE LA ESCENA DRILL UK"
+    ],
     "badge_estado": "DISPONIBLE",
-    "tallas": ["TALLA ÚNICA"],
+    "tallas": [
+      "TALLA ÚNICA"
+    ],
+    "imagen": "img/balaclava_black.jpg"
+  },
+  {
+    "id": 8,
+    "nombre": "PANTALÓN FLARED CARGO TRAPSTAR TECHWEAR 'CARBON'",
+    "subtitulo": "PANTALÓN CARGO CORTE ACAMPANADO",
+    "precio": 109990,
+    "precio_usd": "115.00",
+    "categoria": "PANTALONES FLARED",
+    "descripcion": "Pantalón cargo pesado de silueta acampanada con cremalleras ajustables en tobillo, diseñado específicamente para lucir zapatillas Air Jordan y Nike TN.",
+    "detalles": [
+      "ALGODÓN RÚSTICO Y NYLON TÉCNICO 420 GSM",
+      "CREMALLERAS LATERALES EN BAJOS PARA AJUSTE FLARED",
+      "6 BOLSILLOS TÁCTICOS CON TAPA Y VELCRO",
+      "CINTURA ELÁSTICA CON CORDÓN GRUESO"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "imagen": "img/flared_pants.jpg"
+  },
+  {
+    "id": 9,
+    "nombre": "AIR JORDAN 4 RETRO 'BLACK CAT'",
+    "subtitulo": "SILUETA ICÓNICA TRIPLE BLACK DE COLECCIÓN",
+    "precio": 219990,
+    "precio_usd": "235.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "Edición legendaria Air Jordan 4 en ante nubuck negro mate con herrajes a tono y cámara Air visible. El calzado de referencia en los videoclips de Central Cee.",
+    "detalles": [
+      "CUERO NUBUCK PREMIUM NEGRO MATE",
+      "UNIDAD AIR-SOLE VISIBLE EN EL TALÓN",
+      "DETALLES Y HERRAJES ORIGINALES RETRO",
+      "CÓDIGO DE ESTILO: CU1110-010"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "US 8",
+      "US 8.5",
+      "US 9",
+      "US 9.5",
+      "US 10",
+      "US 11"
+    ],
+    "imagen": "img/jordan.jpg"
+  },
+  {
+    "id": 10,
+    "nombre": "NIKE AIR MAX PLUS TN 'TRIPLE BLACK'",
+    "subtitulo": "AMORTIGUACIÓN TUNED AIR VISIBLE",
+    "precio": 159990,
+    "precio_usd": "170.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "Zapatillas urbanas de alto rendimiento con caja de soporte termoplástica ondulada, cámara Tuned Air y detalles reflectantes nocturnos.",
+    "detalles": [
+      "SISTEMA DE AMORTIGUACIÓN TUNED AIR",
+      "PARTE SUPERIOR DE MALLA TÉCNICA CON DETALLES 3M",
+      "SUELA DE GOMA WAFFLE DE MÁXIMA TRACCIÓN",
+      "CÓDIGO DE ESTILO: 604133-050"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "US 8",
+      "US 8.5",
+      "US 9",
+      "US 9.5",
+      "US 10",
+      "US 10.5"
+    ],
+    "imagen": "img/tn.jpg"
+  },
+  {
+    "id": 11,
+    "nombre": "TRAVIS SCOTT X AIR JORDAN 1 LOW 'REVERSE MOCHA'",
+    "subtitulo": "EDICIÓN LIMITADA CACTUS JACK",
+    "precio": 349990,
+    "precio_usd": "365.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "Colaboración exclusiva de Travis Scott con swoosh invertido en tono crema, gamuza mocha y mediasuela envejecida vintage.",
+    "detalles": [
+      "GAMUZA Y CUERO PREMIUM",
+      "SWOOSH INVERTIDO CACTUS JACK",
+      "SUELA SAIL VINTAGE CON CORDONES EXTRA",
+      "CÓDIGO DE ESTILO: DM7866-162"
+    ],
+    "badge_estado": "AGOTADO",
+    "tallas": [
+      "US 8.5",
+      "US 9",
+      "US 9.5",
+      "US 10"
+    ],
+    "imagen": "img/jordan1_travis.jpg"
+  },
+  {
+    "id": 12,
+    "nombre": "AIR JORDAN 1 HIGH OG 'CHICAGO LOST & FOUND'",
+    "subtitulo": "HERENCIA ORIGINAL RETRO 1985",
+    "precio": 229990,
+    "precio_usd": "240.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "La silueta de básquetbol más emblemática de la historia con acabado craquelado vintage en caja original de los años 80.",
+    "detalles": [
+      "CUERO CRAQUELADO PREMIUM COLORWAY CHICAGO",
+      "CAJA VINTAGE CON FACTURA SIMULADA DE 1985",
+      "CÓDIGO DE ESTILO: DZ5485-612"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "US 8",
+      "US 8.5",
+      "US 9",
+      "US 9.5",
+      "US 10",
+      "US 11"
+    ],
+    "imagen": "img/jordan1_chicago.jpg"
+  },
+  {
+    "id": 13,
+    "nombre": "AIR JORDAN 4 RETRO 'MILITARY BLACK'",
+    "subtitulo": "EDICIÓN BLANCO, NEGRO Y GRIS NEUTRO",
+    "precio": 199990,
+    "precio_usd": "210.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "Silueta Air Jordan 4 con base de cuero blanco liso, puntera de ante gris claro y detalles en negro profundo sobre los ojales y talón.",
+    "detalles": [
+      "CUERO NATURAL BLANCO Y ANTE SUAVE",
+      "UNIDAD AIR VISIBLE EN MEDIASUELA",
+      "CÓDIGO DE ESTILO: DH6927-111"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "US 8.5",
+      "US 9",
+      "US 9.5",
+      "US 10"
+    ],
+    "imagen": "img/jordan4_military.jpg"
+  },
+  {
+    "id": 14,
+    "nombre": "BANANO TÁCTICO DE PECHO TRAPSTAR 'UTILITY POUCH'",
+    "subtitulo": "PORTA ACCESORIOS Y TARJETERA",
+    "precio": 29990,
+    "precio_usd": "32.00",
+    "categoria": "ACCESORIOS",
+    "descripcion": "Estuche porta documentos y accesorios para colgar al pecho o al cuello, con mosquetón desmontable y tejido repelente a la lluvia.",
+    "detalles": [
+      "MATERIAL IMPERMEABLE CORDURA",
+      "CORDÓN AJUSTABLE CON FRENO RÁPIDO",
+      "COMPARTIMENTO PARA SMARTPHONE Y TARJETAS",
+      "COLOR: NEGRO MATE"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "TALLA ÚNICA"
+    ],
     "imagen": "img/pouch_accessory.jpg"
+  },
+  {
+    "id": 15,
+    "nombre": "NIKE DUNK LOW RETRO \"WHITE BLACK PANDA\"",
+    "subtitulo": "SILUETA CLÁSICA SKATEBOARDING",
+    "precio": 129990,
+    "precio_usd": "135.00",
+    "categoria": "ZAPATILLAS (SNEAKERS)",
+    "descripcion": "El icónico modelo Dunk Low en su variante más versátil Black & White. Imprescindible para el día a día.",
+    "detalles": [
+      "CUERO PREMIUM BLANCO Y NEGRO",
+      "SUELA DE GOMA DE MÁXIMA TRACCIÓN",
+      "PERFIL BAJO (LOW TOP)",
+      "CÓDIGO: DD1391-100"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "US 8",
+      "US 9",
+      "US 10",
+      "US 11"
+    ],
+    "imagen": "img/dunk_panda.jpg"
+  },
+  {
+    "id": 16,
+    "nombre": "TRAPSTAR CAMO HOODIE \"STREET EDITION\"",
+    "subtitulo": "POLERÓN CAMUFLADO OVERSIZED",
+    "precio": 85990,
+    "precio_usd": "90.00",
+    "categoria": "POLERONES (HOODIES)",
+    "descripcion": "Polerón grueso con diseño camuflado táctico urbano y logo Trapstar bordado en hilo reforzado.",
+    "detalles": [
+      "100% ALGODÓN RÚSTICO DE ALTO GRAMAJE",
+      "CORTE OVERSIZED",
+      "CAPUCHA DE DOBLE CAPA",
+      "BORDADO DE ALTA DENSIDAD"
+    ],
+    "badge_estado": "DISPONIBLE",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "imagen": "img/camo_hoodie.jpg"
   }
 ]

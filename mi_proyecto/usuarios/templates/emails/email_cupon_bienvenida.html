@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Bienvenido a SOLARY — Cupón de Cortesía Exclusivo</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; padding: 24px 18px !important; }
+      .headline { font-size: 22px !important; }
+      .coupon-val { font-size: 28px !important; }
+      .coupon-code { font-size: 18px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #111111;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f7; padding: 40px 10px;">
+    <tr>
+      <td align="center">
+        <table class="email-container" width="580" cellpadding="0" cellspacing="0" border="0" style="width: 580px; max-width: 580px; background-color: #ffffff; border-radius: 18px; border: 1px solid #e5e5ea; padding: 44px 36px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="padding-bottom: 24px; border-bottom: 1px solid #e5e5ea;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" style="font-size: 13px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #111111;">
+                    SOLARY ARCHIVE
+                  </td>
+                  <td align="right" style="font-size: 11px; font-weight: 600; color: #707072; letter-spacing: 0.05em; text-transform: uppercase;">
+                    CORTESÍA DE BIENVENIDA
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Headline -->
+          <tr>
+            <td style="padding-top: 28px; padding-bottom: 16px;">
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #707072; margin-bottom: 8px;">
+                SOLARY ID OFICIAL
+              </div>
+              <h1 class="headline" style="margin: 0 0 10px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: #111111; line-height: 1.15;">
+                BIENVENIDO A SOLARY
+              </h1>
+              <p style="margin: 0; font-size: 14px; color: #707072; line-height: 1.6;">
+                Hola <strong style="color: #111111;">{{ cliente_nombre|default:"Cliente" }}</strong>, tu cuenta de acceso exclusivo ha sido verificada con éxito. Para darte la bienvenida al universo de piezas de archivo y lanzamientos seleccionados, hemos activado un beneficio exclusivo en tu perfil.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Luxury Coupon Card (Apple / Nike SNKRS minimal card) -->
+          <tr>
+            <td style="padding: 16px 0 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #0b0b0b; border-radius: 16px; padding: 32px 28px; color: #ffffff; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);">
+                <tr>
+                  <td align="center">
+                    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #a1a1a6; margin-bottom: 8px;">
+                      BENEFICIO EXCLUSIVO DE PRIMER INGRESO
+                    </div>
+                    <div class="coupon-val" style="font-size: 34px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; line-height: 1.1; margin-bottom: 8px;">
+                      15% OFF
+                    </div>
+                    <div style="font-size: 13px; color: #d1d1d6; margin-bottom: 24px; font-weight: 400;">
+                      Aplicable a tu primera compra en todo nuestro catálogo oficial
+                    </div>
+
+                    <!-- Voucher Box -->
+                    <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; background-color: #1c1c1e; border: 1px dashed rgba(255, 255, 255, 0.28); border-radius: 10px; padding: 12px 28px;">
+                      <tr>
+                        <td align="center">
+                          <div style="font-size: 10px; font-weight: 600; color: #8e8e93; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">
+                            CÓDIGO DE DESCUENTO
+                          </div>
+                          <div class="coupon-code" style="font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 22px; font-weight: 800; letter-spacing: 0.2em; color: #ffffff; white-space: nowrap !important;">
+                            {{ cupon_codigo|default:"SOLARY15" }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div style="font-size: 11px; color: #8e8e93; margin-top: 20px; letter-spacing: 0.04em;">
+                      Vigencia: {{ vigencia_dias|default:"30 días" }} desde tu activación · Válido para 1 uso por cliente
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Perks / Privileges Grid -->
+          <tr>
+            <td style="padding: 12px 0 24px; border-top: 1px solid #e5e5ea; border-bottom: 1px solid #e5e5ea;">
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 16px;">
+                VENTAJAS ASOCIADAS A TU SOLARY ID
+              </div>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #707072; line-height: 1.6;">
+                <tr>
+                  <td width="28" valign="top" style="font-size: 14px; color: #111111; font-weight: 800;">✓</td>
+                  <td valign="top" style="padding-bottom: 12px;">
+                    <strong style="color: #111111;">Autenticidad Verificada:</strong> Cada prenda y calzado cuenta con certificación individual e inspección física previa al despacho.
+                  </td>
+                </tr>
+                <tr>
+                  <td width="28" valign="top" style="font-size: 14px; color: #111111; font-weight: 800;">✓</td>
+                  <td valign="top" style="padding-bottom: 12px;">
+                    <strong style="color: #111111;">Envíos Asegurados Prioritarios:</strong> Courier DHL Express Worldwide y seguimiento en tiempo real vinculado a tu perfil.
+                  </td>
+                </tr>
+                <tr>
+                  <td width="28" valign="top" style="font-size: 14px; color: #111111; font-weight: 800;">✓</td>
+                  <td valign="top">
+                    <strong style="color: #111111;">Historial Permanente:</strong> Tus recibos, números de guía y facturas oficiales quedan permanentemente guardados en tu cuenta.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Primary CTA Button (Apple / Nike SNKRS Pill Button) -->
+          <tr>
+            <td align="center" style="padding-top: 32px;">
+              <a href="{{ tienda_url|default:'http://127.0.0.1:8000/' }}" style="display: block; width: 100%; box-sizing: border-box; background-color: #111111; color: #ffffff; text-decoration: none; padding: 16px 24px; border-radius: 9999px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-align: center;">
+                INGRESAR A LA TIENDA Y COMPRAR CON 15% OFF
+              </a>
+              <div style="margin-top: 16px; font-size: 12px; color: #707072;">
+                ¿Tienes consultas sobre tu cuenta? <a href="mailto:soporte@solaryluxury.com" style="color: #707072; text-decoration: underline;">Contactar a soporte</a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top: 36px; border-top: 1px solid #e5e5ea; margin-top: 28px; font-size: 11px; color: #8e8e93; line-height: 1.6;">
+              SOLARY LUXURY ARCHIVE · ALONSO DE CÓRDOVA 3890, VITACURA, SANTIAGO<br>
+              Recibes este correo porque iniciaste sesión por primera vez con tu SOLARY ID oficial.<br>
+              Este cupón es personal e intransferible.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
