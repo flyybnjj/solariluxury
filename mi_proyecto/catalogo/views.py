@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from usuarios.models import Cliente
@@ -17,19 +18,13 @@ from .models import Producto, Categoria, DetalleProducto, ImagenProducto, PreOrd
 
 logger = logging.getLogger(__name__)
 
-
 def inicio(request):
-    """
-    SOLARILUXURY x CENTRAL CEE — Official Interactive Campaign Experience
-    Data served from database via Django ORM.
-    """
     productos = list(
         Producto.objects.select_related('categoria')
         .prefetch_related('tallas', 'detalles', 'imagenes_galeria')
         .all()
     )
 
-    # Format prices and prepare gallery
     for p in productos:
         p.precio_fmt = f"${p.precio:,}".replace(',', '.')
         p.galeria_list = p.get_galeria()
@@ -37,8 +32,7 @@ def inicio(request):
         p.es_360_val = p.es_360()
         p.galeria_json_val = p.galeria_json()
 
-    # Curated Bestseller / Star Products for the Dynamic Rotating Showcase
-    bestseller_ids = [49, 46, 76, 35, 44]  # AF1 Syna, Jordan 4 Toro Bravo, Tech Fleece, Swatch AP, Jordan 1 Travis
+    bestseller_ids = [49, 46, 76, 35, 44]
     bestseller_qs = [p for p in productos if p.id in bestseller_ids]
     if len(bestseller_qs) < 4:
         bestseller_qs = productos[:5]
@@ -98,13 +92,8 @@ def inicio(request):
     }
     return render(request, 'catalogo/inicio.html', context)
 
-
 @csrf_exempt
 def solicitar_key(request):
-    """
-    Genera un PIN de 6 dígitos único y despacha el correo mediante Gmail SMTP real con fail_silently=False.
-    NUNCA devuelve el PIN al navegador en la respuesta.
-    """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
 
@@ -117,7 +106,6 @@ def solicitar_key(request):
     if not email or '@' not in email:
         return JsonResponse({'success': False, 'error': 'Por favor ingresa un correo electrónico válido.'}, status=400)
 
-    # 1. Obtener o auto-crear usuario en Django
     user = User.objects.filter(email__iexact=email).first()
     if not user:
         base_username = email.split('@')[0].replace('.', '_').replace('-', '_')
@@ -132,7 +120,6 @@ def solicitar_key(request):
 
     cliente, _ = Cliente.objects.get_or_create(user=user)
 
-    # 2. Generar PIN numérico de 6 dígitos único con validez de 10 minutos (criptográficamente seguro)
     pin = f"{secrets.randbelow(900000) + 100000}"
     cliente.access_pin = pin
     cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
@@ -142,10 +129,8 @@ def solicitar_key(request):
     user.pin_expires_at = cliente.pin_expires_at
     user.save()
 
-    # Guardar en sesión el correo para validación
     request.session['auth_otp_email'] = email
 
-    # 3. Envío 100% REAL mediante Gmail SMTP obligatorio
     pin_spaced = f"{pin[:3]}   {pin[3:]}"
     cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
     html_message = render_to_string('usuarios/email_pin_acceso.html', {
@@ -179,15 +164,8 @@ def solicitar_key(request):
         'message': 'Hemos enviado un código PIN de 6 dígitos a tu correo. Revisa tu bandeja de entrada o spam e ingrésalo abajo.'
     })
 
-
 @csrf_exempt
 def validar_key(request):
-    """
-    Valida el PIN de 6 dígitos recibido por correo.
-    - Quema el PIN inmediatamente para que sea de un solo uso.
-    - Inicia sesión del usuario en Django.
-    - Desbloquea la tienda y vincula pedidos y trackers.
-    """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
 
@@ -240,7 +218,6 @@ def validar_key(request):
             'error': f'El código PIN ingresado es incorrecto. Te quedan {5 - cliente.intentos_fallidos} intentos.'
         }, status=400)
 
-    # 1. QUEMAR EL PIN INMEDIATAMENTE Y RESETEAR INTENTOS
     cliente.intentos_fallidos = 0
     cliente.bloqueado_hasta = None
     cliente.clear_pin()
@@ -248,19 +225,16 @@ def validar_key(request):
     user.pin_expires_at = None
     user.save()
 
-    # 2. INICIAR SESIÓN REAL
     login(request, user)
     request.session['tienda_desbloqueada'] = True
     request.session['vip_unlocked_email'] = email
 
-    # Enviar cupón de bienvenida exclusivamente en el primer login
     try:
         from usuarios.utils import enviar_cupon_bienvenida
         enviar_cupon_bienvenida(user, email=email)
     except Exception as e:
         logger.error(f"[ERROR CUPON BIENVENIDA] {e}")
 
-    # 3. Vincular permanentemente pedidos y trackers
     PreOrden.objects.filter(email_cliente__iexact=email, usuario__isnull=True).update(usuario=user)
     Pedido.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
     Tracker.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
@@ -270,17 +244,13 @@ def validar_key(request):
         'message': f'¡Acceso concedido! Bienvenido/a {user.first_name or user.username}. Desbloqueando tienda...'
     })
 
-
 def bloquear_tienda(request):
-    """Vuelve a bloquear la tienda y regresa al portal privado / gateway"""
     from django.contrib.auth import logout
     logout(request)
     request.session.flush()
     return redirect('inicio')
 
-
 def lista_productos(request):
-    """Catálogo oficial Solariluxury con filtros interactivos, ordenamiento y vistas dinámicas"""
     categoria_seleccionada = request.GET.get('categoria', 'TODOS').upper()
     busqueda = request.GET.get('q', '').strip()
 
@@ -315,9 +285,7 @@ def lista_productos(request):
     }
     return render(request, 'catalogo/productos.html', context)
 
-
 def detalle_producto(request, producto_id):
-    """Detalle interactivo del producto con galería 100% de producto real y selector de tallas"""
     producto = get_object_or_404(
         Producto.objects.select_related('categoria')
         .prefetch_related('tallas', 'detalles', 'imagenes_galeria'),
@@ -329,7 +297,6 @@ def detalle_producto(request, producto_id):
     detalles = list(producto.detalles.all())
     galeria = producto.get_galeria()
 
-    # Productos relacionados (mismo estilo o categoría)
     relacionados = list(
         Producto.objects.filter(categoria=producto.categoria)
         .exclude(id=producto.id)
@@ -351,7 +318,6 @@ def detalle_producto(request, producto_id):
         r.es_360_val = r.es_360()
         r.galeria_json_val = r.galeria_json()
 
-    # Previous / Next navigation
     ids = list(Producto.objects.values_list('id', flat=True).order_by('id'))
     curr_idx = ids.index(producto_id)
     prev_id = ids[curr_idx - 1] if curr_idx > 0 else ids[-1]
@@ -370,3 +336,154 @@ def detalle_producto(request, producto_id):
     }
     return render(request, 'catalogo/detalle_producto.html', context)
 
+from django.contrib.auth.decorators import login_required
+from .models import Talla
+
+def _staff_required(view_func):
+    from functools import wraps
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from django.shortcuts import redirect as _redirect
+            return _redirect('/solicitar-acceso/?next=' + request.path)
+        if not (request.user.is_staff or request.user.is_superuser):
+            from django.http import HttpResponseForbidden
+            return HttpResponseForbidden('Acceso denegado - Solo administradores.')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@_staff_required
+def admin_productos(request):
+    q = request.GET.get('q', '').strip()
+    cat_id = request.GET.get('categoria', '')
+    productos_qs = Producto.objects.select_related('categoria').prefetch_related('tallas').order_by('id')
+    if q:
+        productos_qs = productos_qs.filter(nombre__icontains=q)
+    if cat_id:
+        productos_qs = productos_qs.filter(categoria_id=cat_id)
+    categorias = Categoria.objects.all()
+    context = {
+        'productos': productos_qs,
+        'categorias': categorias,
+        'q': q,
+        'cat_id': cat_id,
+        'total': productos_qs.count(),
+    }
+    return render(request, 'catalogo/admin_productos.html', context)
+
+@_staff_required
+def admin_crear_producto(request):
+    categorias = Categoria.objects.all()
+    tallas = Talla.objects.all()
+    error = None
+    if request.method == 'POST':
+        try:
+            nombre = request.POST.get('nombre', '').strip()
+            if not nombre:
+                raise ValueError('El nombre es obligatorio.')
+            precio_raw = request.POST.get('precio', '0').replace('.', '').replace(',', '').strip()
+            precio = int(precio_raw) if precio_raw.isdigit() else 0
+            prod = Producto.objects.create(
+                nombre=nombre,
+                subtitulo=request.POST.get('subtitulo', '').strip(),
+                precio=precio,
+                precio_usd=request.POST.get('precio_usd', 0) or 0,
+                descripcion=request.POST.get('descripcion', '').strip(),
+                imagen=request.POST.get('imagen', 'img/placeholder.jpg').strip() or 'img/placeholder.jpg',
+                codigo_estilo=request.POST.get('codigo_estilo', '').strip() or None,
+                color=request.POST.get('color', '').strip() or None,
+                badge_estado=request.POST.get('badge_estado', 'DISPONIBLE'),
+                categoria_id=request.POST.get('categoria') or None,
+            )
+            from .models import ProductoTalla
+            talla_ids = request.POST.getlist('tallas')
+            for tid in talla_ids:
+                sv = request.POST.get('stock_' + str(tid), '1') or '1'
+                stock = int(sv) if sv.isdigit() else 1
+                ProductoTalla.objects.get_or_create(
+                    producto=prod, talla_id=int(tid), defaults={'stock': stock}
+                )
+            messages.success(request, 'Producto ' + nombre + ' creado exitosamente (ID: ' + str(prod.id) + ').')
+            return redirect('admin_productos')
+        except Exception as exc:
+            error = str(exc)
+    return render(request, 'catalogo/admin_crear_producto.html', {
+        'categorias': categorias,
+        'tallas': tallas,
+        'error': error,
+        'badge_choices': Producto.BADGE_CHOICES,
+    })
+
+@_staff_required
+def admin_editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    categorias = Categoria.objects.all()
+    tallas = Talla.objects.all()
+    from .models import ProductoTalla
+    tallas_actuales = {pt.talla_id: pt.stock for pt in ProductoTalla.objects.filter(producto=producto)}
+    error = None
+    if request.method == 'POST':
+        try:
+            nombre = request.POST.get('nombre', '').strip()
+            if not nombre:
+                raise ValueError('El nombre es obligatorio.')
+            precio_raw = request.POST.get('precio', '0').replace('.', '').replace(',', '').strip()
+            precio = int(precio_raw) if precio_raw.isdigit() else producto.precio
+            producto.nombre = nombre
+            producto.subtitulo = request.POST.get('subtitulo', '').strip()
+            producto.precio = precio
+            usd_raw = request.POST.get('precio_usd', '').replace(',', '.').strip()
+            if usd_raw:
+                try:
+                    producto.precio_usd = float(usd_raw)
+                except ValueError:
+                    pass
+            producto.descripcion = request.POST.get('descripcion', '').strip()
+            imagen = request.POST.get('imagen', '').strip()
+            if imagen:
+                producto.imagen = imagen
+            producto.codigo_estilo = request.POST.get('codigo_estilo', '').strip() or None
+            producto.color = request.POST.get('color', '').strip() or None
+            producto.badge_estado = request.POST.get('badge_estado', producto.badge_estado)
+            cat_id = request.POST.get('categoria')
+            producto.categoria_id = int(cat_id) if cat_id else None
+            producto.save()
+            talla_ids = request.POST.getlist('tallas')
+            talla_ids_int = [int(t) for t in talla_ids if t.isdigit()]
+            ProductoTalla.objects.filter(producto=producto).exclude(talla_id__in=talla_ids_int).delete()
+            for tid in talla_ids_int:
+                sv = request.POST.get('stock_' + str(tid), '1') or '1'
+                stock = int(sv) if sv.isdigit() else 1
+                pt, created = ProductoTalla.objects.get_or_create(
+                    producto=producto, talla_id=tid, defaults={'stock': stock}
+                )
+                if not created:
+                    pt.stock = stock
+                    pt.save()
+            messages.success(request, 'Producto actualizado exitosamente.')
+            return redirect('admin_productos')
+        except Exception as exc:
+            error = str(exc)
+    return render(request, 'catalogo/admin_editar_producto.html', {
+        'producto': producto,
+        'categorias': categorias,
+        'tallas': tallas,
+        'tallas_actuales': tallas_actuales,
+        'error': error,
+        'badge_choices': Producto.BADGE_CHOICES,
+    })
+
+@_staff_required
+def admin_eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    if request.method == 'POST':
+        nombre = producto.nombre
+        try:
+            producto.delete()
+            messages.success(request, 'Producto «' + nombre + '» eliminado exitosamente.')
+        except Exception:
+            producto.badge_estado = 'AGOTADO'
+            producto.save()
+            messages.warning(request, 'El producto «' + nombre + '» tiene pedidos registrados y no puede ser borrado físicamente; ha sido marcado como AGOTADO.')
+        return redirect('admin_productos')
+    return render(request, 'catalogo/admin_confirmar_eliminar.html', {'producto': producto})

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Local(models.Model):
     TIPO_CHOICES = [
         ('FLAGSHIP', 'Flagship Store'),

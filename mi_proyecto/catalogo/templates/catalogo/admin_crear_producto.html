@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Producto | Panel Admin Solariluxury{% endblock %}
+
+{% block extra_head %}
+<style>
+  .admin-page { padding: 60px 0 100px; min-height: 80vh; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(230,0,0,0.10) 0%, transparent 70%); }
+  .admin-container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .admin-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.35em; color: var(--accent); text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .admin-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .admin-title { font-family: var(--font-display); font-size: clamp(24px, 3.5vw, 42px); margin-bottom: 32px; }
+  .form-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 36px 32px; }
+  .form-section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .form-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+  .form-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: var(--font-body); font-size: 13px; padding: 10px 14px; outline: none; transition: border-color 0.2s; width: 100%; box-sizing: border-box; }
+  .form-input:focus { border-color: rgba(255,255,255,0.4); }
+  .form-input option { background: #111; }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .talla-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .talla-chip { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; cursor: pointer; transition: all 0.2s; }
+  .talla-chip:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.3); }
+  .talla-chip input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; }
+  .talla-chip .talla-name { font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); }
+  .talla-chip .talla-stock { margin-left: 4px; }
+  .talla-chip .talla-stock input { width: 46px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 11px; padding: 2px 6px; text-align: center; }
+  .error-banner { background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.3); color: #ff6b6b; border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .admin-btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 24px; border-radius: 12px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+  .admin-btn-primary { background: var(--accent); color: #fff; }
+  .admin-btn-primary:hover { background: #cc0000; }
+  .admin-btn-secondary { background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: #fff; }
+  .admin-btn-secondary:hover { background: rgba(255,255,255,0.14); }
+  @media (max-width: 640px) { .form-grid, .form-grid-3 { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-container">
+    <div class="admin-eyebrow">PANEL ADMIN — NUEVO PRODUCTO</div>
+    <h1 class="admin-title">AGREGAR PRODUCTO</h1>
+
+    {% if error %}
+    <div class="error-banner">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="form-card">
+      {% csrf_token %}
+
+      <div class="form-section-title">Información Principal</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="nombre">Nombre del Producto *</label>
+          <input type="text" name="nombre" id="nombre" class="form-input" placeholder="Nike Air Force 1 Low…" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="subtitulo">Subtítulo / Tagline</label>
+          <input type="text" name="subtitulo" id="subtitulo" class="form-input" placeholder="OFFICIAL CAMPAIGN DROP 2026">
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-field">
+          <label class="form-label" for="precio">Precio CLP *</label>
+          <input type="number" name="precio" id="precio" class="form-input" placeholder="89990" required min="0">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="precio_usd">Precio USD</label>
+          <input type="number" name="precio_usd" id="precio_usd" class="form-input" placeholder="99.00" step="0.01" min="0">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="badge_estado">Estado / Badge</label>
+          <select name="badge_estado" id="badge_estado" class="form-input">
+            {% for val, label in badge_choices %}
+            <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">Detalles del Producto</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="categoria">Categoría</label>
+          <select name="categoria" id="categoria" class="form-input">
+            <option value="">— Sin categoría —</option>
+            {% for cat in categorias %}
+            <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="codigo_estilo">Código de Estilo / SKU</label>
+          <input type="text" name="codigo_estilo" id="codigo_estilo" class="form-input" placeholder="CW2288-111">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="color">Colorway</label>
+          <input type="text" name="color" id="color" class="form-input" placeholder="White/White-White">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="imagen">Ruta de Imagen Estática</label>
+          <input type="text" name="imagen" id="imagen" class="form-input" placeholder="img/mi_producto.jpg">
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="descripcion">Descripción</label>
+        <textarea name="descripcion" id="descripcion" class="form-input form-textarea" placeholder="Descripción del producto…"></textarea>
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">Tallas Disponibles & Stock</div>
+      <div class="talla-grid">
+        {% for talla in tallas %}
+        <label class="talla-chip">
+          <input type="checkbox" name="tallas" value="{{ talla.id }}">
+          <span class="talla-name">{{ talla.nombre }}</span>
+          <span class="talla-stock">Stock: <input type="number" name="stock_{{ talla.id }}" value="1" min="0" max="999"></span>
+        </label>
+        {% endfor %}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="admin-btn admin-btn-primary">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          CREAR PRODUCTO
+        </button>
+        <a href="{% url 'admin_productos' %}" class="admin-btn admin-btn-secondary">CANCELAR</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente')
     access_pin = models.CharField(
@@ -55,13 +54,11 @@ class Cliente(models.Model):
         return f"Cliente {self.user.email or self.user.username}"
 
     def esta_bloqueado(self):
-        """Verifica si el usuario está actualmente bloqueado por exceso de intentos fallidos."""
         if self.bloqueado_hasta and timezone.now() < self.bloqueado_hasta:
             return True
         return False
 
     def is_pin_valid(self, candidate_pin):
-        """Verifica si el PIN es correcto y si aún no ha expirado usando tiempo constante."""
         import secrets
         if self.esta_bloqueado():
             return False
@@ -72,15 +69,12 @@ class Cliente(models.Model):
         return secrets.compare_digest(str(self.access_pin).strip(), str(candidate_pin).strip())
 
     def clear_pin(self):
-        """Invalida el PIN inmediatamente tras su uso exitoso."""
         self.access_pin = None
         self.pin_expires_at = None
         self.save(update_fields=['access_pin', 'pin_expires_at'])
 
-
 @receiver(post_save, sender=User)
 def ensure_cliente_profile(sender, instance, created, **kwargs):
-    """Garantiza que todo usuario en el sistema tenga su perfil de cliente asociado con un código de cupón único."""
     if created:
         cliente, _ = Cliente.objects.get_or_create(user=instance)
         if not cliente.cupon_bienvenida_codigo:
@@ -91,8 +85,6 @@ def ensure_cliente_profile(sender, instance, created, **kwargs):
         if hasattr(instance, 'cliente'):
             instance.cliente.save()
 
-
-# Helper properties directly on User so user.access_pin and user.pin_expires_at work smoothly
 User.add_to_class('access_pin', property(
     lambda self: getattr(getattr(self, 'cliente', None), 'access_pin', None),
     lambda self, val: setattr(self.cliente, 'access_pin', val) if hasattr(self, 'cliente') else None
@@ -101,7 +93,6 @@ User.add_to_class('pin_expires_at', property(
     lambda self: getattr(getattr(self, 'cliente', None), 'pin_expires_at', None),
     lambda self, val: setattr(self.cliente, 'pin_expires_at', val) if hasattr(self, 'cliente') else None
 ))
-
 
 class TicketSoporte(models.Model):
     codigo = models.CharField(max_length=20, unique=True, verbose_name="Código de Ticket")

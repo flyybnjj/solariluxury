@@ -2,14 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 
-
 class RegistroForm(forms.ModelForm):
-    """
-    [DEPRECADO / CÓDIGO MUERTO]
-    Formulario legado de registro con contraseña. El sistema opera actualmente
-    bajo autenticación Passwordless OTP vía solicitar_acceso_view.
-    Se conserva únicamente por compatibilidad hacia atrás.
-    """
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'auth-input',
@@ -60,7 +53,6 @@ class RegistroForm(forms.ModelForm):
         if p1 and len(p1) < 6:
             self.add_error('password', "La contraseña debe tener al menos 6 caracteres.")
         return cleaned_data
-
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={

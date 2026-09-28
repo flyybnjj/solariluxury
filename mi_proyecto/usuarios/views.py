@@ -23,22 +23,10 @@ from .utils import enviar_cupon_bienvenida
 
 logger = logging.getLogger(__name__)
 
-
 def generar_pin_otp():
-    """Genera un PIN numérico de 6 dígitos criptográficamente seguro."""
     return f"{secrets.randbelow(900000) + 100000}"
 
-
 def solicitar_acceso_view(request):
-    """
-    Paso 1 del Passwordless Login:
-    - Cliente ingresa su correo electrónico.
-    - Si el usuario no existe, se auto-crea la cuenta de cliente al instante (get_or_create).
-    - Se genera un PIN de 6 dígitos con expiración de 10 minutos (timezone.now() + timedelta(minutes=10)).
-    - Se envía el correo usando send_mail y la plantilla HTML de SOLARI LUXURY.
-    - Se captura cualquier excepción SMTP con try-except y registro en consola para pruebas locales.
-    - Se redirige a la pantalla de validación.
-    """
     if request.user.is_authenticated:
         return redirect('inicio')
 
@@ -52,7 +40,6 @@ def solicitar_acceso_view(request):
             messages.error(request, "Por favor introduce un correo electrónico válido.")
             return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
 
-        # Buscar usuario o auto-crearlo al instante
         user = User.objects.filter(email__iexact=email).first()
         if not user:
             base_username = email.split('@')[0].replace('.', '_').replace('-', '_')
@@ -69,16 +56,13 @@ def solicitar_acceso_view(request):
             user.set_unusable_password()
             user.save()
 
-        # Obtener o crear perfil de cliente asociado
         cliente, _ = Cliente.objects.get_or_create(user=user)
 
-        # Generar PIN aleatorio de 6 dígitos con expiración a 10 minutos
         pin = generar_pin_otp()
         cliente.access_pin = pin
         cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
         cliente.save()
 
-        # Guardar correo en la sesión para el paso de validación
         request.session['auth_otp_email'] = email
 
         pin_spaced = f"{pin[:3]}   {pin[3:]}"
@@ -98,7 +82,6 @@ def solicitar_acceso_view(request):
             f"Si tú no solicitaste este código, puedes ignorar este mensaje."
         )
 
-        # Envío con try-except para evitar errores 500 y dejar registro en consola
         try:
             send_mail(
                 subject=subject,
@@ -124,15 +107,7 @@ def solicitar_acceso_view(request):
 
     return render(request, 'usuarios/solicitar_acceso.html', {'next_url': next_url})
 
-
 def validar_pin_view(request):
-    """
-    Paso 2 del Passwordless Login:
-    - Formulario para ingresar el PIN de 6 dígitos (con opción de reenvío si caducó).
-    - Valida coincidencia y que el tiempo no haya superado pin_expires_at.
-    - Si es correcto: inicia sesión con login(request, user), invalida el PIN (access_pin = None)
-      y redirige al catálogo o bolsa de compras.
-    """
     if request.user.is_authenticated:
         return redirect('inicio')
 
@@ -166,7 +141,6 @@ def validar_pin_view(request):
     if request.method == 'POST':
         pin_ingresado = request.POST.get('pin', '').strip()
 
-        # Validación 1: Tiempo no haya superado pin_expires_at (10 minutos)
         if timezone.now() > cliente.pin_expires_at:
             cliente.clear_pin()
             messages.error(request, "El código PIN ha caducado (validez de 10 minutos). Haz clic en Reenviar para obtener uno nuevo.")
@@ -176,7 +150,6 @@ def validar_pin_view(request):
                 'segundos_restantes': 0,
             })
 
-        # Validación 2: Coincidencia del PIN con secrets.compare_digest
         if not secrets.compare_digest(str(cliente.access_pin).strip(), str(pin_ingresado).strip()):
             cliente.intentos_fallidos += 1
             if cliente.intentos_fallidos >= 5:
@@ -197,7 +170,6 @@ def validar_pin_view(request):
                 'segundos_restantes': max(0, int((cliente.pin_expires_at - timezone.now()).total_seconds())),
             })
 
-        # 1. Resetear intentos y quemar el PIN inmediatamente
         cliente.intentos_fallidos = 0
         cliente.bloqueado_hasta = None
         cliente.clear_pin()
@@ -205,30 +177,25 @@ def validar_pin_view(request):
         user.pin_expires_at = None
         user.save()
 
-        # 2. Iniciar sesión de usuario y fijar flags de acceso VIP (BUG-011)
         login(request, user)
         request.session['tienda_desbloqueada'] = True
         request.session['vip_unlocked_email'] = email
 
-        # Enviar cupón de bienvenida exclusivamente en el primer login
         try:
             enviar_cupon_bienvenida(user, email=email)
         except Exception as e:
             logger.error(f"[ERROR CUPON BIENVENIDA] {e}")
 
-        # 3. Vincular permanentemente todos los Pedidos, PreOrdenes y Trackers de este email al usuario
         PreOrden.objects.filter(email_cliente__iexact=email, usuario__isnull=True).update(usuario=user)
         Pedido.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
         Tracker.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
 
-        # Limpiar datos de sesión
         request.session.pop('auth_otp_email', None)
         next_url = request.session.pop('auth_otp_next', None) or request.GET.get('next') or request.POST.get('next') or 'lista_productos'
 
         messages.success(request, f"¡Acceso verificado! Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.")
         return redirect(next_url)
 
-    # Calcular segundos restantes para el temporizador de frontend
     segundos_restantes = 600
     if cliente and cliente.pin_expires_at:
         diff = (cliente.pin_expires_at - timezone.now()).total_seconds()
@@ -239,11 +206,7 @@ def validar_pin_view(request):
         'segundos_restantes': segundos_restantes,
     })
 
-
 def reenviar_pin_view(request):
-    """
-    Reenvía un nuevo PIN de 6 dígitos con expiración a 10 minutos.
-    """
     email = request.session.get('auth_otp_email') or request.GET.get('email')
     if not email:
         messages.warning(request, "Introduce tu correo para solicitar un nuevo PIN.")
@@ -295,16 +258,7 @@ def reenviar_pin_view(request):
 
     return redirect('validar_pin')
 
-
-# ══════════════════════════════════════════════════════════════════
-# VISTAS ADICIONALES (PERFIL, LOGOUT, LEGACY LOGIN)
-# ══════════════════════════════════════════════════════════════════
-
 def login_view(request):
-    """
-    Ruta de login principal: redirige al flujo Passwordless OTP de Solari Luxury,
-    manteniendo soporte de formulario clásico si se solicita explícitamente con ?legacy=1.
-    """
     if request.user.is_authenticated:
         return redirect('inicio')
 
@@ -330,14 +284,10 @@ def login_view(request):
 
     return render(request, 'usuarios/login.html', {'form': form})
 
-
 def registro_view(request):
-    """Redirige al flujo Passwordless que auto-crea la cuenta instantáneamente."""
     return redirect('solicitar_acceso')
 
-
 def logout_view(request):
-    """Cierra la sesión del usuario de forma inmediata y limpia cookies para mostrar siempre la pantalla de login."""
     logout(request)
     request.session.flush()
     messages.info(request, "Has cerrado sesión correctamente de SOLARY LUXURY.")
@@ -345,11 +295,8 @@ def logout_view(request):
     response.delete_cookie('sessionid')
     return response
 
-
 @login_required(login_url='solicitar_acceso')
 def perfil_view(request):
-    """Panel VIP de cliente con historial permanente de pedidos, pre-órdenes y trackers."""
-    # Asegurar vinculación permanente si aún no estuvieran vinculados
     if request.user.email:
         PreOrden.objects.filter(email_cliente__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
         Pedido.objects.filter(email__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
@@ -383,13 +330,10 @@ def perfil_view(request):
     }
     return render(request, 'usuarios/perfil.html', context)
 
-
 from django.views.decorators.csrf import csrf_exempt
-
 
 @csrf_exempt
 def crear_ticket_view(request):
-    """Crea un ticket de soporte para usuarios que no tienen acceso a su correo o PIN."""
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
 
@@ -431,11 +375,6 @@ def crear_ticket_view(request):
         'email': ticket.email,
         'message': f'Ticket {ticket.codigo} registrado exitosamente. Nuestro equipo de Concierge te contactará a la brevedad.'
     })
-
-
-# ══════════════════════════════════════════════════════════════════
-# PREVISUALIZACIÓN Y DESPACHO DE PRUEBA DE CORREOS APPLE STYLE
-# ══════════════════════════════════════════════════════════════════
 
 EMAIL_TEMPLATES_CONFIG = {
     'codigo_seguridad': {
@@ -656,16 +595,13 @@ EMAIL_TEMPLATES_CONFIG = {
     }
 }
 
-
 def email_preview_view(request, plantilla='codigo_seguridad'):
-    """Permite visualizar en vivo cualquiera de las 6 plantillas de correo Apple de SOLARY."""
     if plantilla not in EMAIL_TEMPLATES_CONFIG:
         plantilla = 'codigo_seguridad'
 
     config = EMAIL_TEMPLATES_CONFIG[plantilla]
     html_rendered = render_to_string(config['template'], config['contexto'])
 
-    # Si se pide raw=1 se devuelve directamente el HTML renderizado (ideal para iframe)
     if request.GET.get('raw') == '1':
         from django.http import HttpResponse
         return HttpResponse(html_rendered, content_type='text/html; charset=utf-8')

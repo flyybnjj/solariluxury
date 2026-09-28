@@ -8970,6 +8970,12 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Mi Perfil &amp; Pedidos</span>
         </a>
+        {% if request.user.is_staff or request.user.is_superuser %}
+        <a href="{% url 'admin_productos' %}" class="user-popover-link" style="color:#ff6b6b; border-top:1px solid rgba(255,51,51,0.2); margin-top:4px; padding-top:8px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Gestión de Productos</span>
+        </a>
+        {% endif %}
         <a href="{% url 'logout' %}" class="user-popover-link user-popover-logout">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           <span>Cerrar Sesión</span>
@@ -12172,6 +12178,30 @@ async function handleAceternityContactSubmit(e) {
     }
   }
 }
+
+// ── USER POPOVER TOGGLE (inicio.html standalone) ─────────────────
+function toggleAppleUserMenu(popoverId, btn) {
+  const popover = document.getElementById(popoverId);
+  if (!popover) return;
+  const isOpen = popover.classList.contains('open');
+  // Close any other open popover
+  document.querySelectorAll('.apple-user-popover.open').forEach(p => {
+    if (p.id !== popoverId) p.classList.remove('open');
+  });
+  if (isOpen) {
+    popover.classList.remove('open');
+    if (btn) btn.classList.remove('open');
+  } else {
+    popover.classList.add('open');
+    if (btn) btn.classList.add('open');
+  }
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.header-user-item')) {
+    document.querySelectorAll('.apple-user-popover.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.user-pill-link.open').forEach(b => b.classList.remove('open'));
+  }
+});
 
 </script>
 </body>

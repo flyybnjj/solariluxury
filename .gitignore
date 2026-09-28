@@ -1,17 +1,72 @@
+# Python & Bytecode
 __pycache__/
 *.py[cod]
 *$py.class
-*.sqlite3
-.env
-.venv
+*.so
+.Python
+
+# Virtual Environments
+.venv/
 env/
 venv/
+ENV/
+
+# Sensitive Credentials & Keys (DO NOT COMMIT)
+.env
+**/.env
+*.env
+*.env.*
+*.pem
+*.key
+*.pub
+*.crt
+
+# Database & SQLite files
+*.sqlite3
+**/*.sqlite3
+*.sqlite3-journal
+**/*.sqlite3-journal
+*.sqlite3.*
+**/*.sqlite3.*
+*.backup*
+**/*.backup*
+
+# Media, video recordings & screenshots
+capturas_*/
+test_reports/
+evidencias_*/
+videos/
+temp_rec/
+scratch*/
+*.png
+!mi_proyecto/**
+*.jpg
+!mi_proyecto/**
+*.mp4
+*.webm
+
+# Temporary archives & build files
+*.tar.gz
+*.zip
+*.tar
+*.log
+.temp*
+
+# IDE & OS files
 .vscode/
 .idea/
-*.log
+.DS_Store
+Thumbs.db
+
+# Documentation & audit scratch files
 *.docx
 *.pdf
 *.xlsx
-evidencias_ia/
-capturas_mobile_audit/
-.temp*
+REPORTE_*.txt
+GUIA_*.md
+ESTADO_*.md
+scripts/
+capture_*.py
+check_scroll.py
+record_whatsapp_video.py
+

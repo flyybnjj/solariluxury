@@ -3,7 +3,6 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
@@ -22,7 +21,6 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
 
-
 class Talla(models.Model):
     nombre = models.CharField(max_length=20, unique=True)
 
@@ -32,7 +30,6 @@ class Talla(models.Model):
 
     def __str__(self):
         return self.nombre
-
 
 class Producto(models.Model):
     BADGE_CHOICES = [
@@ -70,7 +67,6 @@ class Producto(models.Model):
         return f"${self.precio:,}".replace(',', '.')
 
     def get_galeria(self):
-        """Devuelve lista de rutas estáticas de imágenes del producto garantizando que sean 100% fotos del producto real"""
         galeria = [self.imagen]
         adicionales = list(self.imagenes_galeria.all().order_by('orden').values_list('imagen', flat=True))
         for img in adicionales:
@@ -79,7 +75,6 @@ class Producto(models.Model):
         return galeria
 
     def es_360(self):
-        """Determina si el producto posee una secuencia de ángulos tipo StockX"""
         gal = self.get_galeria()
         return len(gal) >= 4 or any('angulo' in img.lower() for img in gal)
 
@@ -88,7 +83,6 @@ class Producto(models.Model):
         return json.dumps(self.get_galeria())
 
     def imagen_secundaria(self):
-        """Devuelve una imagen secundaria del producto para el efecto hover interactivo en el catálogo"""
         adicionales = list(self.imagenes_galeria.all().order_by('orden').values_list('imagen', flat=True))
         for img in adicionales:
             if img and img != self.imagen:
@@ -97,7 +91,6 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
-
 
 class ProductoTalla(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='producto_tallas')
@@ -112,7 +105,6 @@ class ProductoTalla(models.Model):
     def __str__(self):
         return f"{self.producto.nombre} — {self.talla.nombre}"
 
-
 class DetalleProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='detalles')
     texto = models.CharField(max_length=255)
@@ -125,7 +117,6 @@ class DetalleProducto(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} — {self.texto[:40]}"
-
 
 class ImagenProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='imagenes_galeria')
@@ -140,7 +131,6 @@ class ImagenProducto(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} — {self.titulo}"
-
 
 class PreOrden(models.Model):
     ESTADOS = [
@@ -198,7 +188,6 @@ class PreOrden(models.Model):
         return mapa.get(self.estado, 20)
 
     def cancelar_y_restituir_stock(self):
-        """Cancela la orden y restituye automáticamente el stock a la base de datos."""
         if self.estado == 'CANCELADA':
             return False
         from django.db.models import F
@@ -215,11 +204,7 @@ class PreOrden(models.Model):
     def __str__(self):
         return f"{self.codigo_orden} — {self.nombre_cliente} ({self.producto.nombre})"
 
-
 class Pedido(models.Model):
-    """
-    Modelo permanente de Pedido / Order vinculado a la cuenta del usuario y a su email.
-    """
     codigo_pedido = models.CharField(max_length=50, unique=True, db_index=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -252,7 +237,6 @@ class Pedido(models.Model):
         return f"${self.precio_total:,}".replace(',', '.')
 
     def cancelar_y_restituir_stock(self):
-        """Cancela el pedido y la preorden asociada, restituyendo stock a la base de datos."""
         preorden = PreOrden.objects.filter(codigo_orden=self.codigo_pedido).first()
         if preorden:
             res = preorden.cancelar_y_restituir_stock()
@@ -274,11 +258,7 @@ class Pedido(models.Model):
     def __str__(self):
         return f"Pedido {self.codigo_pedido} - {self.email}"
 
-
 class Tracker(models.Model):
-    """
-    Modelo permanente de Tracker / Envío con número de guía y estado en vivo.
-    """
     pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE, related_name='tracker', null=True, blank=True)
     preorden = models.OneToOneField(PreOrden, on_delete=models.CASCADE, related_name='tracker_rel', null=True, blank=True)
     usuario = models.ForeignKey(
@@ -305,11 +285,8 @@ class Tracker(models.Model):
     def __str__(self):
         return f"{self.numero_guia} ({self.courier}) - {self.email}"
 
-
 @receiver(post_save, sender=PreOrden)
 def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
-    """Sincroniza automáticamente cada Pre-Orden con los modelos permanentes de Pedido y Tracker."""
-    # 1. Asociar usuario si aún no está asignado pero existe por correo
     if not instance.usuario and instance.email_cliente:
         from django.contrib.auth.models import User
         user = User.objects.filter(email__iexact=instance.email_cliente).first()
@@ -317,7 +294,6 @@ def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
             instance.usuario = user
             PreOrden.objects.filter(pk=instance.pk).update(usuario=user)
 
-    # 2. Crear o actualizar Pedido oficial permanente
     pedido, _ = Pedido.objects.update_or_create(
         codigo_pedido=instance.codigo_orden,
         defaults={
@@ -337,7 +313,6 @@ def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
         }
     )
 
-    # 3. Crear o actualizar Tracker permanente
     if instance.dhl_tracking:
         Tracker.objects.update_or_create(
             numero_guia=instance.dhl_tracking,
@@ -353,13 +328,8 @@ def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
             }
         )
 
-
 @receiver(post_save, sender=Pedido)
 def sync_pedido_to_preorden(sender, instance, created, **kwargs):
-    """
-    Sincroniza cambios desde Pedido hacia PreOrden para consistencia bidireccional
-    cuando un administrador modifica estados o notas desde el Django Admin.
-    """
     if kwargs.get('raw', False):
         return
     preorden = PreOrden.objects.filter(codigo_orden=instance.codigo_pedido).first()
@@ -373,5 +343,4 @@ def sync_pedido_to_preorden(sender, instance, created, **kwargs):
                 estado_envio=instance.get_estado_display(),
                 porcentaje_avance=preorden.porcentaje_progreso()
             )
-
 

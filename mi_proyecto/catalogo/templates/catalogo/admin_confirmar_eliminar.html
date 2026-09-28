@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Eliminar Producto | Panel Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+  .admin-page { padding: 80px 0 120px; min-height: 80vh; display: flex; align-items: center; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(230,0,0,0.15) 0%, transparent 70%); }
+  .admin-container { max-width: 560px; margin: 0 auto; padding: 0 24px; text-align: center; }
+  .danger-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,59,48,0.14); border: 1px solid rgba(255,59,48,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; }
+  .admin-title { font-family: var(--font-display); font-size: clamp(22px, 3vw, 36px); margin-bottom: 14px; }
+  .confirm-msg { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
+  .prod-name-highlight { color: #fff; font-weight: 700; }
+  .prod-id-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+  .warning-box { background: rgba(255,149,0,0.10); border: 1px solid rgba(255,149,0,0.25); border-radius: 12px; padding: 14px 18px; margin: 24px 0; font-size: 13px; color: rgba(255,149,0,0.9); }
+  .form-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+  .admin-btn { display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px; border-radius: 12px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+  .admin-btn-danger { background: var(--accent); color: #fff; }
+  .admin-btn-danger:hover { background: #cc0000; }
+  .admin-btn-secondary { background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: #fff; }
+  .admin-btn-secondary:hover { background: rgba(255,255,255,0.14); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-container">
+    <div class="danger-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+        <path d="M10 11v6"></path><path d="M14 11v6"></path>
+        <path d="M9 6V4h6v2"></path>
+      </svg>
+    </div>
+
+    <h1 class="admin-title">CONFIRMAR ELIMINACIÓN</h1>
+    <p class="confirm-msg">Estás a punto de eliminar permanentemente el producto:</p>
+    <p class="confirm-msg"><span class="prod-name-highlight">{{ producto.nombre }}</span></p>
+    <p class="prod-id-label">ID #{{ producto.id }} • {{ producto.categoria.nombre|default:"Sin categoría" }} • ${{ producto.precio|floatformat:0 }} CLP</p>
+
+    <div class="warning-box">
+      ⚠️ Esta acción es irreversible. Se eliminarán también todas las tallas y detalles asociados. Los pedidos vinculados a este producto serán protegidos (PROTECT).
+    </div>
+
+    <form method="POST" class="form-actions">
+      {% csrf_token %}
+      <button type="submit" class="admin-btn admin-btn-danger">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+        SÍ, ELIMINAR
+      </button>
+      <a href="{% url 'admin_productos' %}" class="admin-btn admin-btn-secondary">CANCELAR</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

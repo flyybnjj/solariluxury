@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+{% load catalogo_extras %}
+
+{% block title %}Editar Producto #{{ producto.id }} | Panel Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+  .admin-page { padding: 60px 0 100px; min-height: 80vh; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(230,0,0,0.10) 0%, transparent 70%); }
+  .admin-container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .admin-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.35em; color: #64d2ff; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .admin-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #64d2ff; box-shadow: 0 0 8px #64d2ff; }
+  .admin-title { font-family: var(--font-display); font-size: clamp(24px, 3.5vw, 42px); margin-bottom: 8px; }
+  .admin-id-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 28px; }
+  .form-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 36px 32px; }
+  .form-section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .form-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+  .form-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: var(--font-body); font-size: 13px; padding: 10px 14px; outline: none; transition: border-color 0.2s; width: 100%; box-sizing: border-box; }
+  .form-input:focus { border-color: rgba(255,255,255,0.4); }
+  .form-input option { background: #111; }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .talla-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .talla-chip { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; cursor: pointer; transition: all 0.2s; }
+  .talla-chip:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.3); }
+  .talla-chip.selected { background: rgba(100,210,255,0.08); border-color: rgba(100,210,255,0.3); }
+  .talla-chip input[type=checkbox] { accent-color: #64d2ff; width: 14px; height: 14px; }
+  .talla-chip .talla-name { font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); }
+  .talla-chip .talla-stock input { width: 46px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 11px; padding: 2px 6px; text-align: center; }
+  .preview-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: contain; background: #111; border: 1px solid var(--border); display: block; margin-bottom: 8px; }
+  .error-banner { background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.3); color: #ff6b6b; border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .admin-btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 24px; border-radius: 12px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+  .admin-btn-primary { background: #64d2ff; color: #000; }
+  .admin-btn-primary:hover { background: #3ac0f5; }
+  .admin-btn-danger-outline { background: transparent; border: 1px solid rgba(255,59,48,0.4); color: #ff6b6b; }
+  .admin-btn-danger-outline:hover { background: rgba(255,59,48,0.12); }
+  .admin-btn-secondary { background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: #fff; }
+  .admin-btn-secondary:hover { background: rgba(255,255,255,0.14); }
+  @media (max-width: 640px) { .form-grid, .form-grid-3 { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-container">
+    <div class="admin-eyebrow">PANEL ADMIN — EDITAR PRODUCTO</div>
+    <h1 class="admin-title">{{ producto.nombre|upper }}</h1>
+    <div class="admin-id-label">Producto ID #{{ producto.id }} • Creado: {{ producto.creado_en|date:"d M Y" }}</div>
+
+    {% if error %}
+    <div class="error-banner">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="form-card">
+      {% csrf_token %}
+
+      <div class="form-section-title">Información Principal</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Nombre del Producto *</label>
+          <input type="text" name="nombre" class="form-input" value="{{ producto.nombre }}" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Subtítulo / Tagline</label>
+          <input type="text" name="subtitulo" class="form-input" value="{{ producto.subtitulo }}">
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-field">
+          <label class="form-label">Precio CLP *</label>
+          <input type="number" name="precio" class="form-input" value="{{ producto.precio }}" required min="0">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Precio USD</label>
+          <input type="number" name="precio_usd" class="form-input" value="{{ producto.precio_usd }}" step="0.01" min="0">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Estado / Badge</label>
+          <select name="badge_estado" class="form-input">
+            {% for val, label in badge_choices %}
+            <option value="{{ val }}" {% if producto.badge_estado == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">Detalles del Producto</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Categoría</label>
+          <select name="categoria" class="form-input">
+            <option value="">— Sin categoría —</option>
+            {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if producto.categoria_id == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Código de Estilo / SKU</label>
+          <input type="text" name="codigo_estilo" class="form-input" value="{{ producto.codigo_estilo|default:'' }}">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Colorway</label>
+          <input type="text" name="color" class="form-input" value="{{ producto.color|default:'' }}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Ruta de Imagen Estática</label>
+          {% if producto.imagen %}
+          <img src="{% static producto.imagen %}" class="preview-thumb" id="imgPreview"
+               onerror="this.style.display='none'">
+          {% endif %}
+          <input type="text" name="imagen" class="form-input" value="{{ producto.imagen }}"
+                 oninput="updatePreview(this.value)">
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Descripción</label>
+        <textarea name="descripcion" class="form-input form-textarea">{{ producto.descripcion }}</textarea>
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">Tallas Disponibles & Stock</div>
+      <div class="talla-grid">
+        {% for talla in tallas %}
+        {% with stock=tallas_actuales|get_item:talla.id %}
+        <label class="talla-chip {% if talla.id in tallas_actuales %}selected{% endif %}">
+          <input type="checkbox" name="tallas" value="{{ talla.id }}"
+                 {% if talla.id in tallas_actuales %}checked{% endif %}>
+          <span class="talla-name">{{ talla.nombre }}</span>
+          <span class="talla-stock">Stock: <input type="number" name="stock_{{ talla.id }}"
+                 value="{{ stock|default:1 }}" min="0" max="999"></span>
+        </label>
+        {% endwith %}
+        {% endfor %}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="admin-btn admin-btn-primary">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          GUARDAR CAMBIOS
+        </button>
+        <a href="{% url 'admin_eliminar_producto' producto.id %}" class="admin-btn admin-btn-danger-outline">ELIMINAR PRODUCTO</a>
+        <a href="{% url 'admin_productos' %}" class="admin-btn admin-btn-secondary">CANCELAR</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function updatePreview(val) {
+  var img = document.getElementById('imgPreview');
+  if (img) {
+    img.src = '/static/' + val;
+    img.style.display = 'block';
+  }
+}
+// Mark talla chip selected when checkbox toggled
+document.querySelectorAll('.talla-chip input[type=checkbox]').forEach(function(cb) {
+  cb.addEventListener('change', function() {
+    this.closest('.talla-chip').classList.toggle('selected', this.checked);
+  });
+});
+</script>
+{% endblock %}

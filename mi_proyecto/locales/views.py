@@ -12,7 +12,6 @@ from django.db.models import F
 from .models import Local
 from catalogo.models import Producto, PreOrden, ProductoTalla
 
-
 def lista_locales(request):
     locales = Local.objects.filter(activo=True)
     context = {
@@ -21,16 +20,12 @@ def lista_locales(request):
     }
     return render(request, 'locales/lista_locales.html', context)
 
-
 from django.template.loader import render_to_string
 
-
 def enviar_correo_preorden(orden):
-    """Envía un correo de notificación de pedido con diseño Apple minimalista conforme al estado actual"""
     fecha_entrega_str = orden.fecha_estimada_entrega.strftime('%d de %B de %Y') if orden.fecha_estimada_entrega else 'Por coordinar'
     tracking_url = f"http://127.0.0.1:8000/locales/informacion/?codigo={orden.codigo_orden}"
 
-    # Calcular desglose
     total_val = orden.precio_total or (orden.producto.precio * orden.cantidad)
     neto_val = round(total_val / 1.19)
     iva_val = total_val - neto_val
@@ -106,9 +101,7 @@ def enviar_correo_preorden(orden):
         print(f"[EMAIL ERROR]: {e}")
         return False
 
-
 def get_timeline_para_orden(orden):
-    """Genera las 4 etapas del tracking para una orden dada"""
     estados_lista = ['CONFIRMADA', 'CONFECCION', 'CONTROL_CALIDAD', 'DESPACHO_DHL', 'EN_ADUANA', 'ENTREGADA']
     idx_actual = estados_lista.index(orden.estado) if orden.estado in estados_lista else 0
 
@@ -145,9 +138,7 @@ def get_timeline_para_orden(orden):
     ]
     return pasos
 
-
 def informacion(request):
-    """Página de Preventa, Tipo de Cambio en Vivo y Seguimiento Logístico"""
     valor_dolar = "No disponible"
     estado_api = "Sin conexion"
     try:
@@ -164,7 +155,6 @@ def informacion(request):
         valor_dolar = "940,50 (Estimado)"
         estado_api = "Modo contingencia / Fuera de linea"
 
-    # Buscar orden si viene por GET param o POST
     codigo_query = request.GET.get('codigo', '').strip()
     orden_encontrada = None
     timeline = []
@@ -191,9 +181,7 @@ def informacion(request):
     }
     return render(request, 'locales/informacion.html', context)
 
-
 def crear_preorden(request):
-    """Procesa la reserva de una pre-orden y envía correo de confirmación"""
     if request.method == 'POST':
         nombre = request.POST.get('nombre_cliente', '').strip()
         email = request.POST.get('email_cliente', '').strip()
@@ -209,7 +197,6 @@ def crear_preorden(request):
 
         producto = get_object_or_404(Producto, id=producto_id)
 
-        # Generar código único SL-2026-XXXX
         random_num = random.randint(1000, 9999)
         codigo_orden = f"SL-2026-{random_num}"
         while PreOrden.objects.filter(codigo_orden=codigo_orden).exists():
@@ -236,17 +223,14 @@ def crear_preorden(request):
             fecha_estimada_entrega=fecha_est
         )
 
-        # Enviar correo de confirmación
         enviar_correo_preorden(orden)
 
         return redirect(f'/locales/informacion/?codigo={orden.codigo_orden}&creada=1')
 
     return redirect('/locales/informacion/')
 
-
 @csrf_exempt
 def api_rastrear(request):
-    """API JSON para rastreo de orden por código"""
     codigo = ''
     if request.method == 'POST':
         try:
@@ -294,10 +278,8 @@ def api_rastrear(request):
         'timeline': timeline,
     })
 
-
 @csrf_exempt
 def api_crear_preorden(request):
-    """API JSON para crear una pre-orden desde modales o carritos y enviar correo"""
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
@@ -444,7 +426,6 @@ def api_crear_preorden(request):
 
     try:
         with transaction.atomic():
-            # 1. Validar y descontar stock con select_for_update()
             for it_res in items_a_reservar:
                 p_obj = it_res['producto']
                 c_qty = it_res['cantidad']
@@ -464,14 +445,12 @@ def api_crear_preorden(request):
                     pt.stock = F('stock') - c_qty
                     pt.save(update_fields=['stock'])
 
-            # 2. Si se utilizó cupón, marcarlo como consumido
             if cliente_cupon_a_consumir:
                 from django.utils import timezone
                 cliente_cupon_a_consumir.cupon_usado = True
                 cliente_cupon_a_consumir.fecha_canje_cupon = timezone.now()
                 cliente_cupon_a_consumir.save(update_fields=['cupon_usado', 'fecha_canje_cupon'])
 
-            # 3. Crear la Pre-Orden oficial dentro de la transacción
             orden = PreOrden.objects.create(
                 codigo_orden=codigo_orden,
                 usuario=user,
@@ -492,7 +471,6 @@ def api_crear_preorden(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': f'Error al procesar la compra: {str(e)}'}, status=500)
 
-    # Enviar correo de confirmación
     correo_enviado = enviar_correo_preorden(orden)
 
     return JsonResponse({
@@ -507,9 +485,7 @@ def api_crear_preorden(request):
         'tracking_url': f"/locales/informacion/?codigo={orden.codigo_orden}"
     })
 
-
 def api_validar_cupon(request):
-    """Valida si un código de cupón es válido (personal de usuario o código general)"""
     codigo = (request.GET.get('codigo') or request.POST.get('codigo') or '').strip().upper()
     if not codigo:
         return JsonResponse({'success': False, 'error': 'Ingresa un código de descuento.'}, status=400)
@@ -530,9 +506,7 @@ def api_validar_cupon(request):
             'error': 'El código de cupón ingresado no es válido o ha expirado.'
         }, status=404)
 
-
 def api_dolar(request):
-    """Retorna el tipo de cambio oficial en vivo USD/CLP de mindicador.cl para conversiones automáticas"""
     valor_raw = 965.71
     try:
         response = requests.get('https://mindicador.cl/api/dolar', timeout=2.5)
