@@ -498,11 +498,16 @@ class StoreAuthenticationBoundaryTests(TestCase):
     def test_guest_login_menu_hides_store_and_checkout_controls(self):
         response = self.client.get('/login/')
         self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'class="sub-header"')
         self.assertNotContains(response, 'VAULT / SHOP')
         self.assertNotContains(response, 'PREVENTA &amp; LOGÍSTICA')
         self.assertNotContains(response, 'id="globalWishlistBtn"')
         self.assertNotContains(response, 'id="globalBagBtn"')
         self.assertNotContains(response, 'id="globalCheckoutForm"')
+
+        self.client.force_login(self.user)
+        authenticated_response = self.client.get('/perfil/')
+        self.assertContains(authenticated_response, 'class="sub-header"')
 
     def test_guest_cannot_checkout_track_or_validate_private_coupon(self):
         purchase = self.client.post('/api/crear-preorden/', data='{}', content_type='application/json')

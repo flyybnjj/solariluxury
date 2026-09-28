@@ -1063,6 +1063,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    {% if request.user.is_authenticated %}
     <!-- Sub-page Apple Dynamic Island Header -->
     <header class="sub-header" id="siteHeader">
       <!-- 1. Left Brand / Logo -->
@@ -1202,6 +1203,7 @@
         {% endif %}
       </div>
     </header>
+    {% endif %}
 
     <main>
         {% block content %}
