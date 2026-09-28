@@ -67,7 +67,7 @@ def solicitar_acceso_view(request):
 
         pin_spaced = f"{pin[:3]}   {pin[3:]}"
         cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
-        subject = f"SOLARY ID — Tu código de verificación: {pin}"
+        subject = "SOLARY ID — Tu acceso a la tienda"
         html_message = render_to_string('usuarios/email_pin_acceso.html', {
             'pin': pin,
             'pin_spaced': pin_spaced,
@@ -225,7 +225,7 @@ def reenviar_pin_view(request):
 
     pin_spaced = f"{pin[:3]}   {pin[3:]}"
     cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
-    subject = f"SOLARY ID — Tu nuevo código de verificación: {pin}"
+    subject = "SOLARY ID — Tu acceso a la tienda"
     html_message = render_to_string('usuarios/email_pin_acceso.html', {
         'pin': pin,
         'pin_spaced': pin_spaced,

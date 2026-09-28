@@ -139,7 +139,7 @@ def solicitar_key(request):
 
     try:
         send_mail(
-            subject=f"Tu código de verificación de Solary: {pin}",
+            subject="SOLARY ID — Tu acceso a la tienda",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
