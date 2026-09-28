@@ -248,9 +248,9 @@
 
     <h1 class="apple-id-title">Iniciar sesión</h1>
 
-    {% if messages %}
+    {% if login_messages %}
     <div class="apple-messages">
-      {% for message in messages %}
+      {% for message in login_messages %}
       <div class="apple-alert {% if message.tags == 'error' %}apple-alert-error{% else %}apple-alert-success{% endif %}">
         {{ message }}
       </div>

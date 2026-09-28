@@ -1,210 +1,31 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Crear Cuenta | SOLARILUXURY ARCHIVE{% endblock %}
+{% block title %}Crear cuenta | SOLARY LUXURY{% endblock %}
 
-{% block extra_head %}
-<style>
-  .auth-wrapper {
-    min-height: calc(100vh - 120px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 120px 20px 80px;
-    background: radial-gradient(circle at 50% 30%, rgba(230,0,0,0.08) 0%, rgba(0,0,0,0.95) 70%);
-  }
-  .auth-card {
-    width: 100%;
-    max-width: 460px;
-    background: rgba(15, 15, 20, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 44px 36px;
-    backdrop-filter: blur(24px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(230,0,0,0.12);
-  }
-  .auth-header {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-  .auth-eyebrow {
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--text-muted, #86868b);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .auth-title {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: #fff;
-    margin: 0;
-  }
-  .auth-subtitle {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 6px;
-  }
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .auth-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .auth-label {
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .auth-input {
-    width: 100%;
-    padding: 13px 18px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    color: #fff;
-    font-size: 14px;
-    font-family: inherit;
-    transition: all 0.25s ease;
-    outline: none;
-  }
-  .auth-input:focus {
-    border-color: #0071e3;
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25);
-  }
-  .auth-btn-submit {
-    width: 100%;
-    padding: 15px;
-    margin-top: 10px;
-    background: #0071e3;
-    color: #fff;
-    border: none;
-    border-radius: 980px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 20px rgba(0, 113, 227, 0.35);
-  }
-  .auth-btn-submit:hover {
-    background: #0077ed;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5);
-  }
-  .auth-footer {
-    margin-top: 28px;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 20px;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  .auth-link {
-    color: #0071e3;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-  .auth-link:hover {
-    color: #0077ed;
-    text-decoration: underline;
-  }
-  .auth-messages {
-    margin-bottom: 20px;
-  }
-  .auth-alert-error {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-family: inherit;
-    margin-bottom: 8px;
-  }
-
-  @media (max-width: 480px) {
-    .auth-wrapper {
-      padding: 80px 14px 60px;
-      min-height: calc(100dvh - 80px);
-    }
-    .auth-card {
-      padding: 28px 18px;
-      border-radius: 20px;
-    }
-    .auth-title {
-      font-size: 24px;
-    }
-    .auth-input {
-      font-size: 16px !important;
-      min-height: 46px;
-    }
-    .auth-btn-submit {
-      min-height: 48px;
-      font-size: 15px;
-    }
-  }
-</style>
-{% endblock %}
+{% block extra_head %}{% include "registration/auth_styles.html" %}{% endblock %}
 
 {% block content %}
 <div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="auth-header">
-      <div class="auth-eyebrow">NUEVO MIEMBRO</div>
-      <h1 class="auth-title">CREAR CUENTA</h1>
-      <p class="auth-subtitle">Únete a Solariluxury para drops exclusivos y seguimiento</p>
-    </div>
+  <section class="auth-card" aria-labelledby="register-title">
+    <header class="auth-header">
+      <div class="auth-brand-mark" aria-hidden="true"><img src="{% static 'img/logo_spin_frame0.png' %}" alt=""></div>
+      <div class="auth-eyebrow">Nuevo miembro</div>
+      <h1 class="auth-title" id="register-title">Crear cuenta</h1>
+      <p class="auth-subtitle">Tu cuenta y tus datos quedan guardados de forma segura.</p>
+    </header>
 
-    {% if messages %}
-    <div class="auth-messages">
-      {% for message in messages %}
-      <div class="auth-alert-error">
-        {{ message }}
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <form method="POST" class="auth-form">
+    {% if messages %}<div class="auth-messages">{% for message in messages %}<div class="auth-alert-{% if message.tags == 'success' %}success{% else %}error{% endif %}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    <form method="POST" class="auth-form" novalidate>
       {% csrf_token %}
-      <div class="auth-field">
-        <label class="auth-label">Usuario</label>
-        {{ form.username }}
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Correo Electrónico</label>
-        {{ form.email }}
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Contraseña</label>
-        {{ form.password1 }}
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Confirmar Contraseña</label>
-        {{ form.password2 }}
-      </div>
-
-      {% if form.errors %}<div class="auth-alert-error">{{ form.errors }}</div>{% endif %}
-      <button type="submit" class="auth-btn-submit">CREAR CUENTA →</button>
+      <div class="auth-field"><label class="auth-label" for="id_username">Usuario</label>{{ form.username }}{% for error in form.username.errors %}<div class="auth-alert-error">{{ error }}</div>{% endfor %}</div>
+      <div class="auth-field"><label class="auth-label" for="id_email">Correo electrónico</label>{{ form.email }}{% for error in form.email.errors %}<div class="auth-alert-error">{{ error }}</div>{% endfor %}</div>
+      <div class="auth-field"><label class="auth-label" for="id_password1">Contraseña</label>{{ form.password1 }}{% for error in form.password1.errors %}<div class="auth-alert-error">{{ error }}</div>{% endfor %}</div>
+      <div class="auth-field"><label class="auth-label" for="id_password2">Repite la contraseña</label>{{ form.password2 }}{% for error in form.password2.errors %}<div class="auth-alert-error">{{ error }}</div>{% endfor %}</div>
+      {% if form.non_field_errors %}<div class="auth-alert-error">{{ form.non_field_errors }}</div>{% endif %}
+      <button type="submit" class="auth-btn-submit">CREAR CUENTA</button>
     </form>
-
-    <div class="auth-footer">
-      ¿Ya eres miembro? <a href="{% url 'login' %}" class="auth-link">Inicia sesión</a>
-    </div>
-  </div>
+    <div class="auth-footer">¿Ya tienes cuenta? <a href="{% url 'login' %}" class="auth-link">Inicia sesión</a></div>
+  </section>
 </div>
 {% endblock %}

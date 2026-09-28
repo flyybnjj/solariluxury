@@ -4,7 +4,8 @@ import requests
 from datetime import date, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import transaction
@@ -140,6 +141,8 @@ def get_timeline_para_orden(orden):
     ]
     return pasos
 
+@never_cache
+@login_required(login_url='login')
 def informacion(request):
     valor_dolar = "No disponible"
     estado_api = "Sin conexion"
@@ -163,7 +166,10 @@ def informacion(request):
     error_busqueda = None
 
     if codigo_query:
-        orden_encontrada = PreOrden.objects.filter(codigo_orden__iexact=codigo_query).select_related('producto').first()
+        orden_encontrada = PreOrden.objects.filter(
+            codigo_orden__iexact=codigo_query,
+            usuario=request.user,
+        ).select_related('producto').first()
         if orden_encontrada:
             timeline = get_timeline_para_orden(orden_encontrada)
         else:
@@ -183,10 +189,12 @@ def informacion(request):
     }
     return render(request, 'locales/informacion.html', context)
 
+@never_cache
+@login_required(login_url='login')
 def crear_preorden(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre_cliente', '').strip()
-        email = request.POST.get('email_cliente', '').strip()
+        nombre = request.user.get_full_name() or request.user.username
+        email = request.user.email
         telefono = request.POST.get('telefono_cliente', '').strip()
         direccion = request.POST.get('direccion_entrega', '').strip()
         ciudad = request.POST.get('ciudad', 'Santiago').strip()
@@ -210,6 +218,7 @@ def crear_preorden(request):
 
         orden = PreOrden.objects.create(
             codigo_orden=codigo_orden,
+            usuario=request.user,
             nombre_cliente=nombre,
             email_cliente=email,
             telefono_cliente=telefono,
@@ -231,8 +240,10 @@ def crear_preorden(request):
 
     return redirect('/locales/informacion/')
 
-@csrf_exempt
+@never_cache
 def api_rastrear(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Inicia sesión para consultar tus pedidos.'}, status=401)
     codigo = ''
     if request.method == 'POST':
         try:
@@ -246,7 +257,10 @@ def api_rastrear(request):
     if not codigo:
         return JsonResponse({'success': False, 'error': 'Debes ingresar un número de orden o código de reserva.'}, status=400)
 
-    orden = PreOrden.objects.filter(codigo_orden__iexact=codigo).select_related('producto').first()
+    orden = PreOrden.objects.filter(
+        codigo_orden__iexact=codigo,
+        usuario=request.user,
+    ).select_related('producto').first()
     if not orden:
         return JsonResponse({
             'success': False,
@@ -280,8 +294,10 @@ def api_rastrear(request):
         'timeline': timeline,
     })
 
-@csrf_exempt
+@never_cache
 def api_crear_preorden(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Inicia sesión para realizar una compra.'}, status=401)
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
@@ -290,8 +306,8 @@ def api_crear_preorden(request):
     except Exception:
         data = request.POST
 
-    nombre = (data.get('nombre_cliente') or data.get('nombre') or '').strip()
-    email = (data.get('email_cliente') or data.get('email') or '').strip()
+    nombre = request.user.get_full_name() or request.user.username
+    email = request.user.email
     telefono = (data.get('telefono_cliente') or data.get('telefono') or '').strip()
     direccion = (data.get('direccion_entrega') or data.get('direccion') or '').strip()
     ciudad = (data.get('ciudad') or 'La Serena').strip()
@@ -354,16 +370,6 @@ def api_crear_preorden(request):
         
         precio_total = producto.precio * cantidad
 
-    if not nombre and request.user.is_authenticated:
-        nombre = request.user.get_full_name() or request.user.username
-    if not email and request.user.is_authenticated:
-        email = request.user.email
-
-    if not nombre:
-        nombre = 'Cliente Solary VIP'
-    if not email:
-        email = 'cliente@solaryluxury.com'
-
     random_num = random.randint(1000, 9999)
     codigo_orden = f"SL-2026-{random_num}"
     while PreOrden.objects.filter(codigo_orden=codigo_orden).exists():
@@ -372,10 +378,7 @@ def api_crear_preorden(request):
 
     dhl_code = f"DHL-CL-{random.randint(10000000, 99999999)}"
     fecha_est = date.today() + timedelta(days=10)
-    user = request.user if request.user.is_authenticated else None
-    if not user and email:
-        from django.contrib.auth.models import User
-        user = User.objects.filter(email__iexact=email).first()
+    user = request.user
 
     cupon_codigo = (data.get('cupon') or data.get('cupon_codigo') or '').strip().upper()
     descuento_aplicado = 0
@@ -487,7 +490,10 @@ def api_crear_preorden(request):
         'tracking_url': f"/locales/informacion/?codigo={orden.codigo_orden}"
     })
 
+@never_cache
 def api_validar_cupon(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Inicia sesión para validar tu cupón.'}, status=401)
     codigo = (request.GET.get('codigo') or request.POST.get('codigo') or '').strip().upper()
     if not codigo:
         return JsonResponse({'success': False, 'error': 'Ingresa un código de descuento.'}, status=400)

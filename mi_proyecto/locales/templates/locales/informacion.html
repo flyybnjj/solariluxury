@@ -1411,11 +1411,11 @@
           <div class="preventa-row">
             <div class="preventa-form-group">
               <label class="preventa-label" for="nombreCliente">NOMBRE COMPLETO *</label>
-              <input type="text" name="nombre_cliente" id="nombreCliente" class="preventa-input" placeholder="Ej: Ignacio Ávalos" required>
+              <input type="text" name="nombre_cliente" id="nombreCliente" class="preventa-input" value="{{ request.user.get_full_name|default:request.user.username }}" autocomplete="name" readonly required>
             </div>
             <div class="preventa-form-group">
               <label class="preventa-label" for="emailCliente">CORREO ELECTRÓNICO * (RECIBE GUÍA)</label>
-              <input type="email" name="email_cliente" id="emailCliente" class="preventa-input" placeholder="cliente@ejemplo.com" required>
+              <input type="email" name="email_cliente" id="emailCliente" class="preventa-input" value="{{ request.user.email }}" autocomplete="email" readonly required>
             </div>
           </div>
 

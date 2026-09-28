@@ -12,11 +12,15 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from usuarios.models import Cliente
 from .models import Producto, Categoria, DetalleProducto, ImagenProducto, PreOrden, Pedido, Tracker
 
 logger = logging.getLogger(__name__)
 
+@never_cache
+@login_required(login_url='login')
 def inicio(request):
     productos = list(
         Producto.objects.select_related('categoria')
@@ -97,6 +101,8 @@ def bloquear_tienda(request):
     request.session.flush()
     return redirect('inicio')
 
+@never_cache
+@login_required(login_url='login')
 def lista_productos(request):
     categoria_seleccionada = request.GET.get('categoria', 'TODOS').upper()
     busqueda = request.GET.get('q', '').strip()
@@ -132,6 +138,8 @@ def lista_productos(request):
     }
     return render(request, 'catalogo/productos.html', context)
 
+@never_cache
+@login_required(login_url='login')
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(
         Producto.objects.select_related('categoria')
@@ -183,7 +191,6 @@ def detalle_producto(request, producto_id):
     }
     return render(request, 'catalogo/detalle_producto.html', context)
 
-from django.contrib.auth.decorators import login_required
 from .models import Talla
 
 def _staff_required(view_func):

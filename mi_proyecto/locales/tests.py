@@ -1,12 +1,16 @@
 import json
 from unittest.mock import patch
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.core import mail
 from catalogo.models import Producto, Talla, ProductoTalla, PreOrden
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug001PriceSpoofingTest(TestCase):
     def setUp(self):
         self.client = Client()
+        from django.contrib.auth.models import User
+        self.user = User.objects.create_user(username='price-check', email='price-check@example.test', password='StrongPassphrase-2026!')
+        self.client.force_login(self.user)
         self.producto = Producto.objects.create(
             nombre="Gorra Syna Test",
             precio=222000,
@@ -38,6 +42,8 @@ class Bug001PriceSpoofingTest(TestCase):
 
         orden = PreOrden.objects.get(codigo_orden=data['codigo_orden'])
         self.assertEqual(orden.precio_total, self.producto.precio * 2)
+        self.assertEqual(orden.usuario, self.user)
+        self.assertEqual(orden.email_cliente, self.user.email)
 
     def test_invalid_product_id_returns_400(self):
         payload = {
@@ -76,9 +82,13 @@ class Bug001PriceSpoofingTest(TestCase):
         self.assertFalse(data.get('success'))
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug004StockDeductionTest(TestCase):
     def setUp(self):
         self.client = Client()
+        from django.contrib.auth.models import User
+        self.user = User.objects.create_user(username='stock-buyer', email='stock-buyer@example.test', password='StrongPassphrase-2026!')
+        self.client.force_login(self.user)
         self.producto = Producto.objects.create(
             nombre="Jordan 4 Military Black",
             precio=290000,
@@ -206,6 +216,7 @@ class Bug004StockDeductionTest(TestCase):
         self.assertEqual(self.pt.stock, 5)
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug016EmailProductMismatchTest(TestCase):
     def test_email_renders_real_product_not_hardcoded_af1(self):
         """
@@ -249,8 +260,12 @@ class Bug016EmailProductMismatchTest(TestCase):
             self.assertNotIn("$189.990", cuerpo_html)
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug005CartItemsTest(TestCase):
     def setUp(self):
+        from django.contrib.auth.models import User
+        self.user = User.objects.create_user(username='cart-buyer', email='cart-buyer@example.test', password='StrongPassphrase-2026!')
+        self.client.force_login(self.user)
         self.p1 = Producto.objects.create(nombre="Trapstar Hoodie", precio=120000, precio_usd=130)
         self.p2 = Producto.objects.create(nombre="Syna Cap", precio=45000, precio_usd=50)
         self.talla_m = Talla.objects.create(nombre="M")
@@ -312,6 +327,7 @@ class Bug005CartItemsTest(TestCase):
         self.assertIn("vacío", resp.json().get('error', '').lower())
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug006CouponSecurityTest(TestCase):
     def setUp(self):
         from django.contrib.auth.models import User
@@ -383,6 +399,7 @@ class Bug006CouponSecurityTest(TestCase):
         self.assertIn("corresponde", resp.json().get('error', '').lower())
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug007PrecioClpCrashTest(TestCase):
     def test_enviar_correo_with_zero_or_none_precio_total_does_not_crash(self):
         """
@@ -420,6 +437,7 @@ class Bug009LocalBadgeBrandTest(TestCase):
         self.assertEqual(local.badge_tipo(), "SOLARY FLAGSHIP")
 
 
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
 class Bug013TaxMathConsistencyTest(TestCase):
     def test_iva_and_neto_sum_matches_total_exactly(self):
         """
@@ -457,6 +475,73 @@ class Bug013TaxMathConsistencyTest(TestCase):
             iva_str = f"${iva_val:,.0f} CLP".replace(',', '.')
             self.assertIn(subtotal_str, html_body)
             self.assertIn(iva_str, html_body)
+
+
+class StoreAuthenticationBoundaryTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth.models import User
+        self.user = User.objects.create_user(
+            username='account-owner', email='owner@example.test', password='StrongPassphrase-2026!'
+        )
+        self.other_user = User.objects.create_user(
+            username='other-owner', email='other@example.test', password='StrongPassphrase-2026!'
+        )
+        self.product = Producto.objects.create(nombre='Private catalog item', precio=125000, precio_usd=135)
+
+    def test_guest_is_redirected_from_store_catalog_and_logistics(self):
+        for path in ('/', '/productos/', f'/productos/{self.product.pk}/', '/locales/informacion/'):
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                self.assertEqual(response.status_code, 302)
+                self.assertTrue(response['Location'].startswith('/login/?next='))
+
+    def test_guest_login_menu_hides_store_and_checkout_controls(self):
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'VAULT / SHOP')
+        self.assertNotContains(response, 'PREVENTA &amp; LOGÍSTICA')
+        self.assertNotContains(response, 'id="globalWishlistBtn"')
+        self.assertNotContains(response, 'id="globalBagBtn"')
+        self.assertNotContains(response, 'id="globalCheckoutForm"')
+
+    def test_guest_cannot_checkout_track_or_validate_private_coupon(self):
+        purchase = self.client.post('/api/crear-preorden/', data='{}', content_type='application/json')
+        tracking = self.client.get('/locales/api/rastrear/?codigo=SL-PRIVATE')
+        coupon = self.client.get('/api/validar-cupon/?codigo=SOLARY15')
+        self.assertEqual(purchase.status_code, 401)
+        self.assertEqual(tracking.status_code, 401)
+        self.assertEqual(coupon.status_code, 401)
+        self.assertEqual(PreOrden.objects.count(), 0)
+
+    def test_user_cannot_read_another_accounts_tracking_details(self):
+        order = PreOrden.objects.create(
+            codigo_orden='SL-OWNER-ONLY', usuario=self.other_user,
+            nombre_cliente='Private Name', email_cliente=self.other_user.email,
+            telefono_cliente='private-phone', direccion_entrega='private-address',
+            producto=self.product, precio_total=self.product.precio,
+        )
+        self.client.force_login(self.user)
+        response = self.client.get('/locales/api/rastrear/', {'codigo': order.codigo_orden})
+        self.assertEqual(response.status_code, 404)
+        self.assertNotIn('Private Name', response.content.decode())
+        self.assertNotIn('private-address', response.content.decode())
+
+    def test_matching_email_does_not_claim_unowned_historical_orders(self):
+        legacy = PreOrden.objects.create(
+            codigo_orden='SL-UNCLAIMED', nombre_cliente='Legacy Guest',
+            email_cliente=self.user.email, direccion_entrega='private-address',
+            producto=self.product, precio_total=self.product.precio,
+        )
+        self.client.force_login(self.user)
+        response = self.client.get('/perfil/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['ordenes'].count(), 0)
+        legacy.refresh_from_db()
+        self.assertIsNone(legacy.usuario_id)
+
+    def test_email_preview_is_not_public(self):
+        response = self.client.get('/emails/')
+        self.assertEqual(response.status_code, 302)
 
 
 

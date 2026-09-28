@@ -1072,7 +1072,7 @@
       <div class="sub-notch-divider"></div>
 
       <!-- 2. Center Navigation Links -->
-      <nav>
+      {% if request.user.is_authenticated %}<nav>
         <ul class="sub-nav">
           <li><a href="{% url 'inicio' %}" {% if request.path == '/' %}class="active"{% endif %}>CAMPAIGN</a></li>
           <li><a href="{% url 'lista_productos' %}" {% if '/productos/' in request.path %}class="active"{% endif %}>VAULT / SHOP</a></li>
@@ -1112,7 +1112,7 @@
           </li>
           {% endif %}
         </ul>
-      </nav>
+      </nav>{% endif %}
       <div class="sub-notch-divider"></div>
       
       <!-- 3. Right Interactive Controls Cluster (Apple Cupertino Logical Order) -->
@@ -1139,6 +1139,7 @@
           </span>
         </button>
 
+        {% if request.user.is_authenticated %}
         <!-- 3B. BOTÓN WISHLIST EN EL NOTCH -->
         <button type="button" class="header-bag-btn" id="globalWishlistBtn" onclick="openGlobalWishlist()" title="Ver Wishlist" aria-label="Lista de deseos">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
@@ -1158,6 +1159,7 @@
           <span class="bag-label">BAG</span>
           <span class="bag-counter-badge" id="globalBagBadge">0</span>
         </button>
+        {% endif %}
 
         <!-- 3D. ANCHOR RIGHT: USER PROFILE / LOGIN -->
         {% if request.user.is_authenticated %}
@@ -1208,13 +1210,14 @@
 
     <footer class="sub-footer">
       <div class="sub-footer-links">
+        {% if request.user.is_authenticated %}
         <a href="{% url 'inicio' %}">CAMPAÑA</a>
         <a href="{% url 'lista_productos' %}">CATÁLOGO</a>
         <a href="{% url 'informacion' %}">PREVENTA &amp; RASTREO</a>
-        {% if request.user.is_authenticated %}
         <a href="{% url 'perfil' %}">MI PANEL VIP</a>
         {% else %}
         <a href="{% url 'login' %}">INICIAR SESIÓN</a>
+        <a href="{% url 'registro' %}">CREAR CUENTA</a>
         {% endif %}
         {% if request.user.is_staff or request.user.is_superuser %}
         <a href="{% url 'admin:index' %}" target="_blank">PANEL ADMIN</a>
@@ -1294,6 +1297,7 @@
       }
     });
     </script>
+    {% if request.user.is_authenticated %}
     <!-- Floating Cart Button -->
     <button type="button" class="floating-bag-btn" id="floatingBagBtn" onclick="openGlobalCart()" title="Bolsa de compra" aria-label="Abrir bolsa de compras">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
@@ -1381,18 +1385,19 @@
 
           <!-- Checkout Form -->
           <form id="globalCheckoutForm" onsubmit="submitGlobalCheckoutOrder(event)">
+            {% csrf_token %}
             <div class="acm-form-grid">
               <div class="acm-field">
                 <label for="gcoNombre">Nombre y Apellido *</label>
-                <input type="text" id="gcoNombre" name="nombre" required placeholder="Ej. Benjamín Ávalos" value="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% else %}Benjamín Ávalos{% endif %}">
+                <input type="text" id="gcoNombre" name="nombre" required autocomplete="name" placeholder="Nombre completo" value="{{ request.user.get_full_name|default:request.user.username }}">
               </div>
               <div class="acm-field">
                 <label for="gcoEmail">Correo Electrónico (para comprobante) *</label>
-                <input type="email" id="gcoEmail" name="email" required placeholder="avalosb758@gmail.com" value="avalosb758@gmail.com">
+                <input type="email" id="gcoEmail" name="email" required autocomplete="email" value="{{ request.user.email }}" readonly>
               </div>
               <div class="acm-field">
                 <label for="gcoTelefono">Teléfono / WhatsApp *</label>
-                <input type="tel" id="gcoTelefono" name="telefono" required placeholder="+56 9 1234 5678" value="+56 9 8765 4321">
+                <input type="tel" id="gcoTelefono" name="telefono" required autocomplete="tel" placeholder="+56 9 1234 5678">
               </div>
               <div class="acm-field">
                 <label for="gcoCiudad">Ciudad / Región *</label>
@@ -1439,6 +1444,7 @@
       <span id="globalToastIcon">✓</span>
       <span id="globalToastMsg">Mensaje</span>
     </div>
+    {% endif %}
 
     <script>
     // GLOBAL CART CONTROLLER
@@ -1777,7 +1783,8 @@
         const res = await fetch('/api/crear-preorden/', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('#globalCheckoutForm [name=csrfmiddlewaretoken]')?.value || ''
           },
           body: JSON.stringify(payload)
         });

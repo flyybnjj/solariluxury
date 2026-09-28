@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.cache import never_cache
 from django.http import JsonResponse
 import json
 from django.shortcuts import render, redirect
@@ -13,7 +14,6 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from django.db import models
 from catalogo.models import PreOrden, Pedido, Tracker
 from .models import Cliente, TicketSoporte
 from .forms import LoginForm, RegistroForm
@@ -33,10 +33,6 @@ def _establish_password_session(request, user):
         enviar_cupon_bienvenida(user, email=user.email)
     except Exception as exc:
         logger.error('Welcome email failed: exception=%s', type(exc).__name__)
-    if user.email:
-        PreOrden.objects.filter(email_cliente__iexact=user.email, usuario__isnull=True).update(usuario=user)
-        Pedido.objects.filter(email__iexact=user.email, usuario__isnull=True).update(usuario=user)
-        Tracker.objects.filter(email__iexact=user.email, usuario__isnull=True).update(usuario=user)
 
 def _safe_next(request, fallback='inicio'):
     target = request.POST.get('next') or request.GET.get('next')
@@ -47,13 +43,24 @@ def _safe_next(request, fallback='inicio'):
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('inicio')
+    flash_messages = []
+    seen_messages = set()
+    for flash_message in messages.get_messages(request):
+        message_text = str(flash_message).strip()
+        if message_text and message_text not in seen_messages:
+            seen_messages.add(message_text)
+            flash_messages.append(flash_message)
     form = LoginForm(request, data=request.POST or None)
     if request.method == 'POST' and form.is_valid():
         user = form.get_user()
         _establish_password_session(request, user)
         messages.success(request, f'Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.')
         return redirect(_safe_next(request, 'lista_productos'))
-    return render(request, 'usuarios/login.html', {'form': form, 'next': request.GET.get('next', '')})
+    return render(request, 'usuarios/login.html', {
+        'form': form,
+        'next': request.GET.get('next', ''),
+        'login_messages': flash_messages,
+    })
 
 def registro_view(request):
     if request.user.is_authenticated:
@@ -74,28 +81,24 @@ def logout_view(request):
     response.delete_cookie('sessionid')
     return response
 
+@never_cache
 @login_required(login_url='login')
 def perfil_view(request):
-    if request.user.email:
-        PreOrden.objects.filter(email_cliente__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
-        Pedido.objects.filter(email__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
-        Tracker.objects.filter(email__iexact=request.user.email, usuario__isnull=True).update(usuario=request.user)
-
     if request.user.is_staff or request.user.is_superuser:
         ordenes = PreOrden.objects.all().select_related('producto').order_by('-fecha_creacion')[:12]
         pedidos = Pedido.objects.all().select_related('producto').order_by('-fecha_creacion')[:12]
         trackers = Tracker.objects.all().select_related('pedido', 'preorden').order_by('-fecha_actualizacion')[:12]
     else:
         ordenes = PreOrden.objects.filter(
-            models.Q(usuario=request.user) | models.Q(email_cliente__iexact=request.user.email)
+            usuario=request.user
         ).select_related('producto').order_by('-fecha_creacion')
 
         pedidos = Pedido.objects.filter(
-            models.Q(usuario=request.user) | models.Q(email__iexact=request.user.email)
+            usuario=request.user
         ).select_related('producto').order_by('-fecha_creacion')
 
         trackers = Tracker.objects.filter(
-            models.Q(usuario=request.user) | models.Q(email__iexact=request.user.email)
+            usuario=request.user
         ).select_related('pedido', 'preorden').order_by('-fecha_actualizacion')
 
     context = {
@@ -363,6 +366,7 @@ EMAIL_TEMPLATES_CONFIG = {
     }
 }
 
+@user_passes_test(lambda user: user.is_staff or user.is_superuser, login_url='login')
 def email_preview_view(request, plantilla='preparando_pedido'):
     if plantilla not in EMAIL_TEMPLATES_CONFIG:
         plantilla = 'preparando_pedido'

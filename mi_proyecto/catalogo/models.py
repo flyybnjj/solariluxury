@@ -287,13 +287,6 @@ class Tracker(models.Model):
 
 @receiver(post_save, sender=PreOrden)
 def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
-    if not instance.usuario and instance.email_cliente:
-        from django.contrib.auth.models import User
-        user = User.objects.filter(email__iexact=instance.email_cliente).first()
-        if user:
-            instance.usuario = user
-            PreOrden.objects.filter(pk=instance.pk).update(usuario=user)
-
     pedido, _ = Pedido.objects.update_or_create(
         codigo_pedido=instance.codigo_orden,
         defaults={
