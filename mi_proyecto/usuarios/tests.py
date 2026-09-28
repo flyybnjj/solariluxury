@@ -6,6 +6,14 @@ from unittest.mock import patch
 
 
 class TraditionalAccountFlowTests(TestCase):
+    def test_password_recovery_uses_custom_styled_templates(self):
+        response = self.client.get(reverse('password_reset'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'auth-card')
+        self.assertContains(response, 'ENVIAR ENLACE')
+        self.assertNotContains(response, 'Administración de Django')
+
     @patch('usuarios.views.enviar_cupon_bienvenida')
     def test_new_account_is_saved_with_hashed_password_and_authenticated(self, _send_welcome):
         response = self.client.post(reverse('registro'), {
@@ -51,6 +59,8 @@ class TraditionalAccountFlowTests(TestCase):
 
         self.assertRedirects(response, reverse('password_reset_done'))
         self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('SOLARY LUXURY', mail.outbox[0].subject)
+        self.assertIn('restablecer-password', mail.outbox[0].body)
         reset_url = next(line for line in mail.outbox[0].body.splitlines() if '/restablecer-password/' in line)
         response = self.client.get(reset_url, follow=True)
         self.assertEqual(response.status_code, 200)
