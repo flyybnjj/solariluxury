@@ -10105,10 +10105,10 @@ function volverASolicitarPin() {
   if (emailInput) setTimeout(() => emailInput.focus(), 100);
 }
 
-async function solicitarVipPin() {
+async function solicitarVipPin(isResend) {
   if (typeof SoundFX !== 'undefined') SoundFX.play('click');
   const emailInput = document.getElementById('vipRequestEmail');
-  const email = (emailInput ? emailInput.value : '').trim();
+  const email = (emailInput ? emailInput.value : '').trim() || window._vipLastEmail || '';
   const reqError = document.getElementById('vipRequestError');
   const btn = document.getElementById('vipSendPinBtn');
 
@@ -10121,7 +10121,7 @@ async function solicitarVipPin() {
   }
 
   if (reqError) reqError.style.display = 'none';
-  if (btn) {
+  if (!isResend && btn) {
     btn.disabled = true;
     btn.innerHTML = '<span style="font-size:11px;">...</span>';
   }
@@ -10141,7 +10141,7 @@ async function solicitarVipPin() {
     }
     const notice = document.getElementById('vipNoticeSent');
     if (notice) {
-      notice.innerHTML = `Código de prueba: <strong>482910</strong> (En servidor Django local se envía a ${email} vía Gmail SMTP).`;
+      notice.textContent = `Código enviado a ${email}. Revisa tu bandeja de entrada o spam.`;
     }
     const pinInput = document.getElementById('vipPinInput');
     if (pinInput) {
@@ -10149,7 +10149,7 @@ async function solicitarVipPin() {
       setTimeout(() => pinInput.focus(), 150);
     }
     if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
-    if (btn) {
+    if (!isResend && btn) {
       btn.disabled = false;
       btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
     }
@@ -10172,26 +10172,28 @@ async function solicitarVipPin() {
       data = { success: false, error: `Error en respuesta del servidor (${res.status}).` };
     }
     if (data.success || data.ok) {
-      // Pasar a la pantalla de validación del PIN sin mostrar nunca el código en pantalla
-      const step1 = document.getElementById('vipStepRequest');
-      const step2 = document.getElementById('vipStepValidate');
-      if (step1) step1.style.display = 'none';
-      if (step2) step2.style.display = 'block';
-      startResendCooldown(60);
-      init2FaBoxes();
-      const firstBox = document.querySelector('#apple2faGrid .apple-2fa-box');
-      if (firstBox) {
-        document.querySelectorAll('#apple2faGrid .apple-2fa-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
-        setTimeout(() => firstBox.focus(), 150);
+      window._vipLastEmail = email;
+      if (!isResend) {
+        const step1 = document.getElementById('vipStepRequest');
+        const step2 = document.getElementById('vipStepValidate');
+        if (step1) step1.style.display = 'none';
+        if (step2) step2.style.display = 'block';
+        startResendCooldown(60);
+        init2FaBoxes();
+        const firstBox = document.querySelector('#apple2faGrid .apple-2fa-box');
+        if (firstBox) {
+          document.querySelectorAll('#apple2faGrid .apple-2fa-box').forEach(b => { b.value = ''; b.classList.remove('filled'); });
+          setTimeout(() => firstBox.focus(), 150);
+        }
       }
       const notice = document.getElementById('vipNoticeSent');
       if (notice) {
-        notice.textContent = `Hemos enviado un código PIN de 6 dígitos a ${email}. Revisa tu bandeja de entrada o spam e ingrésalo abajo.`;
+        notice.textContent = `Hemos enviado un código PIN de 6 dígitos a ${email}. Revisa tu bandeja de entrada o spam.`;
       }
       const pinInput = document.getElementById('vipPinInput');
       if (pinInput) {
         pinInput.value = '';
-        setTimeout(() => pinInput.focus(), 150);
+        if (!isResend) setTimeout(() => pinInput.focus(), 150);
       }
       if (typeof SoundFX !== 'undefined') SoundFX.play('bag');
     } else {
@@ -10206,17 +10208,19 @@ async function solicitarVipPin() {
       reqError.textContent = 'Error de conexión con el servidor backend.';
     }
   } finally {
-    if (btn) {
+    if (!isResend && btn) {
       btn.disabled = false;
       btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
     }
   }
 }
 
+
 async function validarVipPin() {
   if (typeof SoundFX !== 'undefined') SoundFX.play('click');
   const emailInput = document.getElementById('vipRequestEmail');
-  const email = (emailInput ? emailInput.value : '').trim();
+  const email = (emailInput ? emailInput.value : '').trim() || window._vipLastEmail || '';
+
   const pinInput = document.getElementById('vipPinInput');
   const pin = (pinInput ? pinInput.value : '').trim();
   const valError = document.getElementById('vipValidateError');
