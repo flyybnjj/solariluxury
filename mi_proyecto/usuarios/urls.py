@@ -15,8 +15,7 @@ urlpatterns = [
     path('perfil/', views.perfil_view, name='perfil'),
     path('api/crear-ticket/', views.crear_ticket_view, name='crear_ticket'),
 
-    # Vista previa interactiva de correos Apple Style y envío de pruebas
+    # Vista previa interactiva de correos Apple Style
     path('emails/', views.email_preview_view, name='email_preview_default'),
     path('emails/<str:plantilla>/', views.email_preview_view, name='email_preview'),
-    path('api/enviar-email-prueba/', views.enviar_email_prueba_view, name='enviar_email_prueba'),
 ]

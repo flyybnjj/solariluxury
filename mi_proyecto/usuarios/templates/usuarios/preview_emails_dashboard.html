@@ -250,19 +250,11 @@
       <a href="/emails/cupon_bienvenida/" class="tab-btn {% if plantilla_actual == 'cupon_bienvenida' %}active{% endif %}">06 Cupón 15%</a>
     </nav>
 
-    <!-- Actions & Dispatch -->
+    <!-- Actions -->
     <div class="actions-section">
       <div class="device-switcher">
         <button type="button" class="device-btn active" id="btnDesktop" onclick="setDevice('desktop')">PC Desktop</button>
         <button type="button" class="device-btn" id="btnMobile" onclick="setDevice('mobile')">iPhone</button>
-      </div>
-
-      <div class="dispatch-input-wrap">
-        <input type="email" id="testEmailInput" class="email-input" value="avalosb758@gmail.com" placeholder="correo@ejemplo.com" />
-        <button type="button" id="btnSendTest" class="send-btn" onclick="sendTestEmail()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          <span>Enviar Prueba</span>
-        </button>
       </div>
     </div>
   </header>
@@ -303,44 +295,6 @@
       setTimeout(() => {
         toast.style.display = 'none';
       }, 5000);
-    }
-
-    async function sendTestEmail() {
-      const email = document.getElementById('testEmailInput').value.trim();
-      if (!email) {
-        showToast('Ingresa un correo de destino.', true);
-        return;
-      }
-
-      const btn = document.getElementById('btnSendTest');
-      const originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = 'Enviando...';
-
-      try {
-        const res = await fetch('/api/enviar-email-prueba/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            plantilla: '{{ plantilla_actual }}'
-          })
-        });
-
-        const data = await res.json();
-        if (data.success) {
-          showToast(data.message, false);
-        } else {
-          showToast(data.error || 'Error al enviar correo.', true);
-        }
-      } catch (err) {
-        showToast('Error de red al despachar el correo.', true);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-      }
     }
   </script>
 </body>

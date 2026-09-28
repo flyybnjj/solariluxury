@@ -1,5 +1,6 @@
 import logging
 import random
+import secrets
 from datetime import timedelta
 
 from django.conf import settings
@@ -17,15 +18,15 @@ from django.utils import timezone
 from django.db import models
 from catalogo.models import PreOrden, Pedido, Tracker
 from .models import Cliente, TicketSoporte
-from .forms import RegistroForm, LoginForm
+from .forms import LoginForm
 from .utils import enviar_cupon_bienvenida
 
 logger = logging.getLogger(__name__)
 
 
 def generar_pin_otp():
-    """Genera un PIN numérico de 6 dígitos de alta seguridad."""
-    return f"{random.randint(100000, 999999)}"
+    """Genera un PIN numérico de 6 dígitos criptográficamente seguro."""
+    return f"{secrets.randbelow(900000) + 100000}"
 
 
 def solicitar_acceso_view(request):
@@ -146,7 +147,19 @@ def validar_pin_view(request):
         return redirect('solicitar_acceso')
 
     cliente = getattr(user, 'cliente', None)
-    if not cliente or not cliente.access_pin or not cliente.pin_expires_at:
+    if not cliente:
+        messages.warning(request, "Perfil de cliente no encontrado. Solicita un nuevo código.")
+        return redirect('solicitar_acceso')
+
+    if cliente.esta_bloqueado():
+        messages.error(request, "Demasiados intentos fallidos. Tu acceso ha sido bloqueado temporalmente por 15 minutos.")
+        return render(request, 'usuarios/validar_pin.html', {
+            'email': email,
+            'pin_expirado': True,
+            'segundos_restantes': 0,
+        })
+
+    if not cliente.access_pin or not cliente.pin_expires_at:
         messages.warning(request, "No hay ningún PIN activo o el código ya fue utilizado. Solicita uno nuevo.")
         return redirect('solicitar_acceso')
 
@@ -155,6 +168,7 @@ def validar_pin_view(request):
 
         # Validación 1: Tiempo no haya superado pin_expires_at (10 minutos)
         if timezone.now() > cliente.pin_expires_at:
+            cliente.clear_pin()
             messages.error(request, "El código PIN ha caducado (validez de 10 minutos). Haz clic en Reenviar para obtener uno nuevo.")
             return render(request, 'usuarios/validar_pin.html', {
                 'email': email,
@@ -162,23 +176,39 @@ def validar_pin_view(request):
                 'segundos_restantes': 0,
             })
 
-        # Validación 2: Coincidencia del PIN
-        if str(cliente.access_pin).strip() != str(pin_ingresado).strip():
-            messages.error(request, "El código PIN ingresado es incorrecto. Por favor verifica el correo recibido.")
+        # Validación 2: Coincidencia del PIN con secrets.compare_digest
+        if not secrets.compare_digest(str(cliente.access_pin).strip(), str(pin_ingresado).strip()):
+            cliente.intentos_fallidos += 1
+            if cliente.intentos_fallidos >= 5:
+                cliente.bloqueado_hasta = timezone.now() + timedelta(minutes=15)
+                cliente.clear_pin()
+                cliente.save()
+                messages.error(request, "Has superado el límite de 5 intentos fallidos. Tu acceso ha sido bloqueado por 15 minutos y el código PIN ha sido invalidado.")
+                return render(request, 'usuarios/validar_pin.html', {
+                    'email': email,
+                    'pin_expirado': True,
+                    'segundos_restantes': 0,
+                })
+            cliente.save()
+            messages.error(request, f"El código PIN ingresado es incorrecto. Te quedan {5 - cliente.intentos_fallidos} intentos.")
             return render(request, 'usuarios/validar_pin.html', {
                 'email': email,
                 'pin_invalido': True,
                 'segundos_restantes': max(0, int((cliente.pin_expires_at - timezone.now()).total_seconds())),
             })
 
-        # 1. Quemar el PIN inmediatamente para que sea de estricto un solo uso
+        # 1. Resetear intentos y quemar el PIN inmediatamente
+        cliente.intentos_fallidos = 0
+        cliente.bloqueado_hasta = None
         cliente.clear_pin()
         user.access_pin = None
         user.pin_expires_at = None
         user.save()
 
-        # 2. Iniciar sesión de usuario
+        # 2. Iniciar sesión de usuario y fijar flags de acceso VIP (BUG-011)
         login(request, user)
+        request.session['tienda_desbloqueada'] = True
+        request.session['vip_unlocked_email'] = email
 
         # Enviar cupón de bienvenida exclusivamente en el primer login
         try:
@@ -195,7 +225,7 @@ def validar_pin_view(request):
         request.session.pop('auth_otp_email', None)
         next_url = request.session.pop('auth_otp_next', None) or request.GET.get('next') or request.POST.get('next') or 'lista_productos'
 
-        messages.success(request, f"¡Acceso verificado! Bienvenido/a a Solari Luxury, {user.first_name or user.username}.")
+        messages.success(request, f"¡Acceso verificado! Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.")
         return redirect(next_url)
 
     # Calcular segundos restantes para el temporizador de frontend
@@ -310,7 +340,7 @@ def logout_view(request):
     """Cierra la sesión del usuario de forma inmediata y limpia cookies para mostrar siempre la pantalla de login."""
     logout(request)
     request.session.flush()
-    messages.info(request, "Has cerrado sesión correctamente de Solari Luxury.")
+    messages.info(request, "Has cerrado sesión correctamente de SOLARY LUXURY.")
     response = redirect('inicio')
     response.delete_cookie('sessionid')
     return response
@@ -628,7 +658,7 @@ EMAIL_TEMPLATES_CONFIG = {
 
 
 def email_preview_view(request, plantilla='codigo_seguridad'):
-    """Permite visualizar en vivo cualquiera de las 6 plantillas de correo Apple de Solari."""
+    """Permite visualizar en vivo cualquiera de las 6 plantillas de correo Apple de SOLARY."""
     if plantilla not in EMAIL_TEMPLATES_CONFIG:
         plantilla = 'codigo_seguridad'
 
@@ -646,45 +676,3 @@ def email_preview_view(request, plantilla='codigo_seguridad'):
         'templates_list': EMAIL_TEMPLATES_CONFIG,
     }
     return render(request, 'usuarios/preview_emails_dashboard.html', context)
-
-
-@csrf_exempt
-def enviar_email_prueba_view(request):
-    """Envía un correo de prueba real mediante Gmail SMTP a la dirección indicada."""
-    if request.method != 'POST':
-        return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
-
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-    except Exception:
-        data = request.POST
-
-    email_destino = data.get('email', '').strip().lower() or 'avalosb758@gmail.com'
-    plantilla = data.get('plantilla', 'codigo_seguridad')
-
-    if plantilla not in EMAIL_TEMPLATES_CONFIG:
-        plantilla = 'codigo_seguridad'
-
-    config = EMAIL_TEMPLATES_CONFIG[plantilla]
-    html_message = render_to_string(config['template'], config['contexto'])
-    plain_message = f"{config['asunto']}\n\nVisita https://solariluxury.com"
-
-    try:
-        send_mail(
-            subject=config['asunto'],
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email_destino],
-            html_message=html_message,
-            fail_silently=False
-        )
-        return JsonResponse({
-            'success': True,
-            'message': f"Correo '{config['nombre']}' enviado exitosamente a {email_destino} vía Gmail SMTP."
-        })
-    except Exception as e:
-        logger.error(f"[ERROR TEST EMAIL]: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': f"Error al enviar por Gmail SMTP: {e}"
-        }, status=500)

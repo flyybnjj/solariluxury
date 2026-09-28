@@ -136,14 +136,14 @@
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f6f6f6; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 20px;">
                   <tr>
                     <td align="center">
-                      <img class="prod-image" src="{{ producto.imagen_url|default:'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/tech_fleece_email.png' }}" alt="Nike Tech Fleece Central Cee" style="max-width: 250px; width: 100%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));">
+                      <img class="prod-image" src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 250px; width: 100%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));">
                     </td>
                   </tr>
                   <tr>
                     <td style="padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06);">
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 10px; font-weight: 600; color: #707072; letter-spacing: 0.06em; text-transform: uppercase;">
                         <tr>
-                          <td align="left">COLECCIÓN OFICIAL SYNAR WORLD</td>
+                          <td align="left">COLECCIÓN OFICIAL SOLARY LUXURY</td>
                           <td align="right">DESPACHO PRIORITARIO INTERNACIONAL</td>
                         </tr>
                       </table>
@@ -155,19 +155,21 @@
                   <tr>
                     <td align="left" valign="top">
                       <div style="font-size: 16px; font-weight: 700; color: #111111; margin-bottom: 3px;">
-                        {{ producto.nombre|default:"Nike Sportswear Tech Fleece × Central Cee" }}
+                        {{ producto.nombre }}
                       </div>
+                      {% if producto.subtitulo %}
                       <div style="font-size: 13px; color: #707072; margin-bottom: 8px;">
-                        {{ producto.subtitulo|default:"Full-Zip Hoodie · Black / Metallic Edition" }}
+                        {{ producto.subtitulo }}
                       </div>
+                      {% endif %}
                       <div style="font-size: 12px; color: #707072; line-height: 1.5;">
-                        Talla: <span style="color: #111111; font-weight: 500;">{{ orden.talla|default:"L (Corte Boxy Europeo)" }}</span><br>
-                        Estilo: <span style="color: #111111; font-weight: 500; font-family: monospace;">{{ producto.codigo_estilo|default:"SL-TECH-CC-09" }}</span><br>
-                        Transportista: <span style="color: #111111; font-weight: 500;">DHL Express Worldwide</span>
+                        Talla: <span style="color: #111111; font-weight: 500;">{{ orden.talla }}</span><br>
+                        {% if producto.codigo_estilo %}Estilo: <span style="color: #111111; font-weight: 500; font-family: monospace;">{{ producto.codigo_estilo }}</span><br>{% endif %}
+                        Transportista: <span style="color: #111111; font-weight: 500;">DHL Express Priority</span>
                       </div>
                     </td>
                     <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #111111;">
-                      {{ orden.total|default:"$240.000 CLP" }}
+                      {{ total }}
                     </td>
                   </tr>
                 </table>
@@ -206,7 +208,7 @@
                 RASTREAR EN VIVO CON DHL
               </a>
               <div style="margin-top: 16px; font-size: 12px; color: #707072;">
-                ¿Dudas sobre el tránsito internacional? <a href="#" style="color: #707072; text-decoration: underline;">Centro de mensajería</a>
+                ¿Dudas sobre el tránsito internacional? <a href="{{ tracking_url|default:'http://127.0.0.1:8000/locales/informacion/' }}" style="color: #707072; text-decoration: underline;">Centro de mensajería</a>
               </div>
             </td>
           </tr>

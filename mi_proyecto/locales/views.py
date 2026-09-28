@@ -7,8 +7,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db import transaction
+from django.db.models import F
 from .models import Local
-from catalogo.models import Producto, PreOrden
+from catalogo.models import Producto, PreOrden, ProductoTalla
 
 
 def lista_locales(request):
@@ -29,27 +31,46 @@ def enviar_correo_preorden(orden):
     tracking_url = f"http://127.0.0.1:8000/locales/informacion/?codigo={orden.codigo_orden}"
 
     # Calcular desglose
-    total_val = orden.precio_total or (orden.producto.precio_clp * orden.cantidad)
-    neto_val = int(total_val / 1.19)
+    total_val = orden.precio_total or (orden.producto.precio * orden.cantidad)
+    neto_val = round(total_val / 1.19)
     iva_val = total_val - neto_val
 
     subtotal_str = f"${total_val:,.0f} CLP".replace(',', '.')
     iva_str = f"${iva_val:,.0f} CLP".replace(',', '.')
 
+    img_rel = orden.producto.imagen.lstrip('/') if orden.producto.imagen else 'img/placeholder.jpg'
+    img_abs = f"http://127.0.0.1:8000/static/{img_rel}"
+    codigo_estilo_val = orden.producto.codigo_estilo or f"SL-{orden.producto.id:04d}"
+    color_val = orden.producto.color or "Black Edition"
+
+    prod_dict = {
+        'id': orden.producto.id,
+        'nombre': orden.producto.nombre,
+        'subtitulo': orden.producto.subtitulo or f"{orden.producto.nombre} · {color_val}",
+        'imagen_url': img_abs,
+        'codigo_estilo': codigo_estilo_val,
+        'color': color_val,
+        'precio_formateado': orden.producto.precio_formateado(),
+    }
+
     ctx = {
         'orden': orden,
         'pedido_id': orden.codigo_orden,
         'cliente_nombre': orden.nombre_cliente,
+        'producto': prod_dict,
         'producto_nombre': orden.producto.nombre,
-        'producto_subtitulo': f"Central Cee Special Edition · {getattr(orden.producto, 'color', 'Black Edition') or 'Black Edition'}",
+        'producto_subtitulo': prod_dict['subtitulo'],
         'talla': orden.talla,
         'cantidad': orden.cantidad,
-        'estilo': f"SL-{getattr(orden.producto, 'codigo_estilo', 'FZ4210-001') or 'FZ4210-001'}",
+        'estilo': codigo_estilo_val,
         'direccion': orden.direccion_entrega,
+        'ciudad': orden.ciudad,
         'comuna': f"{orden.ciudad}, Región Metropolitana" if orden.ciudad else "Santiago",
         'fecha_estimada': fecha_entrega_str,
+        'fecha_entrega': fecha_entrega_str,
         'llegada_programada': fecha_entrega_str,
         'guia_dhl': orden.dhl_tracking,
+        'total': orden.precio_formateado(),
         'total_precio': subtotal_str,
         'subtotal': subtotal_str,
         'iva': iva_str,
@@ -294,12 +315,60 @@ def api_crear_preorden(request):
     talla = (data.get('talla') or 'M').strip()
     notas = (data.get('notas') or '').strip()
 
+    has_items_key = 'items' in data
     items_list = data.get('items', [])
-    if items_list and not producto_id:
-        first_item = items_list[0]
-        producto_id = first_item.get('id')
-        if not talla or talla == 'M':
-            talla = first_item.get('size', 'M')
+    processed_items = []
+    calc_total = 0
+    desc_items = []
+
+    if has_items_key or items_list:
+        if not isinstance(items_list, list) or len(items_list) == 0:
+            return JsonResponse({'success': False, 'error': 'El carrito de compras está vacío o no contiene artículos válidos.'}, status=400)
+        
+        for it in items_list:
+            it_id = it.get('id')
+            if not it_id:
+                return JsonResponse({'success': False, 'error': 'ID de producto faltante en el carrito.'}, status=400)
+            try:
+                p_item = Producto.objects.get(id=it_id)
+            except (Producto.DoesNotExist, ValueError):
+                return JsonResponse({'success': False, 'error': f'El producto con ID {it_id} no existe en el catálogo.'}, status=400)
+            
+            raw_qty = it.get('quantity', 1)
+            try:
+                qty = int(raw_qty)
+                if qty <= 0 or qty > 50:
+                    return JsonResponse({'success': False, 'error': f'Cantidad inválida ({raw_qty}) para "{p_item.nombre}". Debe ser entre 1 y 50.'}, status=400)
+            except (ValueError, TypeError):
+                return JsonResponse({'success': False, 'error': f'Cantidad no numérica para "{p_item.nombre}".'}, status=400)
+            
+            it_size = (it.get('size') or it.get('talla') or talla or 'M').strip()
+            subtotal_item = p_item.precio * qty
+            calc_total += subtotal_item
+            desc_items.append(f"• {p_item.nombre} (Talla: {it_size}, Cant: {qty}) — ${subtotal_item:,} CLP".replace(',', '.'))
+            processed_items.append({'producto': p_item, 'cantidad': qty, 'talla': it_size, 'subtotal': subtotal_item})
+
+        producto = processed_items[0]['producto']
+        talla = processed_items[0]['talla']
+        precio_total = calc_total
+        notas = f"Pedido de Bolsa ({len(processed_items)} ítems):\n" + "\n".join(desc_items) + (f"\n\nNotas adicionales: {notas}" if notas else "")
+    else:
+        if not producto_id:
+            return JsonResponse({'success': False, 'error': 'Debes especificar un producto para realizar la compra.'}, status=400)
+        try:
+            producto = Producto.objects.get(id=producto_id)
+        except (Producto.DoesNotExist, ValueError):
+            return JsonResponse({'success': False, 'error': f'El producto con ID {producto_id} no existe en el catálogo.'}, status=400)
+        
+        raw_qty = data.get('cantidad', 1)
+        try:
+            cantidad = int(raw_qty)
+            if cantidad <= 0 or cantidad > 50:
+                return JsonResponse({'success': False, 'error': f'Cantidad inválida ({raw_qty}). Debe ser entre 1 y 50.'}, status=400)
+        except (ValueError, TypeError):
+            return JsonResponse({'success': False, 'error': 'Cantidad no numérica.'}, status=400)
+        
+        precio_total = producto.precio * cantidad
 
     if not nombre and request.user.is_authenticated:
         nombre = request.user.get_full_name() or request.user.username
@@ -310,21 +379,6 @@ def api_crear_preorden(request):
         nombre = 'Cliente Solary VIP'
     if not email:
         email = 'cliente@solaryluxury.com'
-
-    if not producto_id:
-        p_first = Producto.objects.first()
-        producto_id = p_first.id if p_first else None
-
-    if not producto_id:
-        return JsonResponse({'success': False, 'error': 'No hay productos disponibles en el catálogo.'}, status=400)
-
-    try:
-        producto = Producto.objects.get(id=producto_id)
-    except (Producto.DoesNotExist, ValueError):
-        # Fallback to first available product if id was invalid
-        producto = Producto.objects.first()
-        if not producto:
-            return JsonResponse({'success': False, 'error': 'No hay productos disponibles en el catálogo.'}, status=404)
 
     random_num = random.randint(1000, 9999)
     codigo_orden = f"SL-2026-{random_num}"
@@ -339,46 +393,104 @@ def api_crear_preorden(request):
         from django.contrib.auth.models import User
         user = User.objects.filter(email__iexact=email).first()
 
-    precio_total = producto.precio
-    if items_list and len(items_list) > 1:
-        calc_total = 0
-        desc_items = []
-        for it in items_list:
-            raw_p = str(it.get('price', '0')).replace('$', '').replace('.', '').replace('CLP', '').strip()
-            val = int(raw_p) if raw_p.isdigit() else 0
-            calc_total += val
-            desc_items.append(f"• {it.get('name', 'Pieza')} — ${val:,} CLP".replace(',', '.'))
-        if calc_total > 0:
-            precio_total = calc_total
-        notas = f"Pedido de Bolsa ({len(items_list)} piezas):\n" + "\n".join(desc_items) + (f"\n\nNotas adicionales: {notas}" if notas else "")
-
     cupon_codigo = (data.get('cupon') or data.get('cupon_codigo') or '').strip().upper()
     descuento_aplicado = 0
+    cliente_cupon_a_consumir = None
+
     if cupon_codigo:
         from usuarios.models import Cliente
-        es_valido = (cupon_codigo == 'SOLARY15') or Cliente.objects.filter(cupon_bienvenida_codigo__iexact=cupon_codigo).exists()
-        if es_valido:
-            descuento_aplicado = int(precio_total * 0.15)
-            precio_total = max(0, precio_total - descuento_aplicado)
-            notas = f"[CUPÓN APLICADO: {cupon_codigo} (-15% = -${descuento_aplicado:,} CLP)]\n".replace(',', '.') + notas
+        cliente_dueno = Cliente.objects.filter(cupon_bienvenida_codigo__iexact=cupon_codigo).first()
 
-    orden = PreOrden.objects.create(
-        codigo_orden=codigo_orden,
-        usuario=user,
-        nombre_cliente=nombre,
-        email_cliente=email,
-        telefono_cliente=telefono,
-        direccion_entrega=direccion or 'Av. del Mar / Cuatro Esquinas (Atelier La Serena)',
-        ciudad=ciudad or 'La Serena',
-        producto=producto,
-        talla=talla or 'M',
-        cantidad=len(items_list) if items_list else 1,
-        precio_total=precio_total,
-        notas=notas,
-        estado='CONFIRMADA',
-        dhl_tracking=dhl_code,
-        fecha_estimada_entrega=fecha_est
-    )
+        if cupon_codigo == 'SOLARY15':
+            if not user or not hasattr(user, 'cliente'):
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Debes iniciar sesión con tu cuenta para utilizar el cupón de bienvenida SOLARY15.'
+                }, status=400)
+            if user.cliente.cupon_usado:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'El cupón de bienvenida ya ha sido utilizado por esta cuenta.'
+                }, status=400)
+            cliente_cupon_a_consumir = user.cliente
+        elif cliente_dueno:
+            if cliente_dueno.cupon_usado:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Este cupón de bienvenida ya fue utilizado anteriormente.'
+                }, status=400)
+            if user and cliente_dueno.user != user:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'El cupón ingresado no corresponde a tu cuenta de usuario.'
+                }, status=400)
+            elif not user and email and cliente_dueno.user.email.lower() != email.lower():
+                return JsonResponse({
+                    'success': False,
+                    'error': 'El cupón ingresado no corresponde al correo del comprador.'
+                }, status=400)
+            cliente_cupon_a_consumir = cliente_dueno
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': f"El cupón '{cupon_codigo}' no es válido o ha expirado."
+            }, status=400)
+
+        descuento_aplicado = int(precio_total * 0.15)
+        precio_total = max(0, precio_total - descuento_aplicado)
+        notas = f"[CUPÓN APLICADO: {cupon_codigo} (-15% = -${descuento_aplicado:,} CLP)]\n".replace(',', '.') + notas
+
+    items_a_reservar = processed_items if processed_items else [{'producto': producto, 'cantidad': cantidad, 'talla': talla}]
+
+    try:
+        with transaction.atomic():
+            # 1. Validar y descontar stock con select_for_update()
+            for it_res in items_a_reservar:
+                p_obj = it_res['producto']
+                c_qty = it_res['cantidad']
+                t_nom = it_res.get('talla', 'M')
+
+                pt_qs = ProductoTalla.objects.select_for_update().filter(producto=p_obj)
+                pt = pt_qs.filter(talla__nombre__iexact=t_nom).first()
+                if not pt:
+                    pt = pt_qs.first()
+
+                if pt:
+                    if pt.stock < c_qty:
+                        return JsonResponse({
+                            'success': False,
+                            'error': f'Stock insuficiente para "{p_obj.nombre}" (Talla: {t_nom}). Stock disponible: {pt.stock}.'
+                        }, status=400)
+                    pt.stock = F('stock') - c_qty
+                    pt.save(update_fields=['stock'])
+
+            # 2. Si se utilizó cupón, marcarlo como consumido
+            if cliente_cupon_a_consumir:
+                from django.utils import timezone
+                cliente_cupon_a_consumir.cupon_usado = True
+                cliente_cupon_a_consumir.fecha_canje_cupon = timezone.now()
+                cliente_cupon_a_consumir.save(update_fields=['cupon_usado', 'fecha_canje_cupon'])
+
+            # 3. Crear la Pre-Orden oficial dentro de la transacción
+            orden = PreOrden.objects.create(
+                codigo_orden=codigo_orden,
+                usuario=user,
+                nombre_cliente=nombre,
+                email_cliente=email,
+                telefono_cliente=telefono,
+                direccion_entrega=direccion or 'Av. del Mar / Cuatro Esquinas (Atelier La Serena)',
+                ciudad=ciudad or 'La Serena',
+                producto=producto,
+                talla=talla or 'M',
+                cantidad=sum(x['cantidad'] for x in items_a_reservar),
+                precio_total=precio_total,
+                notas=notas,
+                estado='CONFIRMADA',
+                dhl_tracking=dhl_code,
+                fecha_estimada_entrega=fecha_est
+            )
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f'Error al procesar la compra: {str(e)}'}, status=500)
 
     # Enviar correo de confirmación
     correo_enviado = enviar_correo_preorden(orden)

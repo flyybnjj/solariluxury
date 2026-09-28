@@ -28,6 +28,24 @@ class Cliente(models.Model):
         null=True,
         verbose_name="Código de Cupón Único de Bienvenida"
     )
+    cupon_usado = models.BooleanField(
+        default=False,
+        verbose_name="Cupón de Bienvenida Usado"
+    )
+    fecha_canje_cupon = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Fecha de Canje del Cupón"
+    )
+    intentos_fallidos = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="Intentos fallidos de PIN"
+    )
+    bloqueado_hasta = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Bloqueado hasta"
+    )
 
     class Meta:
         verbose_name = "Cliente / Perfil OTP"
@@ -36,13 +54,22 @@ class Cliente(models.Model):
     def __str__(self):
         return f"Cliente {self.user.email or self.user.username}"
 
+    def esta_bloqueado(self):
+        """Verifica si el usuario está actualmente bloqueado por exceso de intentos fallidos."""
+        if self.bloqueado_hasta and timezone.now() < self.bloqueado_hasta:
+            return True
+        return False
+
     def is_pin_valid(self, candidate_pin):
-        """Verifica si el PIN es correcto y si aún no ha expirado."""
+        """Verifica si el PIN es correcto y si aún no ha expirado usando tiempo constante."""
+        import secrets
+        if self.esta_bloqueado():
+            return False
         if not self.access_pin or not self.pin_expires_at:
             return False
         if timezone.now() > self.pin_expires_at:
             return False
-        return str(self.access_pin).strip() == str(candidate_pin).strip()
+        return secrets.compare_digest(str(self.access_pin).strip(), str(candidate_pin).strip())
 
     def clear_pin(self):
         """Invalida el PIN inmediatamente tras su uso exitoso."""

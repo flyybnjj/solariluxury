@@ -47,6 +47,8 @@ class Producto(models.Model):
     precio_usd = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     descripcion = models.TextField(blank=True)
     imagen = models.CharField(max_length=255, default='img/placeholder.jpg')
+    codigo_estilo = models.CharField(max_length=50, blank=True, null=True, help_text="Código de estilo o SKU oficial")
+    color = models.CharField(max_length=100, blank=True, null=True, help_text="Colorway oficial")
     badge_estado = models.CharField(max_length=20, choices=BADGE_CHOICES, default='DISPONIBLE')
     categoria = models.ForeignKey(
         Categoria,
@@ -148,6 +150,7 @@ class PreOrden(models.Model):
         ('DESPACHO_DHL', 'Despacho Internacional DHL Express'),
         ('EN_ADUANA', 'En Aduana / Hub Local Santiago'),
         ('ENTREGADA', 'Entregada / Disponible para Retiro'),
+        ('CANCELADA', 'Orden Cancelada & Stock Restituido'),
     ]
 
     codigo_orden = models.CharField(max_length=50, unique=True, db_index=True)
@@ -164,7 +167,7 @@ class PreOrden(models.Model):
     telefono_cliente = models.CharField(max_length=30, blank=True)
     direccion_entrega = models.CharField(max_length=255)
     ciudad = models.CharField(max_length=100, default='Santiago')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='preordenes')
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='preordenes')
     talla = models.CharField(max_length=20, default='M')
     cantidad = models.PositiveIntegerField(default=1)
     precio_total = models.PositiveIntegerField(help_text="Total en CLP")
@@ -190,8 +193,24 @@ class PreOrden(models.Model):
             'DESPACHO_DHL': 80,
             'EN_ADUANA': 90,
             'ENTREGADA': 100,
+            'CANCELADA': 0,
         }
         return mapa.get(self.estado, 20)
+
+    def cancelar_y_restituir_stock(self):
+        """Cancela la orden y restituye automáticamente el stock a la base de datos."""
+        if self.estado == 'CANCELADA':
+            return False
+        from django.db.models import F
+        pt = ProductoTalla.objects.filter(producto=self.producto, talla__nombre__iexact=self.talla).first()
+        if not pt:
+            pt = ProductoTalla.objects.filter(producto=self.producto).first()
+        if pt:
+            pt.stock = F('stock') + self.cantidad
+            pt.save(update_fields=['stock'])
+        self.estado = 'CANCELADA'
+        self.save(update_fields=['estado'])
+        return True
 
     def __str__(self):
         return f"{self.codigo_orden} — {self.nombre_cliente} ({self.producto.nombre})"
@@ -215,7 +234,7 @@ class Pedido(models.Model):
     telefono = models.CharField(max_length=30, blank=True)
     direccion = models.CharField(max_length=255)
     ciudad = models.CharField(max_length=100, default='Santiago')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='pedidos_producto')
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='pedidos_producto')
     talla = models.CharField(max_length=20, default='M')
     cantidad = models.PositiveIntegerField(default=1)
     precio_total = models.PositiveIntegerField(help_text="Total en CLP")
@@ -231,6 +250,26 @@ class Pedido(models.Model):
 
     def precio_formateado(self):
         return f"${self.precio_total:,}".replace(',', '.')
+
+    def cancelar_y_restituir_stock(self):
+        """Cancela el pedido y la preorden asociada, restituyendo stock a la base de datos."""
+        preorden = PreOrden.objects.filter(codigo_orden=self.codigo_pedido).first()
+        if preorden:
+            res = preorden.cancelar_y_restituir_stock()
+            self.refresh_from_db()
+            return res
+        if self.estado == 'CANCELADA':
+            return False
+        from django.db.models import F
+        pt = ProductoTalla.objects.filter(producto=self.producto, talla__nombre__iexact=self.talla).first()
+        if not pt:
+            pt = ProductoTalla.objects.filter(producto=self.producto).first()
+        if pt:
+            pt.stock = F('stock') + self.cantidad
+            pt.save(update_fields=['stock'])
+        self.estado = 'CANCELADA'
+        self.save(update_fields=['estado'])
+        return True
 
     def __str__(self):
         return f"Pedido {self.codigo_pedido} - {self.email}"
@@ -313,5 +352,26 @@ def sync_preorden_to_pedido_and_tracker(sender, instance, created, **kwargs):
                 'porcentaje_avance': instance.porcentaje_progreso(),
             }
         )
+
+
+@receiver(post_save, sender=Pedido)
+def sync_pedido_to_preorden(sender, instance, created, **kwargs):
+    """
+    Sincroniza cambios desde Pedido hacia PreOrden para consistencia bidireccional
+    cuando un administrador modifica estados o notas desde el Django Admin.
+    """
+    if kwargs.get('raw', False):
+        return
+    preorden = PreOrden.objects.filter(codigo_orden=instance.codigo_pedido).first()
+    if preorden and (preorden.estado != instance.estado or preorden.notas != instance.notas):
+        PreOrden.objects.filter(pk=preorden.pk).update(
+            estado=instance.estado,
+            notas=instance.notas
+        )
+        if preorden.dhl_tracking:
+            Tracker.objects.filter(preorden=preorden).update(
+                estado_envio=instance.get_estado_display(),
+                porcentaje_avance=preorden.porcentaje_progreso()
+            )
 
 

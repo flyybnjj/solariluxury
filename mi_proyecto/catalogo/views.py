@@ -1,5 +1,6 @@
 import json
 import random
+import secrets
 import logging
 from datetime import timedelta
 from django.shortcuts import render, get_object_or_404, redirect
@@ -131,8 +132,8 @@ def solicitar_key(request):
 
     cliente, _ = Cliente.objects.get_or_create(user=user)
 
-    # 2. Generar PIN numérico de 6 dígitos único con validez de 10 minutos
-    pin = f"{random.randint(100000, 999999)}"
+    # 2. Generar PIN numérico de 6 dígitos único con validez de 10 minutos (criptográficamente seguro)
+    pin = f"{secrets.randbelow(900000) + 100000}"
     cliente.access_pin = pin
     cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
     cliente.save()
@@ -210,6 +211,12 @@ def validar_key(request):
 
     cliente, _ = Cliente.objects.get_or_create(user=user)
 
+    if cliente.esta_bloqueado():
+        return JsonResponse({
+            'success': False,
+            'error': 'Demasiados intentos fallidos. Tu acceso ha sido bloqueado temporalmente por 15 minutos.'
+        }, status=429)
+
     if not cliente.access_pin or not cliente.pin_expires_at:
         return JsonResponse({'success': False, 'error': 'El PIN no es válido o ya fue utilizado. Solicita uno nuevo.'}, status=400)
 
@@ -217,10 +224,25 @@ def validar_key(request):
         cliente.clear_pin()
         return JsonResponse({'success': False, 'error': 'El código PIN ha caducado (10 minutos de validez). Solicita uno nuevo.'}, status=400)
 
-    if str(cliente.access_pin).strip() != pin:
-        return JsonResponse({'success': False, 'error': 'El código PIN ingresado es incorrecto. Revisa tu correo.'}, status=400)
+    if not secrets.compare_digest(str(cliente.access_pin).strip(), pin):
+        cliente.intentos_fallidos += 1
+        if cliente.intentos_fallidos >= 5:
+            cliente.bloqueado_hasta = timezone.now() + timedelta(minutes=15)
+            cliente.clear_pin()
+            cliente.save()
+            return JsonResponse({
+                'success': False,
+                'error': 'Has superado el límite de 5 intentos fallidos. Tu acceso ha sido bloqueado por 15 minutos y el código PIN ha sido invalidado.'
+            }, status=429)
+        cliente.save()
+        return JsonResponse({
+            'success': False,
+            'error': f'El código PIN ingresado es incorrecto. Te quedan {5 - cliente.intentos_fallidos} intentos.'
+        }, status=400)
 
-    # 1. QUEMAR EL PIN INMEDIATAMENTE
+    # 1. QUEMAR EL PIN INMEDIATAMENTE Y RESETEAR INTENTOS
+    cliente.intentos_fallidos = 0
+    cliente.bloqueado_hasta = None
     cliente.clear_pin()
     user.access_pin = None
     user.pin_expires_at = None

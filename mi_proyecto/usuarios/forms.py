@@ -4,6 +4,12 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class RegistroForm(forms.ModelForm):
+    """
+    [DEPRECADO / CÓDIGO MUERTO]
+    Formulario legado de registro con contraseña. El sistema opera actualmente
+    bajo autenticación Passwordless OTP vía solicitar_acceso_view.
+    Se conserva únicamente por compatibilidad hacia atrás.
+    """
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'auth-input',

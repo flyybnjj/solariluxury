@@ -137,7 +137,7 @@
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f6f6f6; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 20px;">
                   <tr>
                     <td align="center">
-                      <img class="prod-image" src="{{ producto.imagen_url|default:'https://raw.githubusercontent.com/flyyyy98/solariluxury/main/mi_proyecto/static/img/emails/af1_syna_email.png' }}" alt="Producto Solary Luxury" style="max-width: 300px; width: 100%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));">
+                      <img class="prod-image" src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 300px; width: 100%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.06));">
                     </td>
                   </tr>
                   <tr>
@@ -156,19 +156,21 @@
                   <tr>
                     <td align="left" valign="top">
                       <div style="font-size: 16px; font-weight: 700; color: #111111; margin-bottom: 3px;">
-                        {{ producto.nombre|default:"Nike Air Force 1 Low × Syna World" }}
+                        {{ producto.nombre }}
                       </div>
+                      {% if producto.subtitulo %}
                       <div style="font-size: 13px; color: #707072; margin-bottom: 8px;">
-                        {{ producto.subtitulo|default:"Central Cee Special Edition · Black / Optic Yellow" }}
+                        {{ producto.subtitulo }}
                       </div>
+                      {% endif %}
                       <div style="font-size: 12px; color: #707072; line-height: 1.5;">
-                        Talla: <span style="color: #111111; font-weight: 500;">{{ orden.talla|default:"9.5 US / 42.5 EU" }}</span><br>
-                        Estilo: <span style="color: #111111; font-weight: 500; font-family: monospace;">{{ producto.codigo_estilo|default:"FZ4210-001" }}</span><br>
-                        Cantidad: <span style="color: #111111; font-weight: 500;">{{ orden.cantidad|default:"1" }}</span>
+                        Talla: <span style="color: #111111; font-weight: 500;">{{ orden.talla }}</span><br>
+                        {% if producto.codigo_estilo %}Estilo: <span style="color: #111111; font-weight: 500; font-family: monospace;">{{ producto.codigo_estilo }}</span><br>{% endif %}
+                        Cantidad: <span style="color: #111111; font-weight: 500;">{{ orden.cantidad }}</span>
                       </div>
                     </td>
                     <td align="right" valign="top" style="font-size: 16px; font-weight: 700; color: #111111;">
-                      {{ orden.precio_formateado|default:"$189.990 CLP" }}
+                      {{ total }}
                     </td>
                   </tr>
                 </table>
@@ -182,7 +184,7 @@
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #707072; line-height: 1.8;">
                 <tr>
                   <td align="left">Subtotal</td>
-                  <td align="right" style="color: #111111;">{{ orden.subtotal|default:"$189.990 CLP" }}</td>
+                  <td align="right" style="color: #111111;">{{ subtotal }}</td>
                 </tr>
                 <tr>
                   <td align="left">Envío asegurado</td>
@@ -190,14 +192,14 @@
                 </tr>
                 <tr>
                   <td align="left">Impuestos incluidos (IVA 19%)</td>
-                  <td align="right" style="color: #111111;">{{ orden.iva|default:"$30.334 CLP" }}</td>
+                  <td align="right" style="color: #111111;">{{ iva }}</td>
                 </tr>
                 <tr>
                   <td align="left" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
                     Total
                   </td>
                   <td align="right" style="padding-top: 10px; border-top: 1px solid #e5e5ea; font-size: 15px; font-weight: 800; color: #111111;">
-                    {{ orden.total|default:"$189.990 CLP" }}
+                    {{ total }}
                   </td>
                 </tr>
               </table>
@@ -213,9 +215,9 @@
                     <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #111111; margin-bottom: 6px;">
                       Dirección de entrega
                     </div>
-                    <div style="color: #111111; font-weight: 600;">{{ cliente_nombre|default:orden.nombre_cliente|default:"Test Test" }}</div>
-                    <div>{{ orden.direccion|default:"Av. Nueva Costanera 4020, Depto 601" }}</div>
-                    <div>{{ orden.ciudad|default:"Vitacura, Región Metropolitana" }}</div>
+                    <div style="color: #111111; font-weight: 600;">{{ cliente_nombre }}</div>
+                    <div>{{ direccion }}</div>
+                    <div>{{ ciudad }}</div>
                     <div>Chile</div>
                   </td>
                   <td class="grid-stack" width="50%" align="left" valign="top" style="font-size: 12px; color: #707072; line-height: 1.5;">
@@ -249,9 +251,9 @@
           <tr>
             <td align="center" style="padding-top: 36px; border-top: 1px solid #e5e5ea; margin-top: 28px; font-size: 11px; color: #8e8e93; line-height: 1.6;">
               SOLARY LUXURY ARCHIVE · ALONSO DE CÓRDOVA 3890, VITACURA, SANTIAGO<br>
-              Recibes este correo porque realizaste una reserva o compra oficial en Solary Luxury.<br>
-              <a href="#" style="color: #707072; text-decoration: underline;">Política de Privacidad</a> · 
-              <a href="#" style="color: #707072; text-decoration: underline;">Términos del Servicio</a>
+              Recibes este correo porque realizaste una reserva o compra oficial en SOLARY LUXURY.<br>
+              <a href="{{ tracking_url|default:'http://127.0.0.1:8000/locales/informacion/' }}" style="color: #707072; text-decoration: underline;">Política de Privacidad</a> · 
+              <a href="{{ tracking_url|default:'http://127.0.0.1:8000/locales/informacion/' }}" style="color: #707072; text-decoration: underline;">Términos del Servicio</a>
             </td>
           </tr>
 

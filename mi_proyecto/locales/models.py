@@ -23,7 +23,7 @@ class Local(models.Model):
         ordering = ['nombre']
 
     def badge_tipo(self):
-        return f"TRAPSTAR {self.tipo}"
+        return f"SOLARY {self.tipo}"
 
     def __str__(self):
         return self.nombre
