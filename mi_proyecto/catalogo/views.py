@@ -3,6 +3,7 @@ import random
 import logging
 from datetime import timedelta
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
