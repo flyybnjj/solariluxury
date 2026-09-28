@@ -6,7 +6,6 @@ from datetime import timedelta
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
@@ -14,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from usuarios.models import Cliente
+from usuarios.otp import OtpDeliveryError, OtpRateLimited, issue_otp, verify_otp, complete_login
 from .models import Producto, Categoria, DetalleProducto, ImagenProducto, PreOrden, Pedido, Tracker
 
 logger = logging.getLogger(__name__)
@@ -92,153 +92,48 @@ def inicio(request):
     }
     return render(request, 'catalogo/inicio.html', context)
 
-@csrf_exempt
+def _otp_json_payload(request):
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except (ValueError, UnicodeDecodeError):
+        data = request.POST
+    return data
+
 def solicitar_key(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
-
+    data = _otp_json_payload(request)
+    email = str(data.get('email', '')).strip().casefold()
     try:
-        data = json.loads(request.body.decode('utf-8'))
-        email = data.get('email', '').strip().lower()
-    except Exception:
-        email = request.POST.get('email', '').strip().lower()
-
-    if not email or '@' not in email:
-        return JsonResponse({'success': False, 'error': 'Por favor ingresa un correo electrónico válido.'}, status=400)
-
-    user = User.objects.filter(email__iexact=email).first()
-    if not user:
-        base_username = email.split('@')[0].replace('.', '_').replace('-', '_')
-        username = base_username
-        c = 1
-        while User.objects.filter(username=username).exists():
-            username = f"{base_username}_{c}"
-            c += 1
-        user = User.objects.create_user(username=username, email=email)
-        user.set_unusable_password()
-        user.save()
-
-    cliente, _ = Cliente.objects.get_or_create(user=user)
-    pin = f"{secrets.randbelow(900000) + 100000}"
-    cliente.access_pin = pin
-    cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
-    cliente.save()
-
+        from django.core.validators import validate_email
+        validate_email(email)
+        issue_otp(email, request.META.get('HTTP_X_REAL_IP') or request.META.get('REMOTE_ADDR', ''))
+    except OtpRateLimited:
+        return JsonResponse({'success': False, 'error': 'Espera un minuto antes de solicitar otro código.'}, status=429)
+    except Exception as exc:
+        from django.core.exceptions import ValidationError
+        if isinstance(exc, ValidationError):
+            return JsonResponse({'success': False, 'error': 'Por favor ingresa un correo electrónico válido.'}, status=400)
+        logger.error('OTP request failed: exception=%s', type(exc).__name__)
+        return JsonResponse({'success': False, 'error': 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.'}, status=503)
     request.session['auth_otp_email'] = email
+    return JsonResponse({'success': True, 'email': email, 'message': 'Si el correo puede recibir mensajes, enviaremos un código válido por 10 minutos.'})
 
-    pin_spaced = f"{pin[:3]}   {pin[3:]}"
-    cliente_nombre = user.get_full_name() or user.first_name or "Cliente"
-    html_message = render_to_string('usuarios/email_pin_acceso.html', {
-        'pin': pin,
-        'pin_spaced': pin_spaced,
-        'cliente_nombre': cliente_nombre,
-        'user': user,
-        'email': email,
-    })
-    plain_message = f"Tu código de verificación de Solary es: {pin}\nVálido durante 10 minutos."
-
-    try:
-        send_mail(
-            subject="SOLARY ID — Tu acceso a la tienda",
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            html_message=html_message,
-            fail_silently=False,
-        )
-        logger.info(f"[SMTP OK] PIN enviado a {email}")
-    except Exception as e:
-        logger.error(f"[SMTP ERROR] No se pudo enviar PIN a {email}: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': f"No se pudo enviar el correo a {email}. Inténtalo nuevamente.",
-        }, status=500)
-
-    return JsonResponse({
-        'success': True,
-        'email': email,
-        'message': f'Hemos enviado un código PIN de 6 dígitos a {email}. Revisa tu bandeja de entrada o spam.',
-    })
-
-@csrf_exempt
 def validar_key(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
-
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-        email = data.get('email', '').strip().lower() or request.session.get('auth_otp_email', '')
-        pin = data.get('pin', '') or data.get('key', '')
-        pin = str(pin).strip()
-    except Exception:
-        email = request.POST.get('email', '').strip().lower() or request.session.get('auth_otp_email', '')
-        pin = str(request.POST.get('pin', '') or request.POST.get('key', '')).strip()
-
-    if not email:
-        return JsonResponse({'success': False, 'error': 'No se encontró la dirección de correo electrónico.'}, status=400)
-    if not pin or len(pin) != 6 or not pin.isdigit():
-        return JsonResponse({'success': False, 'error': 'Debes ingresar el PIN numérico de 6 dígitos recibido por correo.'}, status=400)
-
-    user = User.objects.filter(email__iexact=email).first()
-    if not user:
-        return JsonResponse({'success': False, 'error': 'Usuario no registrado con este correo.'}, status=404)
-
-    cliente, _ = Cliente.objects.get_or_create(user=user)
-
-    if cliente.esta_bloqueado():
-        return JsonResponse({
-            'success': False,
-            'error': 'Demasiados intentos fallidos. Tu acceso ha sido bloqueado temporalmente por 15 minutos.'
-        }, status=429)
-
-    if not cliente.access_pin or not cliente.pin_expires_at:
-        return JsonResponse({'success': False, 'error': 'El PIN no es válido o ya fue utilizado. Solicita uno nuevo.'}, status=400)
-
-    if timezone.now() > cliente.pin_expires_at:
-        cliente.clear_pin()
-        return JsonResponse({'success': False, 'error': 'El código PIN ha caducado (10 minutos de validez). Solicita uno nuevo.'}, status=400)
-
-    if not secrets.compare_digest(str(cliente.access_pin).strip(), pin):
-        cliente.intentos_fallidos += 1
-        if cliente.intentos_fallidos >= 5:
-            cliente.bloqueado_hasta = timezone.now() + timedelta(minutes=15)
-            cliente.clear_pin()
-            cliente.save()
-            return JsonResponse({
-                'success': False,
-                'error': 'Has superado el límite de 5 intentos fallidos. Tu acceso ha sido bloqueado por 15 minutos y el código PIN ha sido invalidado.'
-            }, status=429)
-        cliente.save()
-        return JsonResponse({
-            'success': False,
-            'error': f'El código PIN ingresado es incorrecto. Te quedan {5 - cliente.intentos_fallidos} intentos.'
-        }, status=400)
-
-    cliente.intentos_fallidos = 0
-    cliente.bloqueado_hasta = None
-    cliente.clear_pin()
-    user.access_pin = None
-    user.pin_expires_at = None
-    user.save()
-
-    login(request, user)
-    request.session['tienda_desbloqueada'] = True
-    request.session['vip_unlocked_email'] = email
-
-    try:
-        from usuarios.utils import enviar_cupon_bienvenida
-        enviar_cupon_bienvenida(user, email=email)
-    except Exception as e:
-        logger.error(f"[ERROR CUPON BIENVENIDA] {e}")
-
-    PreOrden.objects.filter(email_cliente__iexact=email, usuario__isnull=True).update(usuario=user)
-    Pedido.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
-    Tracker.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
-
-    return JsonResponse({
-        'success': True,
-        'message': f'¡Acceso concedido! Bienvenido/a {user.first_name or user.username}. Desbloqueando tienda...'
-    })
+    data = _otp_json_payload(request)
+    email = str(data.get('email', '')).strip().casefold() or request.session.get('auth_otp_email', '')
+    pin = str(data.get('pin', '') or data.get('key', '')).strip()
+    if not email or len(pin) != 6 or not pin.isdigit():
+        return JsonResponse({'success': False, 'error': 'Código no válido o vencido. Solicita uno nuevo.'}, status=400)
+    valid, remaining, user = verify_otp(email, pin)
+    if not valid:
+        status = 429 if remaining == 0 else 400
+        return JsonResponse({'success': False, 'error': 'Código no válido, vencido o con demasiados intentos.' if remaining == 0 else f'Código incorrecto. Te quedan {remaining} intentos.'}, status=status)
+    complete_login(request, email, user)
+    request.session.pop('auth_otp_email', None)
+    return JsonResponse({'success': True, 'message': f'¡Acceso concedido! Bienvenido/a {user.first_name or user.username}. Desbloqueando tienda...'})
 
 def bloquear_tienda(request):
     from django.contrib.auth import logout

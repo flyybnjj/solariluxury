@@ -73,6 +73,33 @@ class Cliente(models.Model):
         self.pin_expires_at = None
         self.save(update_fields=['access_pin', 'pin_expires_at'])
 
+
+class OtpChallenge(models.Model):
+    email = models.EmailField(db_index=True)
+    pin_hash = models.CharField(max_length=128)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    attempts = models.PositiveSmallIntegerField(default=0)
+    consumed_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        indexes = [models.Index(fields=['email', 'consumed_at', 'created_at'])]
+
+
+class OtpRateLimit(models.Model):
+    EMAIL = 'email'
+    IP = 'ip'
+    KIND_CHOICES = [(EMAIL, 'Email'), (IP, 'IP')]
+
+    kind = models.CharField(max_length=8, choices=KIND_CHOICES)
+    subject_hash = models.CharField(max_length=64)
+    window_started_at = models.DateTimeField()
+    last_requested_at = models.DateTimeField()
+    requests_count = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['kind', 'subject_hash'], name='uniq_otp_rate_subject')]
+
 @receiver(post_save, sender=User)
 def ensure_cliente_profile(sender, instance, created, **kwargs):
     if created:

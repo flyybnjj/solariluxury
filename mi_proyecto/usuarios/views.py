@@ -20,242 +20,82 @@ from catalogo.models import PreOrden, Pedido, Tracker
 from .models import Cliente, TicketSoporte
 from .forms import LoginForm
 from .utils import enviar_cupon_bienvenida
+from .otp import OtpDeliveryError, OtpRateLimited, issue_otp, verify_otp, complete_login
 
 logger = logging.getLogger(__name__)
 
 def generar_pin_otp():
-    return f"{secrets.randbelow(900000) + 100000}"
+    return f"{secrets.randbelow(1_000_000):06d}"
+
+def _otp_ip(request):
+    return request.META.get('HTTP_X_REAL_IP') or request.META.get('REMOTE_ADDR', '')
 
 def solicitar_acceso_view(request):
     if request.user.is_authenticated:
         return redirect('inicio')
-
     next_url = request.GET.get('next') or request.POST.get('next') or ''
     if next_url:
         request.session['auth_otp_next'] = next_url
-
     if request.method == 'POST':
-        email = request.POST.get('email', '').strip().lower()
-        if not email or '@' not in email:
-            messages.error(request, "Por favor introduce un correo electrónico válido.")
-            return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
-
-        user = User.objects.filter(email__iexact=email).first()
-        if not user:
-            base_username = email.split('@')[0].replace('.', '_').replace('-', '_')
-            username = base_username
-            counter = 1
-            while User.objects.filter(username=username).exists():
-                username = f"{base_username}_{counter}"
-                counter += 1
-
-            user = User.objects.create_user(
-                username=username,
-                email=email
-            )
-            user.set_unusable_password()
-            user.save()
-
-        cliente, _ = Cliente.objects.get_or_create(user=user)
-
-        pin = generar_pin_otp()
-        cliente.access_pin = pin
-        cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
-        cliente.save()
-
-        request.session['auth_otp_email'] = email
-
-        pin_spaced = f"{pin[:3]}   {pin[3:]}"
-        cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
-        subject = "SOLARY ID — Tu acceso a la tienda"
-        html_message = render_to_string('usuarios/email_pin_acceso.html', {
-            'pin': pin,
-            'pin_spaced': pin_spaced,
-            'cliente_nombre': cliente_nombre,
-            'user': user,
-            'email': email,
-        })
-        plain_message = (
-            f"SOLARY ID — CÓDIGO DE VERIFICACIÓN\n\n"
-            f"Tu código de verificación de Solary es: {pin}\n"
-            f"Vigencia: 10 minutos.\n\n"
-            f"Si tú no solicitaste este código, puedes ignorar este mensaje."
-        )
-
+        email = request.POST.get('email', '').strip().casefold()
         try:
-            send_mail(
-                subject=subject,
-                message=plain_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                html_message=html_message,
-                fail_silently=False
-            )
-            messages.success(request, f"Hemos enviado un código PIN de 6 dígitos a {email}. Revisa tu correo.")
-        except Exception as e:
-            logger.error(f"[ERROR SMTP GMAIL] No se pudo conectar al servidor de correo: {e}")
-            print("\n" + "="*70)
-            print("  [SOLARI LUXURY - OTP LOCAL CONSOLE LOG]")
-            print(f"  Destinatario: {email}")
-            print(f"  PIN Generado: {pin}")
-            print(f"  Expiracion  : {cliente.pin_expires_at} (10 minutos)")
-            print(f"  Detalle SMTP: {e}")
-            print("="*70 + "\n")
-            messages.info(request, f"PIN generado para {email}. Si estas en pruebas locales, revisa la consola del servidor.")
-
+            from django.core.validators import validate_email
+            validate_email(email)
+            issue_otp(email, _otp_ip(request))
+        except OtpRateLimited:
+            messages.error(request, 'Espera un minuto antes de solicitar otro código.')
+            return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
+        except Exception as exc:
+            if isinstance(exc, OtpDeliveryError):
+                messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
+            else:
+                from django.core.exceptions import ValidationError
+                if isinstance(exc, ValidationError):
+                    messages.error(request, 'Por favor introduce un correo electrónico válido.')
+                else:
+                    logger.error('OTP request failed: exception=%s', type(exc).__name__)
+                    messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
+            return render(request, 'usuarios/solicitar_acceso.html', {'email': email, 'next_url': next_url})
+        request.session['auth_otp_email'] = email
+        messages.success(request, 'Si el correo puede recibir mensajes, enviaremos un código de acceso válido por 10 minutos.')
         return redirect('validar_pin')
-
     return render(request, 'usuarios/solicitar_acceso.html', {'next_url': next_url})
 
 def validar_pin_view(request):
     if request.user.is_authenticated:
         return redirect('inicio')
-
     email = request.session.get('auth_otp_email') or request.GET.get('email') or request.POST.get('email')
     if not email:
-        messages.warning(request, "Por favor ingresa tu correo para recibir tu código PIN de acceso.")
+        messages.warning(request, 'Ingresa tu correo para solicitar un código de acceso.')
         return redirect('solicitar_acceso')
-
-    user = User.objects.filter(email__iexact=email).first()
-    if not user:
-        messages.error(request, "No encontramos una cuenta asociada a este correo. Solicita un nuevo código.")
-        return redirect('solicitar_acceso')
-
-    cliente = getattr(user, 'cliente', None)
-    if not cliente:
-        messages.warning(request, "Perfil de cliente no encontrado. Solicita un nuevo código.")
-        return redirect('solicitar_acceso')
-
-    if cliente.esta_bloqueado():
-        messages.error(request, "Demasiados intentos fallidos. Tu acceso ha sido bloqueado temporalmente por 15 minutos.")
-        return render(request, 'usuarios/validar_pin.html', {
-            'email': email,
-            'pin_expirado': True,
-            'segundos_restantes': 0,
-        })
-
-    if not cliente.access_pin or not cliente.pin_expires_at:
-        messages.warning(request, "No hay ningún PIN activo o el código ya fue utilizado. Solicita uno nuevo.")
-        return redirect('solicitar_acceso')
-
+    email = email.strip().casefold()
     if request.method == 'POST':
-        pin_ingresado = request.POST.get('pin', '').strip()
-
-        if timezone.now() > cliente.pin_expires_at:
-            cliente.clear_pin()
-            messages.error(request, "El código PIN ha caducado (validez de 10 minutos). Haz clic en Reenviar para obtener uno nuevo.")
-            return render(request, 'usuarios/validar_pin.html', {
-                'email': email,
-                'pin_expirado': True,
-                'segundos_restantes': 0,
-            })
-
-        if not secrets.compare_digest(str(cliente.access_pin).strip(), str(pin_ingresado).strip()):
-            cliente.intentos_fallidos += 1
-            if cliente.intentos_fallidos >= 5:
-                cliente.bloqueado_hasta = timezone.now() + timedelta(minutes=15)
-                cliente.clear_pin()
-                cliente.save()
-                messages.error(request, "Has superado el límite de 5 intentos fallidos. Tu acceso ha sido bloqueado por 15 minutos y el código PIN ha sido invalidado.")
-                return render(request, 'usuarios/validar_pin.html', {
-                    'email': email,
-                    'pin_expirado': True,
-                    'segundos_restantes': 0,
-                })
-            cliente.save()
-            messages.error(request, f"El código PIN ingresado es incorrecto. Te quedan {5 - cliente.intentos_fallidos} intentos.")
-            return render(request, 'usuarios/validar_pin.html', {
-                'email': email,
-                'pin_invalido': True,
-                'segundos_restantes': max(0, int((cliente.pin_expires_at - timezone.now()).total_seconds())),
-            })
-
-        cliente.intentos_fallidos = 0
-        cliente.bloqueado_hasta = None
-        cliente.clear_pin()
-        user.access_pin = None
-        user.pin_expires_at = None
-        user.save()
-
-        login(request, user)
-        request.session['tienda_desbloqueada'] = True
-        request.session['vip_unlocked_email'] = email
-
-        try:
-            enviar_cupon_bienvenida(user, email=email)
-        except Exception as e:
-            logger.error(f"[ERROR CUPON BIENVENIDA] {e}")
-
-        PreOrden.objects.filter(email_cliente__iexact=email, usuario__isnull=True).update(usuario=user)
-        Pedido.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
-        Tracker.objects.filter(email__iexact=email, usuario__isnull=True).update(usuario=user)
-
+        valid, remaining, user = verify_otp(email, request.POST.get('pin', '').strip())
+        if not valid:
+            messages.error(request, 'El código no es válido, venció o alcanzó el límite de intentos. Solicita uno nuevo.' if remaining == 0 else f'Código incorrecto. Te quedan {remaining} intentos.')
+            return render(request, 'usuarios/validar_pin.html', {'email': email, 'pin_invalido': True, 'pin_expirado': remaining == 0, 'segundos_restantes': 0})
+        complete_login(request, email, user)
         request.session.pop('auth_otp_email', None)
         next_url = request.session.pop('auth_otp_next', None) or request.GET.get('next') or request.POST.get('next') or 'lista_productos'
-
-        messages.success(request, f"¡Acceso verificado! Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.")
+        messages.success(request, f'¡Acceso verificado! Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.')
         return redirect(next_url)
-
-    segundos_restantes = 600
-    if cliente and cliente.pin_expires_at:
-        diff = (cliente.pin_expires_at - timezone.now()).total_seconds()
-        segundos_restantes = max(0, int(diff))
-
-    return render(request, 'usuarios/validar_pin.html', {
-        'email': email,
-        'segundos_restantes': segundos_restantes,
-    })
+    return render(request, 'usuarios/validar_pin.html', {'email': email, 'segundos_restantes': 600})
 
 def reenviar_pin_view(request):
-    email = request.session.get('auth_otp_email') or request.GET.get('email')
+    if request.method != 'POST':
+        return redirect('validar_pin')
+    email = request.session.get('auth_otp_email')
     if not email:
-        messages.warning(request, "Introduce tu correo para solicitar un nuevo PIN.")
         return redirect('solicitar_acceso')
-
-    user = User.objects.filter(email__iexact=email).first()
-    if not user:
-        messages.error(request, "Cuenta no encontrada. Solicita acceso nuevamente.")
-        return redirect('solicitar_acceso')
-
-    cliente, _ = Cliente.objects.get_or_create(user=user)
-    pin = generar_pin_otp()
-    cliente.access_pin = pin
-    cliente.pin_expires_at = timezone.now() + timedelta(minutes=10)
-    cliente.save()
-
-    pin_spaced = f"{pin[:3]}   {pin[3:]}"
-    cliente_nombre = user.get_full_name() or user.first_name or "Test Test"
-    subject = "SOLARY ID — Tu acceso a la tienda"
-    html_message = render_to_string('usuarios/email_pin_acceso.html', {
-        'pin': pin,
-        'pin_spaced': pin_spaced,
-        'cliente_nombre': cliente_nombre,
-        'user': user,
-        'email': email,
-    })
-    plain_message = f"SOLARY ID — Tu nuevo código de verificación de Solary es: {pin} (vigencia de 10 minutos)."
-
     try:
-        send_mail(
-            subject=subject,
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            html_message=html_message,
-            fail_silently=False
-        )
-        messages.success(request, f"Se ha despachado un nuevo código PIN de 6 dígitos a {email}.")
-    except Exception as e:
-        logger.error(f"[ERROR REENVIAR PIN] {e}")
-        print("\n" + "="*70)
-        print("  [SOLARI LUXURY - OTP REENVIADO CONSOLE LOG]")
-        print(f"  Destinatario: {email}")
-        print(f"  Nuevo PIN   : {pin}")
-        print(f"  Expiracion  : {cliente.pin_expires_at} (10 minutos)")
-        print(f"  Detalle SMTP: {e}")
-        print("="*70 + "\n")
-        messages.info(request, f"Nuevo PIN generado para {email}. Revisa la consola en pruebas locales.")
-
+        issue_otp(email, _otp_ip(request))
+    except OtpRateLimited:
+        messages.error(request, 'Espera un minuto antes de solicitar otro código.')
+    except Exception as exc:
+        logger.error('OTP resend failed: exception=%s', type(exc).__name__)
+        messages.error(request, 'No pudimos enviar el correo. Inténtalo de nuevo más tarde.')
+    else:
+        messages.success(request, 'Si el correo puede recibir mensajes, enviaremos un nuevo código válido por 10 minutos.')
     return redirect('validar_pin')
 
 def login_view(request):
