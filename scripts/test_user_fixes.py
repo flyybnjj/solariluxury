@@ -2,7 +2,10 @@ import asyncio
 import os
 from playwright.async_api import async_playwright
 
+import sys
+
 async def run():
+    target_url = sys.argv[1] if len(sys.argv) > 1 else "http://32.193.109.160/"
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         # iPhone 14/15 size: 390x844
@@ -17,8 +20,8 @@ async def run():
             sessionStorage.setItem('solariluxury_vip_unlocked', 'true');
         """)
 
-        print("Navigating to http://127.0.0.1:8000/ ...")
-        await page.goto("http://127.0.0.1:8000/", wait_until="domcontentloaded")
+        print(f"Navigating to {target_url} ...")
+        await page.goto(target_url, wait_until="domcontentloaded")
         await page.wait_for_timeout(1500)
 
         os.makedirs("test_reports/user_fixes", exist_ok=True)
