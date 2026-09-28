@@ -13,7 +13,8 @@ class TraditionalAccountFlowTests(TestCase):
         self.assertContains(response, 'auth-card')
         self.assertContains(response, 'ENVIAR ENLACE')
         self.assertContains(response, 'class="guest-view"')
-        self.assertContains(response, '.guest-view main { padding-top: 0; }')
+        self.assertContains(response, '.guest-view main { padding-top: 0; min-height: 100vh; background: #ebebf0; }')
+        self.assertNotContains(response, 'class="sub-footer"')
         self.assertNotContains(response, 'Administración de Django')
 
     @patch('usuarios.views.enviar_cupon_bienvenida')

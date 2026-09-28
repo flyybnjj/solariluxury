@@ -656,7 +656,7 @@
       }
 
       main { padding-top: 86px; min-height: 85vh; }
-      .guest-view main { padding-top: 0; }
+      .guest-view main { padding-top: 0; min-height: 100vh; background: #ebebf0; }
 
       /* Sub-footer */
       .sub-footer {
@@ -1211,6 +1211,7 @@
         {% endblock %}
     </main>
 
+    {% if request.user.is_authenticated %}
     <footer class="sub-footer">
       <div class="sub-footer-links">
         {% if request.user.is_authenticated %}
@@ -1228,6 +1229,7 @@
       </div>
       <p>© 2026 SOLARILUXURY ARCHIVE • OFFICIAL CATALOG STOREFRONT</p>
     </footer>
+    {% endif %}
 
     <script>
     function toggleTheme() {
