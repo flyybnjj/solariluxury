@@ -8263,6 +8263,251 @@
         height: 44px !important;
       }
     }
+
+    /* ══════════════════════════════════════════════════════════
+       RESPONSIVE MOBILE & LUXURY VISUAL REFINEMENTS (QA FIXES)
+       ══════════════════════════════════════════════════════════ */
+    /* HERO COLLABORATION RESPONSIVE TITLE & GLOW (PHOTO 1) */
+    .hero-collab-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 2.5vw, 24px);
+      margin-top: 4px;
+      font-family: 'Bebas Neue', sans-serif;
+      line-height: 0.92;
+      width: 100%;
+    }
+    .hero-collab-cross {
+      font-size: clamp(28px, 7vw, 76px);
+      color: #ff6b35;
+      text-shadow: 0 0 24px rgba(255, 107, 53, 0.7), 0 0 50px rgba(255, 107, 53, 0.35);
+      display: inline-block;
+      line-height: 1;
+      animation: heroCrossPulse 2.8s ease-in-out infinite alternate;
+    }
+    .hero-collab-artist {
+      font-size: clamp(38px, 9.5vw, 115px);
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      white-space: nowrap;
+      display: inline-block;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 255, 255, 0.3);
+      animation: heroArtistPulse 3.5s ease-in-out infinite alternate;
+    }
+    .hero-collab-edition {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      font-size: clamp(10px, 2vw, 12px);
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.82);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 14px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+      display: block;
+    }
+    @keyframes heroCrossPulse {
+      0% { transform: scale(0.95); opacity: 0.85; filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5)); }
+      100% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 25px rgba(255, 107, 53, 0.9)); }
+    }
+    @keyframes heroArtistPulse {
+      0% { opacity: 0.9; text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 30px rgba(255,255,255,0.2); }
+      100% { opacity: 1; text-shadow: 0 4px 30px rgba(0,0,0,0.9), 0 0 60px rgba(255,255,255,0.5), 0 0 90px rgba(255,107,53,0.3); }
+    }
+
+    /* MANIFESTO WORD VISIBILITY FIX (PHOTO 2) */
+    .big-text em {
+      font-style: normal !important;
+      color: #0071e3 !important;
+      -webkit-text-fill-color: #0071e3 !important;
+      background: none !important;
+      display: inline !important;
+    }
+    .big-text em .word,
+    .big-text em .word.lit {
+      color: #0071e3 !important;
+      -webkit-text-fill-color: #0071e3 !important;
+      opacity: 1 !important;
+      background: none !important;
+    }
+
+    /* FEATURED BESTSELLER RESPONSIVE STACK (PHOTO 3) */
+    @media (max-width: 860px) {
+      .featured-card-wrap {
+        grid-template-columns: 1fr !important;
+      }
+      .featured-img-col {
+        min-height: 260px !important;
+        padding: 24px 16px !important;
+        border-bottom: 1px solid #e5e5ea !important;
+      }
+      .featured-hero-img {
+        max-height: 240px !important;
+        width: auto !important;
+        object-fit: contain !important;
+      }
+      .featured-info-col {
+        border-left: none !important;
+        padding: 24px 20px 32px !important;
+      }
+      .fi-title {
+        font-size: clamp(24px, 6vw, 36px) !important;
+        line-height: 1.15 !important;
+      }
+      .fi-specs {
+        margin-bottom: 20px !important;
+      }
+    }
+
+    /* QUICK VIEW 360 SPINNER & MEDIA REFINEMENTS (PHOTO 4) */
+    .qv-media-col {
+      padding: 20px 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: auto !important;
+    }
+    .qv-media-wrap {
+      position: relative !important;
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      touch-action: pan-y !important;
+    }
+    .qv-media-img {
+      width: 100% !important;
+      max-width: 320px !important;
+      max-height: 220px !important;
+      object-fit: contain !important;
+      margin: 0 auto !important;
+      cursor: ew-resize !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      display: block !important;
+    }
+    .qv-modal-dialog .stockx-360-bar {
+      width: 100% !important;
+      margin-top: 14px !important;
+      background: #f7f7f9 !important;
+      border: 1px solid #e5e5ea !important;
+      border-radius: 18px !important;
+      padding: 12px 14px !important;
+      box-sizing: border-box !important;
+    }
+    .qv-modal-dialog .badge-360-overlay {
+      position: absolute !important;
+      top: 10px !important;
+      left: 10px !important;
+      background: rgba(10, 10, 10, 0.75) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      color: #fff !important;
+      padding: 5px 12px !important;
+      border-radius: 980px !important;
+      font-size: 10.5px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.05em !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      z-index: 4 !important;
+      pointer-events: none !important;
+    }
+    .qv-modal-dialog .stockx-header-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin-bottom: 8px !important;
+    }
+    .qv-modal-dialog .stockx-title {
+      font-size: 11px !important;
+      letter-spacing: 0.04em !important;
+      color: #1d1d1f !important;
+      font-weight: 700 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      text-transform: uppercase !important;
+    }
+    .qv-modal-dialog .stockx-angle-text {
+      font-size: 10.5px !important;
+      font-weight: 600 !important;
+      font-family: -apple-system, BlinkMacSystemFont, monospace !important;
+      color: #4b5563 !important;
+      background: rgba(0, 0, 0, 0.06) !important;
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      padding: 3px 10px !important;
+      border-radius: 980px !important;
+    }
+    .qv-modal-dialog .stockx-controls-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+    }
+    .qv-modal-dialog .stockx-auto-spin-btn {
+      background: rgba(0, 113, 227, 0.1) !important;
+      border: 1px solid rgba(0, 113, 227, 0.25) !important;
+      color: #0071e3 !important;
+      padding: 6px 14px !important;
+      border-radius: 980px !important;
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      white-space: nowrap !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      transition: all 0.2s ease !important;
+    }
+    .qv-modal-dialog .stockx-auto-spin-btn:hover {
+      background: #0071e3 !important;
+      color: #fff !important;
+    }
+    .qv-modal-dialog .stockx-range {
+      flex: 1 !important;
+      accent-color: #0071e3 !important;
+      cursor: ew-resize !important;
+      height: 6px !important;
+    }
+    .qv-modal-dialog .stockx-hint {
+      font-size: 10px !important;
+      color: #86868b !important;
+      text-align: center !important;
+      margin-top: 6px !important;
+    }
+
+    /* CARD PACKSHOT & MOBILE QUICKVIEW BUTTON FIX */
+    .pc-img-main, .pc-img-hover {
+      pointer-events: none !important;
+    }
+    @media (hover: none), (max-width: 768px) {
+      .pc-quickview-btn {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        top: auto !important;
+        bottom: 8px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        padding: 5px 12px !important;
+        font-size: 9.5px !important;
+        letter-spacing: 0.08em !important;
+        border-radius: 980px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        color: #0a0a0a !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+        z-index: 10 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+      }
+    }
     
     </style>
 </head>
@@ -8692,7 +8937,7 @@
   <div class="hero-sticky" id="heroSticky">
     
     <!-- Central Cee 1080p High-Quality Video Clip -->
-    <video class="hero-bg-video" autoplay muted loop playsinline poster="./static/img/central_cee_front.jpg" id="heroVideo">
+    <video class="hero-bg-video" autoplay muted loop playsinline webkit-playsinline poster="./static/img/central_cee_front.jpg" id="heroVideo">
       <source src="./static/video/central_cee_hero.mp4" type="video/mp4">
     </video>
     
@@ -8703,7 +8948,7 @@
       <div class="tape-track" id="tapeTrack">
         <div class="tape-item"><span class="tape-arabic">سولاري لكجري</span></div>
         <div class="tape-item">✦ LIVE YOURS ✦</div>
-        <div class="tape-item"><span class="tape-arabic">سولاري لكجري</span></div>
+        <div class="tape-item"><span class="tape-arabic">سولARI لكجري</span></div>
         <div class="tape-item">✦ MIND OVER MATTER ✦</div>
         <div class="tape-item"><span class="tape-arabic">سولاري لكجري</span></div>
         <div class="tape-item">✦ FROM THE ENDS TO THE WORLD ✦</div>
@@ -8741,21 +8986,16 @@
     <span class="hero-side-text hero-side-left">OFFICIAL COLLABORATION 2026</span>
     <span class="hero-side-text hero-side-right">SOLARILUXURY × CENTRAL CEE</span>
 
-    <!-- Main title: SOLARILUXURY + Animated CENCH Letters that appear and disappear -->
+    <!-- Main title: SOLARILUXURY × CENTRAL CEE Official Collaboration -->
     <div class="hero-content" id="heroContent">
       <div class="hero-eyebrow">Autumn / Winter 2026 Campaign Archive</div>
       <h1 class="hero-title">
         <span class="hero-brand-solar">SOLARILUXURY</span>
-        <div class="cench-animated-box" title="CENCH">
-          <div class="cench-letters-row" aria-label="CENCH">
-            <span class="cench-char" style="--i:0">C</span>
-            <span class="cench-char" style="--i:1">E</span>
-            <span class="cench-char" style="--i:2">N</span>
-            <span class="cench-char" style="--i:3">C</span>
-            <span class="cench-char" style="--i:4">H</span>
-          </div>
-          <span class="cench-tagline">OFFICIAL COLLABORATION EDITION</span>
+        <div class="hero-collab-row">
+          <span class="hero-collab-cross">×</span>
+          <span class="hero-collab-artist">CENTRAL CEE</span>
         </div>
+        <div class="hero-collab-edition">OFFICIAL COLLABORATION EDITION</div>
       </h1>
     </div>
 
@@ -16415,9 +16655,35 @@
   <div class="qv-modal-dialog">
     <button type="button" class="qv-close-btn" onclick="closeQuickView()" title="Cerrar ventana">✕</button>
     
-    <!-- Left Col: Packshot -->
-    <div class="qv-media-col">
-      <img id="qvModalImg" src="" alt="Packshot" class="qv-media-img">
+    <!-- Left Col: Packshot with 360 Interactive Rotation -->
+    <div class="qv-media-col" id="qvMediaCol">
+      <div class="qv-media-wrap" id="qvMediaWrap">
+        <div class="badge-360-overlay" id="qv360Badge" style="display: none;">
+          <svg class="anim-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg>
+          <span>Vista 360° Interactiva</span>
+        </div>
+        <img id="qvModalImg" src="" alt="Packshot" class="qv-media-img" draggable="false">
+      </div>
+
+      <!-- APPLE / STOCKX 360 ROTATION BAR WITH SLIDER, AUTO-SPIN & ANGLE -->
+      <div class="stockx-360-bar" id="qv360Bar" style="display: none;">
+        <div class="stockx-header-row">
+          <span class="stockx-title">
+            <svg class="anim-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-1.19"/></svg>
+            <span>Rotación 360°</span>
+          </span>
+          <span class="stockx-angle-text" id="qvAngleDeg">0° • Ángulo 1</span>
+        </div>
+        <div class="stockx-controls-row">
+          <button type="button" class="stockx-auto-spin-btn" id="qvAutoSpinBtn" onclick="toggleQvAutoSpin()">
+            <span id="qvAutoSpinIcon">▶</span> <span id="qvAutoSpinLabel">Auto Giro</span>
+          </button>
+          <input type="range" id="qvStockxSlider" class="stockx-range" min="0" max="7" value="0" step="1" oninput="onQvSliderMove(this.value)" aria-label="Control de giro 360">
+        </div>
+        <div class="stockx-hint">Desliza horizontalmente sobre la zapatilla o usa la barra para girar</div>
+      </div>
+
+      <!-- Static Thumbnails Strip for non-360 products -->
       <div class="qv-thumbs-strip" id="qvThumbsStrip"></div>
     </div>
 
@@ -16484,7 +16750,7 @@ window.addToGlobalCart = function(item) {
 };
 
 // ── PRIVATE GATEWAY & VIP ACCESS KEY CONTROLLER ────────────────
-const DJANGO_CSRF = 'GQUyHKaouA01nHH4zGTBc1nW70jdOusHb6Cd7IsoXsKaeMS9HlajMtl87D7Nytdp';
+const DJANGO_CSRF = 'Rdx7HSwMUfIyuK4miZIYJUZq7LikvHAqYZGcmyHs5OQF83zUUPmWfXYSMGIeQCfP';
 const IS_DJANGO_UNLOCKED = false;
 
 function updateGatewayClock() {
@@ -17087,6 +17353,26 @@ const heroVideo = document.getElementById('heroVideo');
 const heroBar = document.getElementById('heroBar');
 const heroWhiteOverlay = document.getElementById('heroWhiteOverlay');
 const siteHeader = document.getElementById('siteHeader');
+
+// Autoplay guarantee for mobile and iOS Safari
+if (heroVideo) {
+  heroVideo.muted = true;
+  heroVideo.playsInline = true;
+  const p = heroVideo.play();
+  if (p && typeof p.catch === 'function') {
+    p.catch(() => {
+      const unlock = () => {
+        heroVideo.play().catch(() => {});
+        window.removeEventListener('touchstart', unlock);
+        window.removeEventListener('click', unlock);
+        window.removeEventListener('scroll', unlock);
+      };
+      window.addEventListener('touchstart', unlock, { passive: true, once: true });
+      window.addEventListener('click', unlock, { passive: true, once: true });
+      window.addEventListener('scroll', unlock, { passive: true, once: true });
+    });
+  }
+}
 
 window.addEventListener('scroll', () => {
   if (!heroPin) return;
@@ -17789,17 +18075,130 @@ initWishlistState();
 // ── QUICK VIEW MODAL CONTROLLER ───────────────────────────────
 let activeQuickViewCard = null;
 let currentModalSize = 'M';
+let qvCurrentIndex = 0;
+let qvAutoSpinTimer = null;
+let qvGalleryImgs = [];
+let qvIsDragging = false;
+let qvStartX = 0;
+let qvStartIndex = 0;
+
+function updateQvAngleView(index) {
+  if (!qvGalleryImgs || !qvGalleryImgs.length) return;
+  if (index < 0) index = 0;
+  if (index >= qvGalleryImgs.length) index = qvGalleryImgs.length - 1;
+  qvCurrentIndex = index;
+
+  const modalImg = document.getElementById('qvModalImg');
+  if (modalImg && qvGalleryImgs[index]) {
+    modalImg.src = qvGalleryImgs[index];
+  }
+
+  const slider = document.getElementById('qvStockxSlider');
+  if (slider) slider.value = index;
+
+  const angleDeg = document.getElementById('qvAngleDeg');
+  if (angleDeg && qvGalleryImgs.length > 1) {
+    const deg = Math.round((index / (qvGalleryImgs.length - 1)) * 360);
+    angleDeg.textContent = `${deg}° • Ángulo ${index + 1}`;
+  }
+}
+
+function onQvSliderMove(val) {
+  stopQvAutoSpin();
+  updateQvAngleView(parseInt(val, 10));
+}
+
+function toggleQvAutoSpin() {
+  if (qvAutoSpinTimer) {
+    stopQvAutoSpin();
+  } else {
+    const icon = document.getElementById('qvAutoSpinIcon');
+    const label = document.getElementById('qvAutoSpinLabel');
+    if (icon) icon.textContent = '❚❚';
+    if (label) label.textContent = 'Pausar';
+    qvAutoSpinTimer = setInterval(() => {
+      let nextIdx = (qvCurrentIndex + 1) % qvGalleryImgs.length;
+      updateQvAngleView(nextIdx);
+    }, 280);
+  }
+}
+
+function stopQvAutoSpin() {
+  if (qvAutoSpinTimer) {
+    clearInterval(qvAutoSpinTimer);
+    qvAutoSpinTimer = null;
+    const icon = document.getElementById('qvAutoSpinIcon');
+    const label = document.getElementById('qvAutoSpinLabel');
+    if (icon) icon.textContent = '▶';
+    if (label) label.textContent = 'Auto Giro';
+  }
+}
+
+function initQvDragEvents() {
+  const wrap = document.getElementById('qvMediaWrap');
+  if (!wrap || wrap.dataset.qvDragInit === 'true') return;
+  wrap.dataset.qvDragInit = 'true';
+
+  wrap.addEventListener('mousedown', (e) => {
+    if (!qvGalleryImgs || qvGalleryImgs.length <= 1) return;
+    qvIsDragging = true;
+    qvStartX = e.clientX;
+    qvStartIndex = qvCurrentIndex;
+    stopQvAutoSpin();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!qvIsDragging || !qvGalleryImgs || qvGalleryImgs.length <= 1) return;
+    const deltaX = e.clientX - qvStartX;
+    const step = 16;
+    const stepsShift = Math.floor(deltaX / step);
+    let newIndex = (qvStartIndex + stepsShift) % qvGalleryImgs.length;
+    if (newIndex < 0) newIndex += qvGalleryImgs.length;
+    updateQvAngleView(newIndex);
+  });
+
+  window.addEventListener('mouseup', () => {
+    qvIsDragging = false;
+  });
+
+  wrap.addEventListener('touchstart', (e) => {
+    if (!qvGalleryImgs || qvGalleryImgs.length <= 1) return;
+    if (e.touches.length === 1) {
+      qvIsDragging = true;
+      qvStartX = e.touches[0].clientX;
+      qvStartIndex = qvCurrentIndex;
+      stopQvAutoSpin();
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!qvIsDragging || !qvGalleryImgs || qvGalleryImgs.length <= 1 || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - qvStartX;
+    const step = 14;
+    const stepsShift = Math.floor(deltaX / step);
+    let newIndex = (qvStartIndex + stepsShift) % qvGalleryImgs.length;
+    if (newIndex < 0) newIndex += qvGalleryImgs.length;
+    updateQvAngleView(newIndex);
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    qvIsDragging = false;
+  });
+}
 
 function openQuickView(e, btn) {
   e.stopPropagation();
-  SoundFX.play('click');
+  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
   const card = btn.closest('.prod-card');
   if (!card) return;
   activeQuickViewCard = card;
 
-  // Populate data into modal
-  document.getElementById('qvModalImg').src = card.dataset.img;
-  document.getElementById('qvModalImg').alt = card.dataset.name;
+  // Populate basic product data
+  const mainImg = document.getElementById('qvModalImg');
+  if (mainImg) {
+    mainImg.src = card.dataset.img;
+    mainImg.alt = card.dataset.name;
+  }
   document.getElementById('qvModalCat').textContent = `SOLARILUXURY × ${card.dataset.cat.toUpperCase()}`;
   document.getElementById('qvModalTitle').textContent = card.dataset.name;
   document.getElementById('qvModalSubtitle').textContent = card.dataset.subtitle || 'DROP OFICIAL CAMPAÑA 2026';
@@ -17807,20 +18206,50 @@ function openQuickView(e, btn) {
   document.getElementById('qvModalPriceUsd').textContent = `≈ $${card.dataset.priceUsd} USD`;
   document.getElementById('qvDetailLink').href = card.dataset.url;
 
-  // Real store product thumbnails strip
+  // Detect 360 Sneaker Gallery
+  const is360Attr = (card.getAttribute('data-is-360') || card.dataset['is-360'] || card.dataset.is360 || '').toLowerCase();
+  const cardCat = (card.dataset.cat || '').toLowerCase();
+  const cardName = (card.dataset.name || '').toLowerCase();
+  const isSneakerOrShoe = cardCat.includes('sneaker') || cardCat.includes('calzado') || cardCat.includes('zapatilla') || cardName.includes('jordan') || cardName.includes('dunk') || cardName.includes('travis');
+  const is360 = (is360Attr === 'true') || isSneakerOrShoe;
+
+  const rawGallery = card.getAttribute('data-gallery') || card.dataset.gallery || card.dataset.img || '';
+  qvGalleryImgs = rawGallery.split('|').map(s => s.trim()).filter(Boolean);
+
+  stopQvAutoSpin();
+  initQvDragEvents();
+
+  const bar360 = document.getElementById('qv360Bar');
+  const badge360 = document.getElementById('qv360Badge');
   const strip = document.getElementById('qvThumbsStrip');
-  if (strip) {
-    const galleryImgs = (card.dataset.gallery || card.dataset.img || '').split('|').filter(Boolean);
-    if (galleryImgs.length > 1) {
-      strip.style.display = 'flex';
-      strip.innerHTML = galleryImgs.map((src, i) => `
-        <div class="qv-thumb ${i === 0 ? 'active' : ''}" onclick="switchQuickViewImg('${src}', this)">
-          <img src="${src}" alt="Ángulo ${i + 1}">
-        </div>
-      `).join('');
-    } else {
-      strip.style.display = 'none';
-      strip.innerHTML = '';
+
+  if (is360 && qvGalleryImgs.length > 1) {
+    if (bar360) bar360.style.display = 'block';
+    if (badge360) badge360.style.display = 'inline-flex';
+    if (strip) { strip.style.display = 'none'; strip.innerHTML = ''; }
+
+    const slider = document.getElementById('qvStockxSlider');
+    if (slider) {
+      slider.min = '0';
+      slider.max = String(qvGalleryImgs.length - 1);
+      slider.value = '0';
+    }
+    updateQvAngleView(0);
+  } else {
+    if (bar360) bar360.style.display = 'none';
+    if (badge360) badge360.style.display = 'none';
+    if (strip) {
+      if (qvGalleryImgs.length > 1) {
+        strip.style.display = 'flex';
+        strip.innerHTML = qvGalleryImgs.map((src, i) => `
+          <div class="qv-thumb ${i === 0 ? 'active' : ''}" onclick="switchQuickViewImg('${src}', this)">
+            <img src="${src}" alt="Ángulo ${i + 1}">
+          </div>
+        `).join('');
+      } else {
+        strip.style.display = 'none';
+        strip.innerHTML = '';
+      }
     }
   }
 
@@ -17855,14 +18284,15 @@ function openQuickView(e, btn) {
 }
 
 function switchQuickViewImg(src, thumbEl) {
-  SoundFX.play('click');
+  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
   document.getElementById('qvModalImg').src = src;
   document.querySelectorAll('.qv-thumb').forEach(t => t.classList.remove('active'));
   if (thumbEl) thumbEl.classList.add('active');
 }
 
 function closeQuickView() {
-  SoundFX.play('click');
+  stopQvAutoSpin();
+  if (typeof SoundFX !== 'undefined') SoundFX.play('click');
   const modal = document.getElementById('quickViewModal');
   if (modal) modal.classList.remove('open');
   document.body.style.overflow = '';
