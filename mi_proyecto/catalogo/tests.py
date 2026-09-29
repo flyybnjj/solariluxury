@@ -1,6 +1,24 @@
 from django.test import TestCase
 from django.db.models import ProtectedError
+from django.contrib import admin
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 from catalogo.models import Producto, PreOrden, Pedido
+
+
+class AdminChangelistSmokeTests(TestCase):
+    def setUp(self):
+        self.admin_user = get_user_model().objects.create_superuser(
+            username='qa-admin', email='qa-admin@example.test', password='QA-only-passphrase-2026!'
+        )
+        self.client.force_login(self.admin_user)
+
+    def test_every_registered_model_changelist_loads_for_superuser(self):
+        for model in admin.site._registry:
+            opts = model._meta
+            url = reverse(f'admin:{opts.app_label}_{opts.model_name}_changelist')
+            with self.subTest(model=opts.label):
+                self.assertEqual(self.client.get(url).status_code, 200)
 
 class Bug003ProductDeleteCascadeTest(TestCase):
     def setUp(self):
