@@ -1,4 +1,5 @@
 import json
+import logging
 import random
 import requests
 from datetime import date, timedelta
@@ -12,6 +13,8 @@ from django.db import transaction
 from django.db.models import F
 from .models import Local
 from catalogo.models import Producto, PreOrden, ProductoTalla
+
+logger = logging.getLogger(__name__)
 
 def lista_locales(request):
     locales = Local.objects.filter(activo=True)
@@ -100,8 +103,8 @@ def enviar_correo_preorden(orden):
             fail_silently=False
         )
         return True
-    except Exception as e:
-        print(f"[EMAIL ERROR]: {e}")
+    except Exception as exc:
+        logger.error('Purchase receipt email failed (exception=%s)', type(exc).__name__)
         return False
 
 def get_timeline_para_orden(orden):
@@ -473,15 +476,26 @@ def api_crear_preorden(request):
                 dhl_tracking=dhl_code,
                 fecha_estimada_entrega=fecha_est
             )
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': f'Error al procesar la compra: {str(e)}'}, status=500)
+    except Exception as exc:
+        logger.error('Purchase processing failed (exception=%s)', type(exc).__name__)
+        return JsonResponse({
+            'success': False,
+            'error': 'No pudimos procesar tu pedido. Intenta nuevamente o contacta a soporte.'
+        }, status=500)
 
     correo_enviado = enviar_correo_preorden(orden)
+    if correo_enviado:
+        mensaje = f"¡Pedido #{orden.codigo_orden} confirmado. El comprobante fue enviado a {email}."
+    else:
+        mensaje = (
+            f"¡Pedido #{orden.codigo_orden} confirmado, pero no pudimos enviar el comprobante. "
+            'Contacta a soporte si necesitas una copia.'
+        )
 
     return JsonResponse({
         'success': True,
         'codigo_orden': orden.codigo_orden,
-        'mensaje': f"¡Compra #{orden.codigo_orden} confirmada exitosamente! Se ha enviado el comprobante a {email}.",
+        'mensaje': mensaje,
         'correo_enviado': correo_enviado,
         'email': email,
         'dhl_tracking': orden.dhl_tracking,

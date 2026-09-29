@@ -569,6 +569,40 @@ class StoreAuthenticationBoundaryTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
+class PurchaseEmailFailureTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth.models import User
+
+        self.user = User.objects.create_user(
+            username='checkout-owner', email='checkout@example.test', password='StrongPassphrase-2026!'
+        )
+        self.product = Producto.objects.create(nombre='Checkout product', precio=1000, precio_usd=1)
+        self.client.force_login(self.user)
+
+    def _purchase(self):
+        return self.client.post(
+            '/api/crear-preorden/',
+            data={'producto_id': self.product.pk, 'cantidad': 1},
+        )
+
+    @patch('locales.views.enviar_correo_preorden', return_value=False)
+    def test_failed_receipt_email_is_not_reported_as_sent(self, _send_email):
+        response = self._purchase()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['correo_enviado'])
+        self.assertNotIn('Se ha enviado el comprobante', response.json()['mensaje'])
+        self.assertIn('no pudimos enviar', response.json()['mensaje'].lower())
+        self.assertNotIn('\ufffd', response.json()['mensaje'])
+
+    @patch('locales.views.PreOrden.objects.create', side_effect=RuntimeError('sensitive database details'))
+    def test_checkout_errors_do_not_leak_internal_exception_text(self, _create_order):
+        response = self._purchase()
+
+        self.assertEqual(response.status_code, 500)
+        self.assertNotIn('sensitive database details', response.json()['error'])
+
+
 
 
 
