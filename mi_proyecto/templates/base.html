@@ -1799,6 +1799,11 @@
         if (data.success) {
           saveGlobalCart([]);
           renderGlobalCart();
+          const receiptStatus = data.correo_enviado === true
+            ? 'El comprobante fue enviado a tu correo.'
+            : data.correo_enviado === false
+              ? 'El pedido quedó registrado, pero no pudimos enviar el comprobante. Contacta a soporte si necesitas una copia.'
+              : data.mensaje;
 
           const bodyEl = document.getElementById('globalCheckoutModalBody');
           if (bodyEl) {
@@ -1812,7 +1817,7 @@
                 <h3 class="acm-success-title">¡PEDIDO CONFIRMADO CON ÉXITO!</h3>
                 <p class="acm-success-msg">
                   Tu reserva de archivo ha sido registrada en el sistema oficial de <strong>SOLARY</strong>.<br>
-                  Hemos enviado tu comprobante y detalles a: <strong>${data.email || payload.email}</strong>.
+                  ${receiptStatus}
                 </p>
 
                 <div class="acm-info-pill-box">
