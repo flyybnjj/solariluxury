@@ -89,3 +89,20 @@ class CustomerPasswordResetForm(PasswordResetForm):
             **{f'{email_field}__iexact': email, 'is_active': True}
         )
         return (user for user in users if getattr(user, email_field, None))
+
+
+class PasswordResetCodeForm(forms.Form):
+    code = forms.RegexField(
+        regex=r'^\d{6}$',
+        error_messages={'invalid': 'Ingresa el código de 6 dígitos.'},
+        widget=forms.TextInput(attrs={
+            'class': 'auth-input',
+            'placeholder': '000000',
+            'inputmode': 'numeric',
+            'autocomplete': 'one-time-code',
+            'maxlength': '6',
+            'pattern': '[0-9]{6}',
+            'required': True,
+        }),
+        label='Código de recuperación',
+    )
