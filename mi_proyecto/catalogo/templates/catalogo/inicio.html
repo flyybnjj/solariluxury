@@ -8525,6 +8525,49 @@
     }
     @media (prefers-reduced-motion: reduce) { .catalog-section::before { animation: none; } }
 
+    .cc-editorial-section { padding:clamp(60px,8vw,110px) 24px; color:#171719; background:#fff; border-top:1px solid #f0f0f2; border-bottom:1px solid #f0f0f2; }
+    .cc-editorial-inner { max-width:1160px; margin:0 auto; }
+    .cc-editorial-heading { display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-bottom:20px; border-bottom:1px solid #e8e8eb; }
+    .cc-editorial-heading span,.cc-editorial-kicker,.cc-editorial-index { color:#8a8a90; font-size:9px; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+    .cc-editorial-heading h2 { margin:0; font-size:clamp(18px,2.2vw,26px); letter-spacing:-.04em; }
+    .cc-editorial-layout { display:grid; grid-template-columns:minmax(150px,1fr) minmax(230px,350px) minmax(180px,1fr); align-items:center; gap:clamp(25px,5vw,76px); padding-top:38px; }
+    .cc-editorial-notes { display:flex; flex-direction:column; gap:17px; }
+    .cc-editorial-notes p { margin:0; color:#4a4a50; font-size:11px; font-weight:700; line-height:2; letter-spacing:.08em; }
+    .cc-editorial-left { text-align:right; align-items:flex-end; }
+    .cc-editorial-right { text-align:left; align-items:flex-start; }
+    .cc-editorial-portrait { margin:0; min-width:0; }
+    .cc-editorial-portrait img { display:block; width:100%; height:clamp(320px,42vw,510px); object-fit:cover; object-position:center 28%; border-radius:4px; background:#f3f3f5; }
+    .cc-editorial-portrait figcaption { margin-top:10px; color:#8a8a90; font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+    .cc-editorial-right blockquote { margin:0; color:#171719; font-size:clamp(19px,2.5vw,29px); font-weight:750; line-height:1.25; letter-spacing:-.045em; }
+    .cc-editorial-right p { font-weight:500; line-height:1.7; letter-spacing:.01em; }
+    .cc-editorial-index { margin-top:12px; font-size:8px; }
+    .campaign-manifesto { padding:clamp(70px,10vw,130px) 24px; color:#171719; background:#f5f5f7; }
+    .campaign-manifesto-inner { max-width:1110px; margin:0 auto; }
+    .campaign-manifesto-label { display:flex; align-items:center; gap:10px; color:#77777e; font-size:9px; font-weight:750; letter-spacing:.17em; text-transform:uppercase; }
+    .campaign-manifesto-label span { width:22px; height:2px; background:linear-gradient(90deg,#e84532,#f28a35); }
+    .campaign-manifesto h2 { max-width:790px; margin:26px 0 18px; font-size:clamp(46px,8vw,100px); line-height:.98; letter-spacing:-.075em; }
+    .campaign-manifesto h2 em { color:#a7a7ad; font-style:normal; }
+    .campaign-manifesto p { max-width:440px; margin:0; color:#68686f; font-size:14px; line-height:1.75; }
+    .campaign-manifesto-signoff { display:flex; align-items:center; gap:12px; margin-top:34px; color:#77777e; font-size:9px; font-weight:750; letter-spacing:.13em; }
+    .campaign-manifesto-rule { width:clamp(40px,10vw,120px); height:1px; background:#d9d9de; }
+    @media(max-width:760px) {
+      .cc-editorial-heading { align-items:flex-start; flex-direction:column; gap:8px; }
+      .cc-editorial-layout { grid-template-columns:1fr 1fr; gap:24px 18px; padding-top:24px; }
+      .cc-editorial-portrait { grid-column:1/-1; grid-row:1; width:min(100%,390px); justify-self:center; }
+      .cc-editorial-portrait img { height:min(105vw,470px); }
+      .cc-editorial-left { text-align:left; align-items:flex-start; }
+      .cc-editorial-right blockquote { font-size:20px; }
+      .campaign-manifesto { padding-left:20px; padding-right:20px; }
+    }
+    @media(prefers-reduced-motion:reduce) { .cc-editorial-section *, .campaign-manifesto * { scroll-behavior:auto; } }
+
+    @media (min-width: 1024px) {
+      .site-header { width: min(1240px, calc(100% - 40px)); max-width: none; justify-content: space-between; gap: 22px; }
+      .site-header > nav { margin-left: clamp(8px, 2.5vw, 34px); }
+      .site-header .header-actions { margin-left: auto; gap: 12px; flex: 0 0 auto; }
+      .apple-user-popover { width: 238px; }
+    }
+
     </style>
 </head>
 <body>
@@ -8740,36 +8783,6 @@
       <li><a href="#campaign">CAMPAIGN</a></li>
       <li><a href="#shop">SHOP</a></li>
       <li><a href="#contact">CONTACT</a></li>
-      {% if request.user.is_staff or request.user.is_superuser %}
-      <li class="header-panel-item">
-        <button type="button" class="header-panel-btn" id="headerPanelBtn" onclick="toggleAppleTray('headerPanelTray', this)">
-          <svg class="anim-pulse" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          <span>ADMIN</span>
-          <span class="apple-chevron">▼</span>
-        </button>
-        <div class="apple-expandable-tray header-panel-tray" id="headerPanelTray">
-          <div class="apple-tray-inner header-panel-inner">
-            <div class="header-panel-group-title">ADMINISTRACIÓN CATÁLOGO (CRUD)</div>
-            <div class="header-panel-row">
-              <a href="{% url 'admin:catalogo_producto_add' %}" class="apple-crud-item apple-crud-add" target="_blank">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> AGREGAR
-              </a>
-              <a href="{% url 'admin:catalogo_producto_changelist' %}" class="apple-crud-item apple-crud-edit" target="_blank">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> MODIFICAR
-              </a>
-              <a href="{% url 'admin:catalogo_producto_changelist' %}" class="apple-crud-item apple-crud-del" target="_blank">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ELIMINAR
-              </a>
-            </div>
-            <div class="header-panel-divider"></div>
-            <a href="{% url 'admin:index' %}" class="header-panel-full-link" target="_blank">
-              <svg class="anim-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              <span>DJANGO ADMIN GENERAL →</span>
-            </a>
-          </div>
-        </div>
-      </li>
-      {% endif %}
     </ul>
   </nav>
 
@@ -8838,10 +8851,12 @@
           <span>Mi Perfil &amp; Pedidos</span>
         </a>
         {% if request.user.is_staff or request.user.is_superuser %}
-        <a href="{% url 'admin_productos' %}" class="user-popover-link" style="color:#ff6b6b; border-top:1px solid rgba(255,51,51,0.2); margin-top:4px; padding-top:8px;">
+        <a href="{% url 'admin_dashboard' %}" class="user-popover-link">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>Gestión de Productos</span>
+          <span>Panel de administración</span>
         </a>
+        <a href="{% url 'admin_productos' %}" class="user-popover-link"><span>▦</span><span>Gestionar productos</span></a>
+        {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="user-popover-link"><span>♙</span><span>Gestionar usuarios</span></a>{% endif %}
         {% endif %}
         <a href="{% url 'logout' %}" class="user-popover-link user-popover-logout">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -8967,202 +8982,13 @@
 <!-- ══════════════════════════════════════════════════════════
      CENTRAL CEE LOOKBOOK CAROUSEL — SECTION 2.5
 ════════════════════════════════════════════════════════════ -->
-<section class="cc-carousel-section" id="editorialLookbook">
-  <div class="cc-carousel-header sr">
-    <div class="cc-carousel-label">
-      <svg class="anim-pulse" width="10" height="10" viewBox="0 0 24 24" fill="#0071e3"><circle cx="12" cy="12" r="10"></circle></svg>
-      ARCHIVE LOOKBOOK 2026
-    </div>
-    <h2 class="cc-carousel-title">CENTRAL CEE × SOLARILUXURY</h2>
-    <p class="cc-carousel-sub">
-      De Shepherd's Bush a la élite mundial. Colección editorial exclusiva, piezas oversized y joyería de lujo en movimiento continuo.
-    </p>
-  </div>
-  <div class="cc-track-container">
-    <div class="cc-track-inner">
-      <!-- SET 1: 10 COMPLETELY DISTINCT EDITORIAL STREETWEAR LOOKS -->
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_01_arena_concert.jpg' %}" alt="Central Cee 4K Arena Concert" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Headline Arena Tour 2026</span>
-          <span class="cc-card-location">London Arena · W12 Special</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_02_highsnobiety_cover.jpg' %}" alt="Highsnobiety Issue 30 Cover" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Highsnobiety Issue 30 Cover</span>
-          <span class="cc-card-location">Cover Shoot · Thom Browne Tailoring</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_03_louis_vuitton_varsity.jpg' %}" alt="Louis Vuitton Varsity Jacket" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Louis Vuitton Varsity Jacket</span>
-          <span class="cc-card-location">Paris Atelier · Public Housing Archive</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_04_jekeun_designer.jpg' %}" alt="JEKEUN London Heavyweight Puffer" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">JEKEUN London Heavyweight Puffer</span>
-          <span class="cc-card-location">Editorial Vault · London Studio</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_05_lacoste_tracksuit.jpg' %}" alt="Pastel Lacoste Archive Tracksuit" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Pastel Lacoste Archive Tracksuit</span>
-          <span class="cc-card-location">Spring Editorial · Minimal Monochrome</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_06_jacquemus_puppies.jpg' %}" alt="Jacquemus Paris Front Row" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Jacquemus Paris Front Row</span>
-          <span class="cc-card-location">Paris Fashion Week · Sherpa &amp; Puppies</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_07_poster_aesthetic.jpg' %}" alt="Pinterest Graphic Moodboard" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Pinterest Graphic Moodboard</span>
-          <span class="cc-card-location">UK Drill Archive · Typography Poster</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_08_trapstar_chenille.jpg' %}" alt="Trapstar Irongate Chenille Tracksuit" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Trapstar Irongate Chenille Tracksuit</span>
-          <span class="cc-card-location">Roadman Essentials · Crossbody Pouch</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_09_wikimedia_portrait.jpg' %}" alt="West London Studio Session" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">West London Studio Session</span>
-          <span class="cc-card-location">Early Archive · Authentic West London</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_10_street_chrome.jpg' %}" alt="Chrome Details &amp; SOLARY Boots" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Chrome Details &amp; SOLARY Boots</span>
-          <span class="cc-card-location">London Underground Series · 3M Flash</span>
-        </div>
-      </div>
-
-      <!-- SET 2: DUPLICATE OF THE EXACT 10 DISTINCT CARDS FOR SEAMLESS INFINITE MARQUEE LOOP -->
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_01_arena_concert.jpg' %}" alt="Central Cee 4K Arena Concert" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Headline Arena Tour 2026</span>
-          <span class="cc-card-location">London Arena · W12 Special</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_02_highsnobiety_cover.jpg' %}" alt="Highsnobiety Issue 30 Cover" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Highsnobiety Issue 30 Cover</span>
-          <span class="cc-card-location">Cover Shoot · Thom Browne Tailoring</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_03_louis_vuitton_varsity.jpg' %}" alt="Louis Vuitton Varsity Jacket" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Louis Vuitton Varsity Jacket</span>
-          <span class="cc-card-location">Paris Atelier · Public Housing Archive</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_04_jekeun_designer.jpg' %}" alt="JEKEUN London Heavyweight Puffer" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">JEKEUN London Heavyweight Puffer</span>
-          <span class="cc-card-location">Editorial Vault · London Studio</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_05_lacoste_tracksuit.jpg' %}" alt="Pastel Lacoste Archive Tracksuit" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Pastel Lacoste Archive Tracksuit</span>
-          <span class="cc-card-location">Spring Editorial · Minimal Monochrome</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_06_jacquemus_puppies.jpg' %}" alt="Jacquemus Paris Front Row" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Jacquemus Paris Front Row</span>
-          <span class="cc-card-location">Paris Fashion Week · Sherpa &amp; Puppies</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_07_poster_aesthetic.jpg' %}" alt="Pinterest Graphic Moodboard" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Pinterest Graphic Moodboard</span>
-          <span class="cc-card-location">UK Drill Archive · Typography Poster</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_08_trapstar_chenille.jpg' %}" alt="Trapstar Irongate Chenille Tracksuit" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Trapstar Irongate Chenille Tracksuit</span>
-          <span class="cc-card-location">Roadman Essentials · Crossbody Pouch</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_09_wikimedia_portrait.jpg' %}" alt="West London Studio Session" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">West London Studio Session</span>
-          <span class="cc-card-location">Early Archive · Authentic West London</span>
-        </div>
-      </div>
-      <div class="cc-card-item">
-        <div class="cc-card-img-wrap">
-          <img src="{% static 'img/carousel/look_10_street_chrome.jpg' %}" alt="Chrome Details &amp; SOLARY Boots" loading="lazy">
-        </div>
-        <div class="cc-card-caption">
-          <span class="cc-card-headline">Chrome Details &amp; SOLARY Boots</span>
-          <span class="cc-card-location">London Underground Series · 3M Flash</span>
-        </div>
-      </div>
+<section class="cc-editorial-section" id="editorialLookbook">
+  <div class="cc-editorial-inner">
+    <div class="cc-editorial-heading"><span>01 / SOLARY EDITORIAL</span><h2>Central Cee × Solaryluxury</h2></div>
+    <div class="cc-editorial-layout">
+      <div class="cc-editorial-notes cc-editorial-left"><span class="cc-editorial-kicker">THE ORIGIN</span><p>WEST LONDON<br>INDEPENDENT SPIRIT<br>BUILT ON FOCUS</p><span class="cc-editorial-index">EST. IN THE ENDS · W12</span></div>
+      <figure class="cc-editorial-portrait"><img src="{% static 'img/carousel/look_01_arena_concert.jpg' %}" alt="Central Cee durante una presentación en vivo" loading="lazy"><figcaption>Central Cee · Solaryluxury archive</figcaption></figure>
+      <div class="cc-editorial-notes cc-editorial-right"><span class="cc-editorial-kicker">OUR MOTTO</span><blockquote>“Built from the ends.<br>Driven by the work.”</blockquote><p>One vision. No shortcuts.<br>Made for what comes next.</p><span class="cc-editorial-index">SOLARY LUXURY · 2026</span></div>
     </div>
   </div>
 </section>
@@ -9249,15 +9075,12 @@
 <!-- ══════════════════════════════════════════════════════════
      CAMPAIGN PHOTO — SECTION 4
 ════════════════════════════════════════════════════════════ -->
-<section class="campaign-section" id="campaignPhoto">
-  <div class="campaign-bg" id="campBg"></div>
-  <div class="campaign-overlay"></div>
-  <div class="campaign-content sr">
-    <div class="campaign-label">SOLARILUXURY × CENTRAL CEE — OFFICIAL COLLAB</div>
-    <h2 class="campaign-title">FROM THE ENDS<br>TO THE WORLD</h2>
-    <p class="campaign-desc">
-      Shepherd's Bush al mundo. Central Cee lidera la colaboración más exclusiva junto a Solariluxury — alta costura streetwear, piezas de edición limitada y joyería icónica diseñadas para marcar época.
-    </p>
+<section class="campaign-manifesto" id="campaignPhoto">
+  <div class="campaign-manifesto-inner">
+    <div class="campaign-manifesto-label"><span></span> THE SOLARY POINT OF VIEW</div>
+    <h2>Made to move.<br><em>Built to last.</em></h2>
+    <p>Streetwear is more than a look. It is the confidence to choose your own direction and the discipline to keep moving.</p>
+    <div class="campaign-manifesto-signoff"><span>FROM WEST LONDON</span><span class="campaign-manifesto-rule"></span><span>TO EVERYWHERE</span></div>
   </div>
 </section>
 
