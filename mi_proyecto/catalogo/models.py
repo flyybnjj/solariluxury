@@ -146,7 +146,7 @@ class PreOrden(models.Model):
     codigo_orden = models.CharField(max_length=50, unique=True, db_index=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name='preordenes',
@@ -208,7 +208,7 @@ class Pedido(models.Model):
     codigo_pedido = models.CharField(max_length=50, unique=True, db_index=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='pedidos',
         null=True,
         blank=True,
@@ -263,7 +263,7 @@ class Tracker(models.Model):
     preorden = models.OneToOneField(PreOrden, on_delete=models.CASCADE, related_name='tracker_rel', null=True, blank=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='trackers',
         null=True,
         blank=True
