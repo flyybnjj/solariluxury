@@ -602,6 +602,49 @@ class PurchaseEmailFailureTests(TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertNotIn('sensitive database details', response.json()['error'])
 
+    @patch('locales.views.enviar_correo_preorden', return_value=True)
+    def test_retry_with_same_key_creates_one_order_and_deducts_stock_once(self, send_email):
+        from catalogo.models import ProductoTalla, Talla
+
+        talla = Talla.objects.create(nombre='M')
+        stock = ProductoTalla.objects.create(producto=self.product, talla=talla, stock=5)
+        payload = {
+            'items': [{'id': self.product.pk, 'quantity': 1, 'size': 'M'}],
+            'idempotency_key': 'qa-checkout-key-0001',
+        }
+        import json
+        first = self.client.post('/api/crear-preorden/', json.dumps(payload), content_type='application/json')
+        second = self.client.post('/api/crear-preorden/', json.dumps(payload), content_type='application/json')
+
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(first.json()['codigo_orden'], second.json()['codigo_orden'])
+        self.assertEqual(PreOrden.objects.count(), 1)
+        stock.refresh_from_db()
+        self.assertEqual(stock.stock, 4)
+        send_email.assert_called_once()
+
+    def test_failed_multi_item_checkout_rolls_back_all_stock_changes(self):
+        from catalogo.models import ProductoTalla, Talla
+
+        talla = Talla.objects.create(nombre='S')
+        second_product = Producto.objects.create(nombre='Out-of-stock checkout item', precio=2000, precio_usd=2)
+        first_stock = ProductoTalla.objects.create(producto=self.product, talla=talla, stock=4)
+        ProductoTalla.objects.create(producto=second_product, talla=talla, stock=0)
+        payload = {
+            'items': [
+                {'id': self.product.pk, 'quantity': 1, 'size': 'S'},
+                {'id': second_product.pk, 'quantity': 1, 'size': 'S'},
+            ],
+        }
+
+        response = self.client.post('/api/crear-preorden/', json.dumps(payload), content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
+        first_stock.refresh_from_db()
+        self.assertEqual(first_stock.stock, 4)
+        self.assertEqual(PreOrden.objects.count(), 0)
+
 
 
 

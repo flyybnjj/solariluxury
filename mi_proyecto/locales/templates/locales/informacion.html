@@ -1314,6 +1314,7 @@
         <!-- Formulario -->
         <form method="POST" action="{% url 'crear_preorden' %}" id="preOrderForm" onsubmit="handlePreOrderSubmit(event)">
           {% csrf_token %}
+          <input type="hidden" name="idempotency_key" value="{{ idempotency_key }}">
 
           <!-- Selector de Producto (Apple Luxury Custom Select) -->
           <div class="preventa-form-group">

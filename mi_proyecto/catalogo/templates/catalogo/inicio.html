@@ -11275,6 +11275,20 @@ function closeCheckoutModal() {
   document.body.style.overflow = '';
 }
 
+function getCheckoutIdempotencyKey() {
+  const storageKey = 'solaryCheckoutIdempotencyKey';
+  try {
+    let key = sessionStorage.getItem(storageKey);
+    if (!key) {
+      key = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+      sessionStorage.setItem(storageKey, key);
+    }
+    return key;
+  } catch (_) {
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
 async function submitCheckoutOrder(e) {
   e.preventDefault();
   if (!cart || !cart.length) {
@@ -11300,7 +11314,8 @@ async function submitCheckoutOrder(e) {
     direccion: formData.get('direccion'),
     notas: formData.get('notas'),
     payment_method: formData.get('payment_method'),
-    items: cart
+    items: cart,
+    idempotency_key: getCheckoutIdempotencyKey()
   };
 
   try {
@@ -11315,6 +11330,7 @@ async function submitCheckoutOrder(e) {
 
     const data = await res.json();
     if (data.success) {
+      try { sessionStorage.removeItem('solaryCheckoutIdempotencyKey'); } catch (_) {}
       const receiptStatus = data.correo_enviado === true
         ? 'El comprobante fue enviado a tu correo.'
         : data.correo_enviado === false

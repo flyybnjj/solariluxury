@@ -3,18 +3,23 @@ import logging
 import random
 import requests
 from datetime import date, timedelta
+import secrets
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.core.mail import send_mail
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import F
 from .models import Local
-from catalogo.models import Producto, PreOrden, ProductoTalla
+from catalogo.models import CheckoutRequest, Producto, PreOrden, ProductoTalla
 
 logger = logging.getLogger(__name__)
+
+
+class InsufficientStockError(Exception):
+    pass
 
 def lista_locales(request):
     locales = Local.objects.filter(activo=True)
@@ -107,6 +112,20 @@ def enviar_correo_preorden(orden):
         logger.error('Purchase receipt email failed (exception=%s)', type(exc).__name__)
         return False
 
+
+def _existing_order_response(orden):
+    return JsonResponse({
+        'success': True,
+        'codigo_orden': orden.codigo_orden,
+        'mensaje': f'Este pedido ya estaba registrado con el código {orden.codigo_orden}.',
+        'correo_enviado': None,
+        'email': orden.email_cliente,
+        'dhl_tracking': orden.dhl_tracking,
+        'precio_fmt': orden.precio_formateado(),
+        'descuento_aplicado': 0,
+        'tracking_url': f"/locales/informacion/?codigo={orden.codigo_orden}",
+    })
+
 def get_timeline_para_orden(orden):
     estados_lista = ['CONFIRMADA', 'CONFECCION', 'CONTROL_CALIDAD', 'DESPACHO_DHL', 'EN_ADUANA', 'ENTREGADA']
     idx_actual = estados_lista.index(orden.estado) if orden.estado in estados_lista else 0
@@ -189,6 +208,7 @@ def informacion(request):
         'timeline': timeline,
         'error_busqueda': error_busqueda,
         'total_productos': productos_preventa.count(),
+        'idempotency_key': secrets.token_urlsafe(32),
     }
     return render(request, 'locales/informacion.html', context)
 
@@ -196,6 +216,18 @@ def informacion(request):
 @login_required(login_url='login')
 def crear_preorden(request):
     if request.method == 'POST':
+        idempotency_key = request.POST.get('idempotency_key', '').strip()
+        if idempotency_key and len(idempotency_key) > 64:
+            return redirect('/locales/informacion/?error=solicitud_invalida')
+        if idempotency_key:
+            existing_request = CheckoutRequest.objects.filter(
+                usuario=request.user,
+                key=idempotency_key,
+            ).select_related('orden').first()
+            if existing_request and existing_request.orden_id:
+                existing_order = existing_request.orden
+                return redirect(f'/locales/informacion/?codigo={existing_order.codigo_orden}&creada=1')
+
         nombre = request.user.get_full_name() or request.user.username
         email = request.user.email
         telefono = request.POST.get('telefono_cliente', '').strip()
@@ -219,23 +251,44 @@ def crear_preorden(request):
         dhl_code = f"DHL-CL-{random.randint(10000000, 99999999)}"
         fecha_est = date.today() + timedelta(days=10)
 
-        orden = PreOrden.objects.create(
-            codigo_orden=codigo_orden,
-            usuario=request.user,
-            nombre_cliente=nombre,
-            email_cliente=email,
-            telefono_cliente=telefono,
-            direccion_entrega=direccion,
-            ciudad=ciudad,
-            producto=producto,
-            talla=talla,
-            cantidad=1,
-            precio_total=producto.precio,
-            notas=notas,
-            estado='CONFIRMADA',
-            dhl_tracking=dhl_code,
-            fecha_estimada_entrega=fecha_est
-        )
+        try:
+            with transaction.atomic():
+                checkout_request = None
+                if idempotency_key:
+                    checkout_request = CheckoutRequest.objects.create(
+                        usuario=request.user,
+                        key=idempotency_key,
+                    )
+                orden = PreOrden.objects.create(
+                    codigo_orden=codigo_orden,
+                    usuario=request.user,
+                    nombre_cliente=nombre,
+                    email_cliente=email,
+                    telefono_cliente=telefono,
+                    direccion_entrega=direccion,
+                    ciudad=ciudad,
+                    producto=producto,
+                    talla=talla,
+                    cantidad=1,
+                    precio_total=producto.precio,
+                    notas=notas,
+                    estado='CONFIRMADA',
+                    dhl_tracking=dhl_code,
+                    fecha_estimada_entrega=fecha_est
+                )
+                if checkout_request:
+                    checkout_request.orden = orden
+                    checkout_request.save(update_fields=['orden'])
+        except IntegrityError:
+            if idempotency_key:
+                existing_request = CheckoutRequest.objects.filter(
+                    usuario=request.user,
+                    key=idempotency_key,
+                ).select_related('orden').first()
+                if existing_request and existing_request.orden_id:
+                    existing_order = existing_request.orden
+                    return redirect(f'/locales/informacion/?codigo={existing_order.codigo_orden}&creada=1')
+            raise
 
         enviar_correo_preorden(orden)
 
@@ -308,6 +361,19 @@ def api_crear_preorden(request):
         data = json.loads(request.body.decode('utf-8'))
     except Exception:
         data = request.POST
+
+    idempotency_key = str(
+        data.get('idempotency_key') or request.headers.get('Idempotency-Key') or ''
+    ).strip()
+    if len(idempotency_key) > 64:
+        return JsonResponse({'success': False, 'error': 'La solicitud de compra no es válida.'}, status=400)
+    if idempotency_key:
+        existing_request = CheckoutRequest.objects.filter(
+            usuario=request.user,
+            key=idempotency_key,
+        ).select_related('orden__producto').first()
+        if existing_request and existing_request.orden_id:
+            return _existing_order_response(existing_request.orden)
 
     nombre = request.user.get_full_name() or request.user.username
     email = request.user.email
@@ -434,6 +500,12 @@ def api_crear_preorden(request):
 
     try:
         with transaction.atomic():
+            checkout_request = None
+            if idempotency_key:
+                checkout_request = CheckoutRequest.objects.create(
+                    usuario=request.user,
+                    key=idempotency_key,
+                )
             for it_res in items_a_reservar:
                 p_obj = it_res['producto']
                 c_qty = it_res['cantidad']
@@ -445,13 +517,16 @@ def api_crear_preorden(request):
                     pt = pt_qs.first()
 
                 if pt:
-                    if pt.stock < c_qty:
-                        return JsonResponse({
-                            'success': False,
-                            'error': f'Stock insuficiente para "{p_obj.nombre}" (Talla: {t_nom}). Stock disponible: {pt.stock}.'
-                        }, status=400)
-                    pt.stock = F('stock') - c_qty
-                    pt.save(update_fields=['stock'])
+                    updated = ProductoTalla.objects.filter(
+                        pk=pt.pk,
+                        stock__gte=c_qty,
+                    ).update(stock=F('stock') - c_qty)
+                    if not updated:
+                        stock_available = ProductoTalla.objects.filter(pk=pt.pk).values_list('stock', flat=True).first() or 0
+                        raise InsufficientStockError(
+                            f'Stock insuficiente para "{p_obj.nombre}" (Talla: {t_nom}). '
+                            f'Stock disponible: {stock_available}.'
+                        )
 
             if cliente_cupon_a_consumir:
                 from django.utils import timezone
@@ -476,7 +551,19 @@ def api_crear_preorden(request):
                 dhl_tracking=dhl_code,
                 fecha_estimada_entrega=fecha_est
             )
+            if checkout_request:
+                checkout_request.orden = orden
+                checkout_request.save(update_fields=['orden'])
+    except InsufficientStockError as exc:
+        return JsonResponse({'success': False, 'error': str(exc)}, status=400)
     except Exception as exc:
+        if idempotency_key:
+            existing_request = CheckoutRequest.objects.filter(
+                usuario=request.user,
+                key=idempotency_key,
+            ).select_related('orden__producto').first()
+            if existing_request and existing_request.orden_id:
+                return _existing_order_response(existing_request.orden)
         logger.error('Purchase processing failed (exception=%s)', type(exc).__name__)
         return JsonResponse({
             'success': False,
