@@ -7,6 +7,11 @@ import json
 
 
 class SupportTicketSecurityTests(TestCase):
+    def test_favicon_redirects_to_store_brand_asset(self):
+        response = self.client.get('/favicon.ico')
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response['Location'], '/static/img/logo_marca.png')
+
     def test_ticket_requires_csrf_and_accepts_valid_contact_from_store_page(self):
         client = Client(enforce_csrf_checks=True)
         payload = json.dumps({
