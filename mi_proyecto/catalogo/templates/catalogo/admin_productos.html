@@ -1,311 +1,109 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Panel Admin — Gestión de Productos | Solariluxury{% endblock %}
-
+{% block title %}Productos | Panel de administración | SOLARY LUXURY{% endblock %}
 {% block extra_head %}
 <style>
-  .admin-page {
-    padding: 60px 0 100px;
-    min-height: 80vh;
-    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(230,0,0,0.10) 0%, transparent 70%);
-  }
-  .admin-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .admin-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.35em;
-    color: var(--accent);
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .admin-eyebrow::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
-  }
-  .admin-title {
-    font-family: var(--font-display);
-    font-size: clamp(28px, 4vw, 52px);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-  .admin-subtitle {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 36px;
-  }
-
-  /* Toolbar */
-  .admin-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .admin-search-form {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .admin-input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: #fff;
-    font-family: var(--font-body);
-    font-size: 13px;
-    padding: 8px 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .admin-input:focus { border-color: rgba(255,255,255,0.4); }
-  .admin-input option { background: #111; }
-  .admin-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 20px;
-    border-radius: 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .admin-btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
-  .admin-btn-primary:hover { background: #cc0000; color: #fff; }
-  .admin-btn-secondary {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid var(--border);
-    color: #fff;
-  }
-  .admin-btn-secondary:hover { background: rgba(255,255,255,0.14); }
-  .admin-btn-danger {
-    background: rgba(230,0,0,0.12);
-    border: 1px solid rgba(230,0,0,0.3);
-    color: #ff6b6b;
-  }
-  .admin-btn-danger:hover { background: rgba(230,0,0,0.22); }
-  .admin-btn-edit {
-    background: rgba(100,210,255,0.10);
-    border: 1px solid rgba(100,210,255,0.25);
-    color: #64d2ff;
-  }
-  .admin-btn-edit:hover { background: rgba(100,210,255,0.20); }
-
-  /* Stats bar */
-  .admin-stats-bar {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 22px;
-    flex-wrap: wrap;
-  }
-  .stat-chip {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-secondary);
-  }
-  .stat-chip strong { color: #fff; }
-
-  /* Product table */
-  .admin-table-wrap {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    overflow: hidden;
-  }
-  .admin-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .admin-table th {
-    background: rgba(255,255,255,0.04);
-    padding: 12px 16px;
-    text-align: left;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .admin-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-    color: var(--text-primary);
-    vertical-align: middle;
-  }
-  .admin-table tr:last-child td { border-bottom: none; }
-  .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-  .prod-thumb {
-    width: 44px; height: 44px;
-    border-radius: 8px;
-    object-fit: contain;
-    background: #111;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .prod-name { font-weight: 600; margin-bottom: 3px; }
-  .prod-cat { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
-  .badge-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 980px;
-    font-size: 10px;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    letter-spacing: 0.04em;
-  }
-  .badge-DISPONIBLE { background: rgba(52,199,89,0.14); color: #34c759; border: 1px solid rgba(52,199,89,0.3); }
-  .badge-AGOTADO { background: rgba(255,59,48,0.14); color: #ff3b30; border: 1px solid rgba(255,59,48,0.3); }
-  .badge-LIMITED { background: rgba(255,149,0,0.14); color: #ff9500; border: 1px solid rgba(255,149,0,0.3); }
-  .row-actions { display: flex; gap: 6px; }
-
-  /* Alerts */
-  {% if messages %}
-  .admin-alert {
-    padding: 12px 18px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    font-size: 13px;
-    font-family: var(--font-body);
-  }
-  .admin-alert-success { background: rgba(52,199,89,0.12); border: 1px solid rgba(52,199,89,0.3); color: #34c759; }
-  .admin-alert-error { background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.3); color: #ff6b6b; }
-  {% endif %}
-
-  @media (max-width: 768px) {
-    .admin-table th:nth-child(4),
-    .admin-table td:nth-child(4),
-    .admin-table th:nth-child(5),
-    .admin-table td:nth-child(5) { display: none; }
-  }
+  :root { --prod-ink:#171719; --prod-muted:#77777e; --prod-line:#e7e7eb; --prod-paper:#fff; --prod-accent:#0071e3; --prod-orange:#4da3f5; }
+  .product-admin-page { min-height:calc(100vh - 100px); padding:34px 24px 64px; color:var(--prod-ink); background:var(--app-backdrop,linear-gradient(135deg,#dce9fb 0%,#f7f8fb 52%,#f6e9f0 100%)); }
+  .product-admin-layout { display:grid; grid-template-columns:230px minmax(0,1fr); gap:24px; max-width:1440px; margin:0 auto; }
+  .product-admin-sidebar { align-self:start; position:sticky; top:24px; padding:20px 14px; border:1px solid rgba(255,255,255,.8); border-radius:22px; background:rgba(255,255,255,.78); box-shadow:0 8px 26px rgba(20,20,30,.06); backdrop-filter:blur(18px); }
+  .product-admin-brand { display:flex; align-items:center; gap:11px; padding:2px 8px 20px; border-bottom:1px solid var(--prod-line); }
+  .product-admin-mark { width:36px; height:36px; display:grid; place-items:center; border-radius:12px; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--prod-accent),var(--prod-orange)); }
+  .product-admin-brand strong { display:block; font-size:13px; letter-spacing:.03em; }
+  .product-admin-brand small { display:block; margin-top:3px; color:var(--prod-muted); font-size:10px; letter-spacing:.13em; }
+  .product-admin-label { margin:20px 10px 8px; color:#96969c; font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+  .product-admin-nav { display:grid; gap:5px; }
+  .product-admin-nav a { display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:12px; color:#626269; font-size:12px; font-weight:650; text-decoration:none; transition:background .18s,color .18s; }
+  .product-admin-nav a:hover,.product-admin-nav a.active { color:var(--prod-ink); background:#f1f1f3; }
+  .product-admin-nav a.active { box-shadow:inset 3px 0 var(--prod-accent); }
+  .product-admin-nav-icon { width:18px; text-align:center; font-size:15px; }
+  .product-admin-main { min-width:0; }
+  .product-admin-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; }
+  .product-admin-kicker { margin:0 0 8px; color:var(--prod-accent); font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+  .product-admin-title { margin:0; font-size:clamp(28px,3vw,40px); line-height:1.08; letter-spacing:-.045em; }
+  .product-admin-subtitle { margin:9px 0 0; color:var(--prod-muted); font-size:13px; }
+  .product-admin-account { padding:10px 14px; border:1px solid var(--prod-line); border-radius:999px; background:rgba(255,255,255,.75); color:#55555b; font-size:11px; white-space:nowrap; }
+  .product-admin-account strong { color:var(--prod-ink); }
+  .product-admin-toolbar { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:15px; margin-bottom:14px; border:1px solid rgba(255,255,255,.8); border-radius:18px; background:rgba(255,255,255,.78); box-shadow:0 6px 20px rgba(20,20,30,.035); backdrop-filter:blur(18px); }
+  .product-admin-search { display:flex; flex:1; flex-wrap:wrap; gap:8px; }
+  .product-admin-input { min-height:40px; padding:0 12px; border:1px solid #dedee3; border-radius:11px; color:#1d1d1f; background:#fff; font:inherit; font-size:12px; }
+  .product-admin-input:focus { outline:2px solid rgba(0,113,227,.22); border-color:var(--prod-accent); }
+  .product-admin-search input { flex:1; min-width:190px; }
+  .product-admin-search select { min-width:170px; }
+  .product-admin-btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:40px; padding:0 15px; border:1px solid var(--prod-line); border-radius:999px; color:#3d3d42; background:#fff; font:inherit; font-size:11px; font-weight:750; text-decoration:none; white-space:nowrap; cursor:pointer; transition:background .2s,border-color .2s,transform .2s; }
+  .product-admin-btn:hover { transform:translateY(-1px); background:#f7f7f8; }
+  .product-admin-btn.primary { border-color:transparent; color:#fff; background:linear-gradient(110deg,var(--prod-accent),var(--prod-orange)); }
+  .product-admin-btn.primary:hover { color:#fff; filter:brightness(.97); }
+  .product-admin-btn.edit { min-height:32px; border-color:#e3e3e7; padding:0 12px; font-size:10px; }
+  .product-admin-btn.danger { min-height:32px; padding:0 12px; border-color:#c8ddf8; color:#0071e3; font-size:10px; }
+  .product-admin-stats { display:flex; gap:10px; margin-bottom:14px; }
+  .product-admin-stat { padding:10px 14px; border:1px solid rgba(255,255,255,.8); border-radius:13px; background:rgba(255,255,255,.75); color:var(--prod-muted); font-size:11px; }
+  .product-admin-stat strong { color:var(--prod-ink); }
+  .product-admin-table-wrap { overflow-x:auto; border:1px solid rgba(255,255,255,.85); border-radius:19px; background:rgba(255,255,255,.84); box-shadow:0 8px 26px rgba(20,20,30,.045); backdrop-filter:blur(18px); }
+  .product-admin-table { width:100%; min-width:820px; border-collapse:collapse; }
+  .product-admin-table th { padding:12px 15px; color:#92929a; background:rgba(255,255,255,.5); font-size:9px; font-weight:700; letter-spacing:.1em; text-align:left; text-transform:uppercase; }
+  .product-admin-table td { padding:12px 15px; border-top:1px solid #f0f0f2; color:#5d5d64; font-size:11px; vertical-align:middle; }
+  .product-admin-table td:first-child { color:var(--prod-muted); font-size:10px; }
+  .product-admin-table tr:hover td { background:rgba(255,255,255,.55); }
+  .product-admin-thumb { width:44px; height:44px; display:block; object-fit:contain; border:1px solid #eeeef1; border-radius:10px; background:#fff; }
+  .product-admin-name { color:var(--prod-ink); font-size:12px; font-weight:700; }
+  .product-admin-sub { margin-top:3px; color:#909097; font-size:10px; }
+  .product-admin-price { color:var(--prod-ink)!important; font-weight:700; white-space:nowrap; }
+  .product-admin-badge { display:inline-flex; padding:5px 9px; border:1px solid #d4ead8; border-radius:999px; color:#26733b; background:#f1faf2; font-size:9px; font-weight:700; white-space:nowrap; }
+  .product-admin-badge[data-state="AGOTADO"] { border-color:#c8ddf8; color:#0071e3; background:#f3f8ff; }
+  .product-admin-actions { display:flex; align-items:center; gap:6px; }
+  .product-admin-alert { padding:11px 14px; margin-bottom:14px; border:1px solid #d3ead8; border-radius:13px; color:#276e39; background:#f2faf3; font-size:12px; }
+  .product-admin-empty { padding:36px!important; color:var(--prod-muted)!important; text-align:center; }
+  @media(max-width:1000px) { .product-admin-layout { grid-template-columns:1fr; } .product-admin-sidebar { position:static; padding:12px; } .product-admin-brand { padding-bottom:12px; } .product-admin-label { display:none; } .product-admin-nav { display:flex; overflow-x:auto; padding-top:10px; } .product-admin-nav a { flex:0 0 auto; padding:10px; } }
+  @media(max-width:700px) { .product-admin-page { padding:20px 12px 42px; } .product-admin-heading { align-items:flex-start; flex-direction:column; } .product-admin-toolbar { align-items:stretch; flex-direction:column; } .product-admin-search { display:grid; grid-template-columns:1fr 1fr; } .product-admin-search input { grid-column:1/-1; min-width:0; } .product-admin-search select,.product-admin-btn { width:100%; min-width:0; } .product-admin-stats { flex-wrap:wrap; } }
+  @media(prefers-reduced-motion:reduce) { .product-admin-nav a,.product-admin-btn { transition:none; } .product-admin-btn:hover { transform:none; } }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="admin-page">
-  <div class="admin-container">
+<main class="product-admin-page"><div class="product-admin-layout">
+  <aside class="product-admin-sidebar" aria-label="Navegación de administración">
+    <div class="product-admin-brand"><span class="product-admin-mark">S</span><span><strong>SOLARY LUXURY</strong><small>ADMIN STUDIO</small></span></div>
+    <p class="product-admin-label">Workspace</p>
+    <nav class="product-admin-nav">
+      <a href="{% url 'admin_dashboard' %}"><span class="product-admin-nav-icon">⌂</span>Resumen</a>
+      <a class="active" href="{% url 'admin_productos' %}"><span class="product-admin-nav-icon">▦</span>Productos</a>
+      {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}"><span class="product-admin-nav-icon">♙</span>Usuarios</a>{% endif %}
+    </nav>
+    <p class="product-admin-label">Tienda</p>
+    <nav class="product-admin-nav"><a href="{% url 'inicio' %}"><span class="product-admin-nav-icon">↗</span>Volver a la tienda</a><a href="{% url 'admin:index' %}"><span class="product-admin-nav-icon">⚙</span>Admin de Django</a></nav>
+  </aside>
 
-    <div class="admin-eyebrow">PANEL ADMINISTRADOR — SOLARILUXURY</div>
-    <h1 class="admin-title">GESTIÓN DE PRODUCTOS</h1>
-    <p class="admin-subtitle">Agregar, editar y eliminar productos del catálogo oficial.</p>
+  <section class="product-admin-main">
+    <header class="product-admin-heading"><div><p class="product-admin-kicker">SOLARY LUXURY · CATÁLOGO</p><h1 class="product-admin-title">Gestión de productos</h1><p class="product-admin-subtitle">Administra las piezas y su disponibilidad.</p></div><div class="product-admin-account">Sesión: <strong>{{ request.user.get_short_name|default:request.user.username }}</strong></div></header>
+    {% for msg in messages %}<div class="product-admin-alert" role="status">{{ msg }}</div>{% endfor %}
 
-    {% for msg in messages %}
-    <div class="admin-alert admin-alert-{{ msg.tags }}">{{ msg }}</div>
-    {% endfor %}
-
-    <div class="admin-toolbar">
-      <form method="GET" class="admin-search-form">
-        <input type="text" name="q" placeholder="Buscar producto…" value="{{ q }}" class="admin-input" style="min-width:220px;">
-        <select name="categoria" class="admin-input">
+    <div class="product-admin-toolbar">
+      <form method="GET" class="product-admin-search" role="search">
+        <input type="search" name="q" placeholder="Buscar producto…" value="{{ q }}" class="product-admin-input" aria-label="Buscar producto">
+        <select name="categoria" class="product-admin-input" aria-label="Filtrar por categoría">
           <option value="">Todas las categorías</option>
-          {% for cat in categorias %}
-          <option value="{{ cat.id }}" {% if cat_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nombre }}</option>
-          {% endfor %}
+          {% for cat in categorias %}<option value="{{ cat.id }}" {% if cat_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nombre }}</option>{% endfor %}
         </select>
-        <button type="submit" class="admin-btn admin-btn-secondary">FILTRAR</button>
-        {% if q or cat_id %}<a href="{% url 'admin_productos' %}" class="admin-btn admin-btn-secondary">LIMPIAR</a>{% endif %}
+        <button type="submit" class="product-admin-btn">Buscar</button>
+        {% if q or cat_id %}<a href="{% url 'admin_productos' %}" class="product-admin-btn">Limpiar</a>{% endif %}
       </form>
-      <a href="{% url 'admin_crear_producto' %}" class="admin-btn admin-btn-primary">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        AGREGAR PRODUCTO
-      </a>
+      <a href="{% url 'admin_crear_producto' %}" class="product-admin-btn primary"><span aria-hidden="true">＋</span>Agregar producto</a>
     </div>
 
-    <div class="admin-stats-bar">
-      <div class="stat-chip"><strong>{{ total }}</strong> producto{{ total|pluralize:"s" }} encontrado{{ total|pluralize:"s" }}</div>
-      <div class="stat-chip">Admin: <strong>{{ request.user.email }}</strong></div>
-    </div>
-
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Estado</th>
-            <th>Precio CLP</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for prod in productos %}
-          <tr>
-            <td style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">#{{ prod.id }}</td>
-            <td>
-              <img src="{% static prod.imagen %}" alt="{{ prod.nombre }}" class="prod-thumb"
-                   onerror="this.src='{% static "img/placeholder.jpg" %}'">
-            </td>
-            <td>
-              <div class="prod-name">{{ prod.nombre }}</div>
-              {% if prod.subtitulo %}<div class="prod-cat">{{ prod.subtitulo|truncatechars:40 }}</div>{% endif %}
-            </td>
-            <td style="font-size:12px; color:var(--text-secondary);">{{ prod.categoria.nombre|default:"—" }}</td>
-            <td>
-              <span class="badge-pill badge-{{ prod.badge_estado|cut:" "|cut:"/" }}">{{ prod.badge_estado }}</span>
-            </td>
-            <td style="font-family: var(--font-mono); font-size: 13px; white-space: nowrap;">
-              ${{ prod.precio|floatformat:0 }}
-            </td>
-            <td>
-              <div class="row-actions">
-                <a href="{% url 'admin_editar_producto' prod.id %}" class="admin-btn admin-btn-edit" style="padding:6px 14px; font-size:10px;">
-                  EDITAR
-                </a>
-                <a href="{% url 'admin_eliminar_producto' prod.id %}" class="admin-btn admin-btn-danger" style="padding:6px 14px; font-size:10px;">
-                  ELIMINAR
-                </a>
-              </div>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7" style="text-align:center; color: var(--text-muted); padding: 48px; font-family: var(--font-mono); font-size: 12px;">
-              No se encontraron productos.
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
-      <a href="{% url 'admin_dashboard' %}" class="admin-btn admin-btn-secondary">PANEL DE ADMINISTRACIÓN</a>
-      {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="admin-btn admin-btn-secondary">GESTIÓN DE USUARIOS</a>{% endif %}
-      <a href="{% url 'lista_productos' %}" class="admin-btn admin-btn-secondary">← VER CATÁLOGO</a>
-      <a href="{% url 'perfil' %}" class="admin-btn admin-btn-secondary">MI PERFIL</a>
-      <a href="{% url 'admin:index' %}" target="_blank" class="admin-btn admin-btn-secondary">DJANGO ADMIN ↗</a>
-    </div>
-
-  </div>
-</div>
+    <div class="product-admin-stats"><div class="product-admin-stat"><strong>{{ total }}</strong> producto{{ total|pluralize:"s" }} encontrado{{ total|pluralize:"s" }}</div></div>
+    <div class="product-admin-table-wrap"><table class="product-admin-table"><thead><tr><th>ID</th><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Estado</th><th>Precio CLP</th><th>Acciones</th></tr></thead><tbody>
+      {% for prod in productos %}<tr>
+        <td>#{{ prod.id }}</td>
+        <td><img src="{% static prod.imagen %}" alt="{{ prod.nombre }}" class="product-admin-thumb" onerror="this.src='{% static "img/placeholder.jpg" %}'"></td>
+        <td><div class="product-admin-name">{{ prod.nombre }}</div>{% if prod.subtitulo %}<div class="product-admin-sub">{{ prod.subtitulo|truncatechars:40 }}</div>{% endif %}</td>
+        <td>{{ prod.categoria.nombre|default:"—" }}</td>
+        <td><span class="product-admin-badge" data-state="{{ prod.badge_estado }}">{{ prod.badge_estado }}</span></td>
+        <td class="product-admin-price">${{ prod.precio|floatformat:0 }}</td>
+        <td><div class="product-admin-actions"><a href="{% url 'admin_editar_producto' prod.id %}" class="product-admin-btn edit">Modificar</a><a href="{% url 'admin_eliminar_producto' prod.id %}" class="product-admin-btn danger">Eliminar</a></div></td>
+      </tr>{% empty %}<tr><td colspan="7" class="product-admin-empty">No se encontraron productos.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+</div></main>
 {% endblock %}

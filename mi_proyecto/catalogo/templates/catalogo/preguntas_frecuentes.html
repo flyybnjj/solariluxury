@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Preguntas frecuentes | SOLARY LUXURY{% endblock %}
+{% block extra_head %}
+<style>
+  .faq-page { min-height:calc(100vh - 160px); padding:clamp(36px,6vw,76px) 20px; color:#1d1d1f; background:var(--app-backdrop,linear-gradient(135deg,#dce9fb,#f7f8fb)); }
+  .faq-wrap { width:min(100%,1040px); margin:0 auto; }
+  .faq-intro { max-width:680px; margin:0 auto 38px; text-align:center; }
+  .faq-kicker { color:#0071e3; font-size:10px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
+  .faq-intro h1 { margin:12px 0; font-size:clamp(38px,7vw,66px); line-height:1; letter-spacing:-.07em; }
+  .faq-intro p { color:#65656c; font-size:14px; line-height:1.65; }
+  .faq-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr); align-items:start; gap:20px; }
+  .faq-panel,.faq-reviews { padding:22px; border:1px solid rgba(255,255,255,.86); border-radius:22px; background:rgba(255,255,255,.76); box-shadow:0 15px 42px rgba(35,54,80,.07); backdrop-filter:blur(20px); }
+  .faq-panel h2,.faq-reviews h2 { margin:0 0 16px; font-size:17px; letter-spacing:-.03em; }
+  .faq-item { border-top:1px solid rgba(20,30,45,.1); }
+  .faq-item summary { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 2px; color:#25252a; font-size:13px; font-weight:750; cursor:pointer; list-style:none; }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary::after { content:"＋"; color:#0071e3; font-size:17px; }
+  .faq-item[open] summary::after { content:"−"; }
+  .faq-item p { padding:0 24px 16px 2px; color:#66666e; font-size:12px; line-height:1.65; }
+  .faq-review-note { margin:-5px 0 16px; padding:11px 12px; border:1px solid #c8ddf8; border-radius:12px; color:#31577f; background:rgba(0,113,227,.06); font-size:10px; line-height:1.55; }
+  .faq-sample-rating { display:flex; align-items:center; gap:11px; padding:14px; margin-bottom:12px; border:1px solid #e5e9f0; border-radius:15px; background:rgba(255,255,255,.76); }
+  .faq-sample-rating strong { font-size:28px; letter-spacing:-.06em; }
+  .faq-stars { color:#0071e3; font-size:16px; letter-spacing:.08em; }
+  .faq-sample-rating small { display:block; margin-top:3px; color:#85858c; font-size:9px; }
+  .faq-review-card { padding:14px; margin-top:10px; border:1px solid #e8eaf0; border-radius:15px; background:rgba(255,255,255,.68); }
+  .faq-review-card .faq-stars { font-size:12px; }
+  .faq-review-card p { margin-top:7px; color:#55555d; font-size:11px; line-height:1.6; }
+  .faq-review-card small { display:block; margin-top:8px; color:#8b8b92; font-size:9px; }
+  .faq-contact { display:inline-flex; align-items:center; justify-content:center; min-height:42px; width:100%; margin-top:16px; border-radius:999px; color:#fff; background:#0071e3; font-size:11px; font-weight:750; text-decoration:none; transition:background .2s,transform .2s; }
+  .faq-contact:hover { color:#fff; background:#0067cf; transform:translateY(-1px); }
+  @media(max-width:760px) { .faq-grid { grid-template-columns:1fr; } .faq-panel,.faq-reviews { padding:18px; } }
+  @media(prefers-reduced-motion:reduce) { .faq-contact { transition:none; } .faq-contact:hover { transform:none; } }
+</style>
+{% endblock %}
+{% block content %}
+<main class="faq-page"><div class="faq-wrap">
+  <header class="faq-intro"><span class="faq-kicker">SOLARY LUXURY · AYUDA</span><h1>¿En qué te ayudamos?</h1><p>Respuestas claras sobre cuentas, catálogo, compras, envíos y seguimiento.</p></header>
+  <div class="faq-grid">
+    <section class="faq-panel" aria-labelledby="faq-list-title"><h2 id="faq-list-title">Preguntas frecuentes</h2>
+      <details class="faq-item"><summary>¿Cómo creo una cuenta?</summary><p>Abre el menú de inicio de sesión, elige “Crear una cuenta” y completa usuario, correo y contraseña. Tus datos quedan guardados en la base de datos de la tienda.</p></details>
+      <details class="faq-item"><summary>¿Cómo recupero mi contraseña?</summary><p>En la pantalla de inicio de sesión selecciona “¿Olvidaste tu contraseña?”, ingresa el correo asociado y sigue el código de recuperación que recibirás por email.</p></details>
+      <details class="faq-item"><summary>¿Cómo compro un producto?</summary><p>Abre el catálogo, selecciona una pieza disponible y agrégala a la bolsa. Continúa el proceso de compra y revisa los datos antes de confirmar.</p></details>
+      <details class="faq-item"><summary>¿Cómo reviso mis pedidos?</summary><p>Inicia sesión y entra a “Mi Perfil &amp; Pedidos” desde el icono de usuario. Allí aparecen las compras asociadas a tu cuenta y su estado.</p></details>
+      <details class="faq-item"><summary>¿Dónde está el seguimiento de envíos?</summary><p>El Tracker está en construcción. Mientras se habilita, consulta el estado desde tu perfil o contacta al equipo de atención con tu número de pedido.</p></details>
+      <details class="faq-item"><summary>¿Qué medios de pago aceptan?</summary><p>Los medios disponibles se muestran durante el checkout. Confirma el total y las condiciones antes de finalizar la compra.</p></details>
+      <details class="faq-item"><summary>¿Cómo sé si una pieza está disponible?</summary><p>El catálogo muestra el estado de cada producto. Las piezas agotadas aparecen marcadas y no permiten agregarse a la bolsa.</p></details>
+      <details class="faq-item"><summary>¿Cómo contacto a la tienda?</summary><p>Usa los canales de contacto publicados en la sección de atención de la página para resolver dudas sobre productos o pedidos.</p></details>
+      <details class="faq-item"><summary>¿Puedo cambiar o cancelar una compra?</summary><p>Contacta al equipo de atención cuanto antes e incluye el número de pedido. Las opciones dependen del estado en que se encuentre la preparación o el envío.</p></details>
+      <details class="faq-item"><summary>¿Qué hago si olvidé mi contraseña?</summary><p>Usa la opción de recuperación en el inicio de sesión, solicita el código por correo y crea una contraseña nueva desde el enlace o formulario indicado.</p></details>
+      <details class="faq-item"><summary>¿Puedo comprar sin iniciar sesión?</summary><p>La tienda puede solicitar una cuenta para asociar y mostrar el pedido. Si se requiere iniciar sesión, sigue el acceso indicado durante la compra.</p></details>
+      <details class="faq-item"><summary>¿Cómo actualizo mis datos de contacto?</summary><p>Inicia sesión y revisa las opciones disponibles en tu perfil. Si no puedes editar un dato desde allí, contacta a atención al cliente.</p></details>
+    </section>
+    <aside class="faq-reviews" aria-labelledby="faq-reviews-title"><h2 id="faq-reviews-title">Reseñas · vista previa</h2>
+      <p class="faq-review-note"><strong>Demostración:</strong> estas tarjetas y sus cinco estrellas son contenido de muestra. No son opiniones reales, no están verificadas y no representan reseñas de Google.</p>
+      <div class="faq-sample-rating"><div><strong>5.0</strong><div class="faq-stars" aria-label="Cinco estrellas de muestra">★★★★★</div></div><div><small>Calificación visual de ejemplo</small><small>No corresponde a una puntuación publicada</small></div></div>
+      <article class="faq-review-card"><div class="faq-stars" aria-label="Cinco estrellas de muestra">★★★★★</div><p>“La presentación de la colección se ve increíble y fue fácil encontrar lo que buscaba.”</p><small>Opinión simulada · Ejemplo 01</small></article>
+      <article class="faq-review-card"><div class="faq-stars" aria-label="Cinco estrellas de muestra">★★★★★</div><p>“Una experiencia de compra clara, con detalles útiles de cada pieza.”</p><small>Opinión simulada · Ejemplo 02</small></article>
+      <article class="faq-review-card"><div class="faq-stars" aria-label="Cinco estrellas de muestra">★★★★★</div><p>“El catálogo reúne estilos muy buenos y se navega cómodamente desde el teléfono.”</p><small>Opinión simulada · Ejemplo 03</small></article>
+      <a class="faq-contact" href="https://wa.me/56991234567" target="_blank" rel="noopener noreferrer">Contactar atención al cliente</a>
+    </aside>
+  </div>
+</div></main>
+{% endblock %}

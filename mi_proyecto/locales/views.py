@@ -166,51 +166,7 @@ def get_timeline_para_orden(orden):
 @never_cache
 @login_required(login_url='login')
 def informacion(request):
-    valor_dolar = "No disponible"
-    estado_api = "Sin conexion"
-    try:
-        response = requests.get('https://mindicador.cl/api/dolar', timeout=2.5)
-        if response.status_code == 200:
-            datos = response.json()
-            valor_raw = datos['serie'][0]['valor']
-            valor_dolar = f"{valor_raw:.2f}".replace('.', ',')
-            estado_api = "Conexion en tiempo real exitosa"
-        else:
-            valor_dolar = "940,50 (Estimado)"
-            estado_api = "Modo contingencia / API en espera"
-    except Exception:
-        valor_dolar = "940,50 (Estimado)"
-        estado_api = "Modo contingencia / Fuera de linea"
-
-    codigo_query = request.GET.get('codigo', '').strip()
-    orden_encontrada = None
-    timeline = []
-    error_busqueda = None
-
-    if codigo_query:
-        orden_encontrada = PreOrden.objects.filter(
-            codigo_orden__iexact=codigo_query,
-            usuario=request.user,
-        ).select_related('producto').first()
-        if orden_encontrada:
-            timeline = get_timeline_para_orden(orden_encontrada)
-        else:
-            error_busqueda = f"No se encontró ninguna pre-orden registrada con el código '{codigo_query}'."
-
-    productos_preventa = Producto.objects.all().order_by('id')
-
-    context = {
-        'dolar': valor_dolar,
-        'estado_api': estado_api,
-        'productos': productos_preventa,
-        'codigo_query': codigo_query,
-        'orden': orden_encontrada,
-        'timeline': timeline,
-        'error_busqueda': error_busqueda,
-        'total_productos': productos_preventa.count(),
-        'idempotency_key': secrets.token_urlsafe(32),
-    }
-    return render(request, 'locales/informacion.html', context)
+    return render(request, 'locales/informacion.html')
 
 @never_cache
 @login_required(login_url='login')

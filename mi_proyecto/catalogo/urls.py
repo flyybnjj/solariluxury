@@ -4,6 +4,7 @@ from locales import views as locales_views
 
 urlpatterns = [
     path('', views.inicio, name='inicio'),
+    path('preguntas-frecuentes/', views.preguntas_frecuentes, name='preguntas_frecuentes'),
     path('productos/', views.lista_productos, name='lista_productos'),
     path('productos/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
     path('bloquear-tienda/', views.bloquear_tienda, name='bloquear_tienda'),

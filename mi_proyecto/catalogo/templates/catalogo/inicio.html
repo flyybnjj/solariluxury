@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <link rel="icon" type="image/png" href="{% static 'img/logo_marca.png' %}">
   <meta charset="UTF-8">
@@ -13,13 +13,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/site-typography.css' %}">
 
-  <script>
-    (function() {
-      var saved = localStorage.getItem('solari_theme');
-      var theme = saved ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      document.documentElement.setAttribute('data-theme', theme);
-    })();
-  </script>
 
   <style>
     /* ======================================================
@@ -41,8 +34,8 @@
       --text-muted: rgba(255, 255, 255, 0.42);
       --border: rgba(255, 255, 255, 0.1);
       --border-hover: rgba(255, 255, 255, 0.28);
-      --accent: #ff2a2a;
-      --accent-glow: rgba(255, 42, 42, 0.35);
+      --accent: #0071e3;
+      --accent-glow: rgba(0, 113, 227, 0.16);
       --notch-bg: rgba(14, 14, 18, 0.88);
       --notch-border: rgba(255, 255, 255, 0.12);
       --notch-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
@@ -73,8 +66,8 @@
       --text-muted: #6b7280;
       --border: rgba(0, 0, 0, 0.09);
       --border-hover: rgba(0, 0, 0, 0.22);
-      --accent: #d90429;
-      --accent-glow: rgba(217, 4, 41, 0.2);
+      --accent: #0071e3;
+      --accent-glow: rgba(0, 113, 227, 0.12);
       --notch-bg: rgba(255, 255, 255, 0.9);
       --notch-border: rgba(0, 0, 0, 0.12);
       --notch-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
@@ -245,7 +238,7 @@
 
     /* Red and Orange Animated Gradient Text */
     .vip-gradient-text {
-      background: linear-gradient(90deg, #ff1a1a, #ff7a00, #ff1a1a, #ff8c00);
+      background: linear-gradient(90deg, #0071e3, #1684ed, #0071e3, #54a4f5);
       background-size: 250% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -274,8 +267,8 @@
     }
     .anim-flame { animation: iconFlameAnim 1.8s ease-in-out infinite alternate; }
     @keyframes iconFlameAnim {
-      0% { transform: scale(1); filter: drop-shadow(0 0 2px #ff3333); }
-      100% { transform: scale(1.15) translateY(-2px); filter: drop-shadow(0 0 7px #ff8c00); }
+      0% { transform: scale(1); filter: drop-shadow(0 0 2px #0071e3); }
+      100% { transform: scale(1.15) translateY(-2px); filter: drop-shadow(0 0 7px #54a4f5); }
     }
     .anim-heart { transition: transform 0.2s; }
     .anim-heart:hover { transform: scale(1.25); }
@@ -349,7 +342,7 @@
        SCROLLBAR
     ====================================================== */
     ::-webkit-scrollbar { width: 2px; }
-    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-track { background: #e8eef6; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
 
     /* ======================================================
@@ -731,7 +724,7 @@
                      0 0 90px rgba(255, 255, 255, 0.5);
       }
       45% {
-        color: #ff6b35;
+        color: #1684ed;
         text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         transform: translateY(-3px) scale(1.06);
       }
@@ -1120,7 +1113,7 @@
     .big-text .word.lit { color: #0a0a0a; }
     .big-text em {
       font-style: normal;
-      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%);
+      background: linear-gradient(90deg, #0071e3 0%, #1684ed 52%, #54a4f5 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       animation: appleGradientShimmer 4s ease-in-out infinite, appleEmPulse 3.5s ease-in-out infinite alternate;
@@ -1146,7 +1139,7 @@
     /* Decorative red line */
     .section-rule {
       width: 60px; height: 2px;
-      background: linear-gradient(90deg, #ff3b30, #ff9f0a);
+      background: linear-gradient(90deg, #0071e3, #54a4f5);
       margin-bottom: 32px;
     }
     .section-label {
@@ -1235,7 +1228,7 @@
       background: #34c759;
     }
     .badge-dot-live.red {
-      background: #ff3b30;
+      background: #0071e3;
     }
     .badge-dot-live.green {
       background: #34c759;
@@ -2289,13 +2282,13 @@
     .pc-wish-btn:hover {
       background: rgba(255, 59, 48, 0.12);
       border-color: rgba(255, 59, 48, 0.3);
-      color: #ff3b30;
+      color: #0071e3;
       transform: scale(1.08);
     }
     .pc-wish-btn.active {
       background: rgba(255, 59, 48, 0.15);
       border-color: rgba(255, 59, 48, 0.35);
-      color: #ff3b30;
+      color: #0071e3;
       box-shadow: 0 2px 10px rgba(255, 59, 48, 0.25);
     }
 
@@ -2354,10 +2347,10 @@
     .badge-ltd {
       background: rgba(255, 59, 48, 0.12);
       border: 1px solid rgba(255, 59, 48, 0.28);
-      color: #ff3b30;
+      color: #0071e3;
     }
     .badge-ltd::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%; background: #ff3b30;
+      content: ''; width: 5px; height: 5px; border-radius: 50%; background: #0071e3;
       animation: pulseDot 2s infinite;
     }
 
@@ -3008,7 +3001,7 @@
     .cd-item-name { font-size: 13px; font-weight: var(--fw-main); margin-bottom: 4px; line-height: 1.3; color: #0a0a0a; }
     .cd-item-price { font-family: var(--font-main); font-size: 13px; color: rgba(0,0,0,0.55); }
     .cd-item-rm { background: none; border: none; color: rgba(0,0,0,0.35); cursor: pointer; font-size: 14px; transition: color 0.2s; }
-    .cd-item-rm:hover { color: #ff3b30; }
+    .cd-item-rm:hover { color: #0071e3; }
     .cd-foot { padding: 20px 24px 32px; border-top: 1px solid #ebebef; background: #fafafc; }
     .cd-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .cd-total-label { font-size: 13px; color: rgba(0,0,0,0.5); }
@@ -3244,7 +3237,7 @@
        SCROLLBAR
     ====================================================== */
     ::-webkit-scrollbar { width: 2px; }
-    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-track { background: #e8eef6; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
 
     /* ======================================================
@@ -3689,7 +3682,7 @@
     .header-wish:hover {
       background: rgba(255, 255, 255, 0.09) !important;
       transform: scale(1.06);
-      color: #ff3b30;
+      color: #0071e3;
     }
     .header-wish:active {
       transform: scale(0.94);
@@ -3702,7 +3695,7 @@
       height: 14px;
       padding: 0 3px;
       border-radius: 9999px;
-      background: #ff3b30;
+      background: #0071e3;
       color: #ffffff;
       font-size: 8.5px;
       font-weight: var(--fw-main);
@@ -3762,7 +3755,7 @@
     html[data-theme="light"] .header-wish:hover,
     .site-header.light-mode .header-wish:hover {
       background: rgba(0, 0, 0, 0.05) !important;
-      color: #ff3b30;
+      color: #0071e3;
     }
     html[data-theme="light"] .header-bag,
     .site-header.light-mode .header-bag {
@@ -3876,7 +3869,7 @@
                      0 0 90px rgba(255, 255, 255, 0.5);
       }
       45% {
-        color: #ff6b35;
+        color: #1684ed;
         text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         transform: translateY(-3px) scale(1.06);
       }
@@ -4265,7 +4258,7 @@
     .big-text .word.lit { color: #0a0a0a; }
     .big-text em {
       font-style: normal;
-      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%);
+      background: linear-gradient(90deg, #0071e3 0%, #1684ed 52%, #54a4f5 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       animation: appleGradientShimmer 4s ease-in-out infinite, appleEmPulse 3.5s ease-in-out infinite alternate;
@@ -4291,7 +4284,7 @@
     /* Decorative red line */
     .section-rule {
       width: 60px; height: 2px;
-      background: linear-gradient(90deg, #ff3b30, #ff9f0a);
+      background: linear-gradient(90deg, #0071e3, #54a4f5);
       margin-bottom: 32px;
     }
     .section-label {
@@ -4380,7 +4373,7 @@
       background: #34c759;
     }
     .badge-dot-live.red {
-      background: #ff3b30;
+      background: #0071e3;
     }
     .badge-dot-live.green {
       background: #34c759;
@@ -5386,13 +5379,13 @@
     .pc-wish-btn:hover {
       background: rgba(255, 59, 48, 0.12);
       border-color: rgba(255, 59, 48, 0.3);
-      color: #ff3b30;
+      color: #0071e3;
       transform: scale(1.08);
     }
     .pc-wish-btn.active {
       background: rgba(255, 59, 48, 0.15);
       border-color: rgba(255, 59, 48, 0.35);
-      color: #ff3b30;
+      color: #0071e3;
       box-shadow: 0 2px 10px rgba(255, 59, 48, 0.25);
     }
 
@@ -5451,10 +5444,10 @@
     .badge-ltd {
       background: rgba(255, 59, 48, 0.12);
       border: 1px solid rgba(255, 59, 48, 0.28);
-      color: #ff3b30;
+      color: #0071e3;
     }
     .badge-ltd::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%; background: #ff3b30;
+      content: ''; width: 5px; height: 5px; border-radius: 50%; background: #0071e3;
       animation: pulseDot 2s infinite;
     }
 
@@ -6146,7 +6139,7 @@
     .cd-item-name { font-size: 13px; font-weight: var(--fw-main); margin-bottom: 4px; line-height: 1.3; color: #0a0a0a; }
     .cd-item-price { font-family: var(--font-main); font-size: 13px; color: rgba(0,0,0,0.55); }
     .cd-item-rm { background: none; border: none; color: rgba(0,0,0,0.35); cursor: pointer; font-size: 14px; transition: color 0.2s; }
-    .cd-item-rm:hover { color: #ff3b30; }
+    .cd-item-rm:hover { color: #0071e3; }
     .cd-foot { padding: 20px 24px 32px; border-top: 1px solid #ebebef; background: #fafafc; }
     .cd-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .cd-total-label { font-size: 13px; color: rgba(0,0,0,0.5); }
@@ -7756,7 +7749,7 @@
     }
     .header-wish:hover {
       background: rgba(255, 255, 255, 0.09) !important;
-      color: #ff3b30;
+      color: #0071e3;
       transform: scale(1.06);
     }
     .header-wish .bag-dot {
@@ -7767,7 +7760,7 @@
       height: 14px;
       padding: 0 3px;
       border-radius: 9999px;
-      background: #ff3b30;
+      background: #0071e3;
       color: #ffffff;
       font-size: 8.5px;
       font-weight: var(--fw-main);
@@ -7784,7 +7777,7 @@
     }
     html[data-theme="light"] .header-wish:hover {
       background: rgba(0, 0, 0, 0.05) !important;
-      color: #ff3b30;
+      color: #0071e3;
     }
 
     .wishlist-drawer {
@@ -7821,12 +7814,12 @@
     .pc-wish-btn.active {
       background: rgba(255, 59, 48, 0.15);
       border-color: rgba(255, 59, 48, 0.35);
-      color: #ff3b30;
+      color: #0071e3;
       box-shadow: 0 2px 10px rgba(255, 59, 48, 0.25);
     }
     .pc-wish-btn.active svg {
-      fill: #ff3b30 !important;
-      stroke: #ff3b30 !important;
+      fill: #0071e3 !important;
+      stroke: #0071e3 !important;
       transform: scale(1.15);
     }
 
@@ -8282,7 +8275,7 @@
     }
     .hero-collab-cross {
       font-size: clamp(28px, 7vw, 76px);
-      color: #ff6b35;
+      color: #1684ed;
       text-shadow: 0 0 24px rgba(255, 107, 53, 0.7), 0 0 50px rgba(255, 107, 53, 0.35);
       display: inline-block;
       line-height: 1;
@@ -8322,8 +8315,8 @@
     .big-text em .word,
     .big-text em .word.lit {
       font-style: normal !important;
-      color: #ff3b30 !important;
-      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%) !important;
+      color: #0071e3 !important;
+      background: linear-gradient(90deg, #0071e3 0%, #1684ed 52%, #54a4f5 100%) !important;
       background-size: 200% auto !important;
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent !important;
@@ -8544,7 +8537,7 @@
     .campaign-manifesto { padding:clamp(70px,10vw,130px) 24px; color:#171719; background:#f5f5f7; }
     .campaign-manifesto-inner { max-width:1110px; margin:0 auto; }
     .campaign-manifesto-label { display:flex; align-items:center; gap:10px; color:#77777e; font-size:9px; font-weight:750; letter-spacing:.17em; text-transform:uppercase; }
-    .campaign-manifesto-label span { width:22px; height:2px; background:linear-gradient(90deg,#e84532,#f28a35); }
+    .campaign-manifesto-label span { width:22px; height:2px; background:linear-gradient(90deg,#0071e3,#0071e3); }
     .campaign-manifesto h2 { max-width:790px; margin:26px 0 18px; font-size:clamp(46px,8vw,100px); line-height:.98; letter-spacing:-.075em; }
     .campaign-manifesto h2 em { color:#a7a7ad; font-style:normal; }
     .campaign-manifesto p { max-width:440px; margin:0; color:#68686f; font-size:14px; line-height:1.75; }
@@ -8568,6 +8561,33 @@
       .apple-user-popover { width: 238px; }
     }
 
+
+    :root { --app-backdrop: radial-gradient(ellipse at 12% 4%, #dce9fb 0%, #e8eff9 34%, #f5f7fb 72%, #edf2fa 100%); }
+    html[data-theme="light"] body { background:var(--app-backdrop)!important; color:#1d1d1f; }
+    html[data-theme="light"] main.post-hero-world { background:var(--app-backdrop)!important; }
+    html[data-theme="light"] main.post-hero-world > section:not(.hero-pin) { background:transparent!important; color:#1d1d1f; }
+    html[data-theme="light"] .hero-pin { background-color:#dce9fb; }
+    html[data-theme="light"] .hero-pin::before { background:linear-gradient(90deg,rgba(245,248,253,.68),rgba(245,248,253,.12)); }
+    html[data-theme="light"] .site-header { background:rgba(255,255,255,.86); border-color:rgba(255,255,255,.96); box-shadow:0 10px 32px rgba(41,67,103,.12); }
+    html[data-theme="light"] .header-nav a { color:#34343a; }
+    .header-nav-icon-link { display:grid!important; place-items:center; width:38px; height:38px; min-width:38px; padding:0!important; border-radius:50%!important; color:#0071e3!important; }
+    .header-nav-icon-link svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+    .header-faq-link { border:1px solid rgba(0,113,227,.25)!important; font-size:21px!important; font-weight:800!important; }
+    html[data-theme="light"] #loader { background:var(--app-backdrop)!important; color:#1d1d1f; }
+    html[data-theme="light"] .cc-card-img-wrap { background:#f5f7fb!important; }
+    html[data-theme="light"] .apple-dynamic-island { color:#26262b!important; background:rgba(255,255,255,.9)!important; border:1px solid rgba(255,255,255,.95)!important; box-shadow:0 14px 36px rgba(43,64,94,.13)!important; backdrop-filter:blur(24px); }
+    html[data-theme="light"] .apple-dynamic-island .adi-main-bar, html[data-theme="light"] .apple-dynamic-island .adi-expanded-drawer { background:transparent!important; }
+    html[data-theme="light"] .apple-dynamic-island .adi-cat-pill, html[data-theme="light"] .apple-dynamic-island .adi-segment-btn, html[data-theme="light"] .apple-dynamic-island .adi-sort-select { border-color:#d8e0eb!important; }
+    html[data-theme="light"] .site-footer-minimal { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px clamp(22px,5vw,80px); background:rgba(255,255,255,.42); border-top:1px solid rgba(20,50,90,.1); }
+    .footer-brand-minimal { display:inline-flex; align-items:center; gap:10px; color:#1d1d1f; text-decoration:none; font-size:11px; letter-spacing:.12em; }
+    .footer-brand-minimal img { width:24px; height:24px; object-fit:contain; }
+    .site-footer-minimal .footer-bottom { margin:0; padding:0; border:0; }
+    .site-footer-minimal .footer-legal { color:#77777e; font-size:9px; letter-spacing:.08em; }
+    .live-yours-section { min-height:clamp(250px,34vw,430px); display:grid; place-items:center; padding:50px 24px; text-align:center; background:transparent; }
+    .live-yours-inner > span { color:#747984; font-size:10px; letter-spacing:.18em; }
+    .live-yours-inner h2 { margin:16px 0 10px; color:#0071e3; font-size:clamp(58px,13vw,168px); line-height:.88; letter-spacing:-.085em; font-weight:800; }
+    .live-yours-inner p { margin:0; color:#515763; font-size:12px; letter-spacing:.16em; }
+    @media(max-width:600px) { html[data-theme="light"] .site-footer-minimal { flex-direction:column; justify-content:center; text-align:center; } }
     </style>
 </head>
 <body>
@@ -8629,14 +8649,14 @@
 <div class="cart-drawer wishlist-drawer" id="wishlistDrawer">
   <div class="cd-head">
     <div style="display:flex; align-items:center; gap:10px;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff3b30" stroke="#ff3b30" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0071e3" stroke="#0071e3" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
       <span class="cd-title">TU WISHLIST</span>
     </div>
     <button type="button" class="cd-close" onclick="closeWishlistDrawer()" aria-label="Cerrar Wishlist">✕</button>
   </div>
   <div class="cd-body" id="wishlistBody">
     <div class="cd-empty" id="wishlistEmpty">
-      <span class="cd-empty-icon" style="color:#ff3b30; opacity:0.7;">♡</span>
+      <span class="cd-empty-icon" style="color:#0071e3; opacity:0.7;">♡</span>
       <p>Tu wishlist está vacía.</p>
       <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:6px;">Toca el corazón en cualquier prenda para guardarla.</p>
     </div>
@@ -8780,9 +8800,9 @@
   <div class="header-notch-divider"></div>
   <nav>
     <ul class="header-nav">
-      <li><a href="#campaign">CAMPAIGN</a></li>
-      <li><a href="#shop">SHOP</a></li>
-      <li><a href="#contact">CONTACT</a></li>
+      <li><a class="header-nav-icon-link" href="#campaign" aria-label="Campaign" title="Campaign"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 5.3L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.7L12 3Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></svg></a></li>
+      <li><a class="header-nav-icon-link" href="#shop" aria-label="Shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></a></li>
+      <li><a class="header-nav-icon-link header-faq-link" href="{% url 'preguntas_frecuentes' %}" aria-label="Preguntas frecuentes" title="Preguntas frecuentes">?</a></li>
     </ul>
   </nav>
 
@@ -8791,28 +8811,7 @@
   <!-- 3. Right Interactive Controls Cluster (Apple Cupertino Logical Order) -->
   <div class="header-actions">
     <!-- 3A. APPLE CONTROL CENTER THEME SWITCHER -->
-    <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Modo Día / Noche" aria-label="Cambiar tema">
-      <span class="theme-icon theme-icon-sun">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      </span>
-      <span class="theme-icon theme-icon-moon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </span>
-    </button>
-
-    <!-- 3B. Wishlist Button -->
+<!-- 3B. Wishlist Button -->
     <button type="button" class="header-wish" id="wishNavBtn" onclick="openWishlistDrawer()" title="Ver tu Wishlist" aria-label="Wishlist">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
       <span class="bag-dot" id="wishlistCount" style="display:none;">0</span>
@@ -8851,12 +8850,10 @@
           <span>Mi Perfil &amp; Pedidos</span>
         </a>
         {% if request.user.is_staff or request.user.is_superuser %}
-        <a href="{% url 'admin_dashboard' %}" class="user-popover-link">
+        <a href="{% url 'admin_dashboard' %}" class="user-popover-link user-popover-admin">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>Panel de administración</span>
+          <span>Admin</span>
         </a>
-        <a href="{% url 'admin_productos' %}" class="user-popover-link"><span>▦</span><span>Gestionar productos</span></a>
-        {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="user-popover-link"><span>♙</span><span>Gestionar usuarios</span></a>{% endif %}
         {% endif %}
         <a href="{% url 'logout' %}" class="user-popover-link user-popover-logout">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -8866,7 +8863,7 @@
     </div>
     {% else %}
     <a href="{% url 'login' %}" class="nav-vip-pill-btn">
-      <svg class="anim-pulse" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      <svg class="anim-pulse" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       <span class="vip-gradient-text">INICIAR SESIÓN</span>
     </a>
     {% endif %}
@@ -9095,7 +9092,7 @@
     <div class="featured-bestseller-bar">
       <div class="fbb-left">
         <span class="fbb-live-dot"></span>
-        <span class="fbb-badge" id="featuredBadgeTitle"><svg class="anim-flame" width="13" height="13" viewBox="0 0 24 24" fill="#ff4500" stroke="#ff8c00" stroke-width="1.5"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg> PRODUCTO MÁS VENDIDO #1</span>
+        <span class="fbb-badge" id="featuredBadgeTitle"><svg class="anim-flame" width="13" height="13" viewBox="0 0 24 24" fill="#ff4500" stroke="#54a4f5" stroke-width="1.5"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg> PRODUCTO MÁS VENDIDO #1</span>
         <span class="fbb-counter" id="featuredLiveCounter">342 unidades vendidas en las últimas 24h</span>
       </div>
       <div class="fbb-right">
@@ -9347,37 +9344,8 @@
 <!-- ══════════════════════════════════════════════════════════
      STORES — SECTION 7
 ════════════════════════════════════════════════════════════ -->
-<section class="stores-section" id="stores">
-  <div class="stores-inner">
-    <div class="stores-head sr">
-      <div class="section-label">LOCATIONS</div>
-      <h2 class="stores-title">FLAGSHIP<br>STORES</h2>
-    </div>
-    <div class="stores-grid sr">
-      {% for loc in locales %}
-      <div class="store-card">
-        <div class="sc-img"><img src="{% static loc.imagen %}" alt="{{ loc.nombre }}"></div>
-        <div class="sc-body">
-          <div class="sc-type">SOLARILUXURY {{ loc.tipo }}</div>
-          <div class="sc-name">{{ loc.nombre }}</div>
-          <div class="sc-meta">
-            <div class="sc-row"><div class="sc-icon"><svg class="anim-float" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>{{ loc.direccion }}</div>
-            <div class="sc-row"><div class="sc-icon"><svg class="anim-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>{{ loc.horario }}</div>
-            <div class="sc-row"><div class="sc-icon"><svg class="anim-pulse" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>{{ loc.telefono }}</div>
-          </div>
-          <div class="sc-open">ABIERTO HOY — RETIRO INMEDIATO</div>
-        </div>
-      </div>
-      {% empty %}
-      <div class="stores-empty-state" style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
-        <svg class="anim-float" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="1.5" style="margin: 0 auto 12px; display:block; opacity: 0.6;"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="8" x2="12" y2="12"></line></svg>
-        <p style="font-family: var(--font-main); font-size: 11px; letter-spacing: 0.12em; color: rgba(0,0,0,0.45); text-transform: uppercase;">
-          Espacio reservado — Nuevas aperturas internacionales en desarrollo
-        </p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+<section class="live-yours-section" id="liveYours" aria-label="Live yours">
+  <div class="live-yours-inner"><span>UNA FRASE PARA SEGUIR ADELANTE</span><h2>LIVE YOURS</h2><p>— CENTRAL CEE</p></div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -9498,52 +9466,9 @@
 <!-- ══════════════════════════════════════════════════════════
      FOOTER
 ════════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div>
-      <div class="footer-logo"><img src="{% static 'img/logo_marca.png' %}" alt="Logo"></div>
-      <p class="footer-about">Solariluxury × Central Cee. Official streetwear collaboration 2026. Prendas de edición limitada con autenticidad y confección garantizada.</p>
-    </div>
-    <div>
-      <div class="footer-col-title">NAVEGACIÓN</div>
-      <ul class="footer-links">
-        <li><a href="#campaign">Campaign</a></li>
-        <li><a href="#editorialLookbook">Archive Lookbook</a></li>
-        <li><a href="#officialCatalog">Catálogo Oficial</a></li>
-        <li><a href="javascript:void(0)" onclick="openGatewayInfoModal('preventa')">Preventa &amp; Drops</a></li>
-        <li><a href="javascript:void(0)" onclick="openGatewayInfoModal('pedido')">Seguimiento Pedido</a></li>
-        {% if request.user.is_authenticated %}
-        <li><a href="{% url 'perfil' %}">Panel de Usuario</a></li>
-        {% else %}
-        <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-        {% endif %}
-        {% if request.user.is_staff or request.user.is_superuser %}
-        <li><a href="{% url 'admin:index' %}" target="_blank">Django Admin</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">COLECCIÓN</div>
-      <ul class="footer-links">
-        {% for cat in categorias %}{% if cat != "TODOS" %}
-        <li><a href="javascript:void(0)" onclick="filterCatalogCategory('{{ cat }}'); document.getElementById('officialCatalog').scrollIntoView({behavior:'smooth'});">{{ cat }}</a></li>
-        {% endif %}{% endfor %}
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-title">CONTACTO &amp; SERVICIO</div>
-      <ul class="footer-links">
-        <li><a href="https://wa.me/56991234567?text=Hola%20Solariluxury%2C%20quisiera%20consultar%20sobre%20la%20colecci%C3%B3n" target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
-        <li><a href="https://www.instagram.com/solariluxury/" target="_blank" rel="noopener noreferrer">Instagram Oficial</a></li>
-        <li><a href="#contact">Atelier &amp; Citas La Serena</a></li>
-        <li><a href="{% url 'registro' %}">Crear una cuenta</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-legal">© 2026 SOLARILUXURY × CENTRAL CEE. ALL RIGHTS RESERVED.</span>
-    <span class="footer-legal">SISTEMA PRIVADO VIP — APPLE DESIGN ARCHIVE</span>
-  </div>
+<footer class="site-footer site-footer-minimal">
+  <a class="footer-brand-minimal" href="{% url 'inicio' %}"><img src="{% static 'img/logo_marca.png' %}" alt="Solariluxury"><span>SOLARILUXURY</span></a>
+  <div class="footer-bottom"><span class="footer-legal">© 2026 SOLARILUXURY. TODOS LOS DERECHOS RESERVADOS.</span></div>
 </footer>
 
 </main>
@@ -9793,7 +9718,7 @@ function openGatewayInfoModal(type) {
         <p>Los pedidos de preventa del <strong>DROP 01 (AUTUMN/WINTER 2026)</strong> se encuentran en fase de confección artesanal numerada en nuestros talleres de Londres y Santiago.</p>
         <p style="margin-top:8px;"><strong>Despachos programados:</strong> Inicio de envíos internacionales el 15 de Octubre de 2026 mediante DHL Express Priority.</p>
         <div style="margin-top:20px; text-align:center;">
-          <a href="/locales/informacion/#preventa-seccion" class="vip-action-btn" style="text-decoration:none; display:inline-block; padding:14px 28px; width:auto;">
+          <a href="{% url 'lista_productos' %}" class="vip-action-btn" style="text-decoration:none; display:inline-block; padding:14px 28px; width:auto;">
             RESERVAR PREVENTA AHORA ➔
           </a>
         </div>
@@ -10112,7 +10037,7 @@ function renderBestseller(index) {
 
   setTimeout(() => {
     if (badgeTitle) {
-      const flameSvg = '<svg class="anim-flame" width="13" height="13" viewBox="0 0 24 24" fill="#ff4500" stroke="#ff8c00" stroke-width="1.5"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg>';
+      const flameSvg = '<svg class="anim-flame" width="13" height="13" viewBox="0 0 24 24" fill="#ff4500" stroke="#54a4f5" stroke-width="1.5"><path d="M12 2c-1.5 3-4 5.5-4 9a6 6 0 0 0 12 0c0-3.5-2.5-6-4-9-1 2-2 3-4 3s-3-1-4-3z"/></svg>';
       badgeTitle.innerHTML = `${flameSvg} ${item.badge_title}`;
     }
     if (liveCounter) liveCounter.textContent = item.live_counter;
@@ -11265,32 +11190,6 @@ async function submitCheckoutOrder(e) {
     }
   });
 })();
-
-// ── THEME CONTROLLER (MODO DÍA / MODO NOCHE) ─────────────────
-function toggleTheme() {
-  var current = document.documentElement.getAttribute('data-theme') || 'dark';
-  var next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('solari_theme', next);
-  updateThemeLabels(next);
-  window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
-}
-
-function updateThemeLabels(theme) {
-  var labels = document.querySelectorAll('.theme-label-text');
-  labels.forEach(function(el) {
-    el.textContent = theme === 'dark' ? 'NOCHE' : 'DÍA';
-  });
-  var btns = document.querySelectorAll('.theme-toggle-btn');
-  btns.forEach(function(b) {
-    b.setAttribute('title', theme === 'dark' ? 'Cambiar a Modo Día (Blanco)' : 'Cambiar a Modo Noche (Oscuro)');
-  });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var current = document.documentElement.getAttribute('data-theme') || 'dark';
-  updateThemeLabels(current);
-});
 
 function mostrarAyudaSolaryId() {
   alert('Tu SOLARY ID es tu correo electrónico. Si no recuerdas si tienes cuenta, escribe tu correo y el sistema te enviará tu código de acceso automáticamente.');

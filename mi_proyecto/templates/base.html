@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <link rel="icon" type="image/png" href="{% static 'img/logo_marca.png' %}">
     <meta name="view-transition" content="same-origin">
@@ -14,12 +14,6 @@
     <link rel="stylesheet" href="{% static 'css/site-typography.css' %}">
 
     <script>
-      (function() {
-        var saved = localStorage.getItem('solari_theme');
-        var theme = saved ? saved : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-
       // SOLARI GLOBAL CART INITIALIZER (HEAD LEVEL)
       window.getGlobalCart = function() {
         try {
@@ -90,8 +84,8 @@
         --text-muted: rgba(255, 255, 255, 0.42);
         --border: rgba(255, 255, 255, 0.1);
         --border-hover: rgba(255, 255, 255, 0.28);
-        --accent: #ff2a2a;
-        --accent-glow: rgba(255, 42, 42, 0.35);
+        --accent: #0071e3;
+        --accent-glow: rgba(0, 113, 227, 0.16);
         --notch-bg: rgba(14, 14, 18, 0.88);
         --notch-border: rgba(255, 255, 255, 0.12);
         --notch-shadow: 0 16px 45px rgba(0, 0, 0, 0.7);
@@ -117,8 +111,8 @@
         --text-muted: #6b7280;
         --border: rgba(0, 0, 0, 0.09);
         --border-hover: rgba(0, 0, 0, 0.22);
-        --accent: #d90429;
-        --accent-glow: rgba(217, 4, 41, 0.2);
+        --accent: #0071e3;
+        --accent-glow: rgba(0, 113, 227, 0.12);
         --notch-bg: rgba(255, 255, 255, 0.9);
         --notch-border: rgba(0, 0, 0, 0.12);
         --notch-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
@@ -129,8 +123,9 @@
         --input-bg: rgba(0, 0, 0, 0.035);
       }
 
+      :root { --app-backdrop: radial-gradient(ellipse at 12% 4%, #dce9fb 0%, #e8eff9 34%, #f5f7fb 72%, #edf2fa 100%); }
       body {
-        background: var(--bg);
+        background: var(--app-backdrop);
         color: var(--text-primary);
         font-family: var(--font-main);
         -webkit-font-smoothing: antialiased;
@@ -366,11 +361,11 @@
         color: #fff;
       }
       .user-popover-logout {
-        color: #ff453a !important;
+        color: #0071e3 !important;
       }
       .user-popover-logout:hover {
         background: rgba(255, 69, 58, 0.12) !important;
-        color: #ff453a !important;
+        color: #0071e3 !important;
       }
       html[data-theme="light"] .apple-user-popover {
         background: rgba(255, 255, 255, 0.96);
@@ -400,7 +395,7 @@
 
       /* Animated Red-Orange Gradient Text */
       .vip-gradient-text {
-        background: linear-gradient(90deg, #ff1a1a, #ff7a00, #ff2a2a, #ff8c00);
+        background: linear-gradient(90deg, #0071e3, #1684ed, #0071e3, #54a4f5);
         background-size: 300% 100%;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -654,7 +649,7 @@
       .header-panel-full-link:hover {
         background: rgba(230, 0, 0, 0.2);
         border-color: rgba(230, 0, 0, 0.5);
-        color: #ff6b6b;
+        color: #0071e3;
       }
 
       main { padding-top: 86px; min-height: 85vh; }
@@ -822,7 +817,7 @@
       .cd-item-name { font-size: 13px; font-weight: var(--fw-main); margin-bottom: 4px; line-height: 1.3; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .cd-item-price { font-family: var(--font-main); font-size: 12px; color: var(--text-secondary); }
       .cd-item-rm { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; padding: 10px; transition: color 0.2s; touch-action: manipulation; }
-      .cd-item-rm:hover { color: #ff3b30; }
+      .cd-item-rm:hover { color: #0071e3; }
       .cd-foot { padding: 20px 24px calc(24px + var(--sab)); border-top: 1px solid var(--border); background: var(--bg); }
       .cd-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
       .cd-total-label { font-size: 12px; font-weight: var(--fw-main); letter-spacing: 0.08em; color: var(--text-secondary); }
@@ -835,7 +830,7 @@
         touch-action: manipulation;
       }
       .cd-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,255,255,0.25); background: #ebebeb; }
-      html[data-theme="light"] .cd-cta { background: #000000; color: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.15); }
+      html[data-theme="light"] .cd-cta { background: #0071e3; color: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.15); }
       html[data-theme="light"] .cd-cta:hover { background: #222222; }
 
       /* Apple Checkout Modal & Wishlist in base.html */
@@ -916,7 +911,7 @@
       .acm-trust-row span { display: inline-flex; align-items: center; gap: 5px; }
       .acm-submit-btn { width: 100%; padding: 16px; min-height: 48px; background: #ffffff; color: #000000; border: none; border-radius: 980px; font-size: 14px; font-weight: var(--fw-main); letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s cubic-bezier(0.16,1,0.3,1); display: flex; align-items: center; justify-content: center; gap: 8px; touch-action: manipulation; }
       .acm-submit-btn:hover { background: #ececf0; transform: translateY(-1px); }
-      html[data-theme="light"] .acm-submit-btn { background: #000000; color: #ffffff; }
+      html[data-theme="light"] .acm-submit-btn { background: #0071e3; color: #ffffff; }
       .acm-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
       .acm-success-card { text-align: center; padding: 16px 8px; }
       .acm-check-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(52,199,89,0.15); border: 2px solid #34c759; color: #34c759; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
@@ -936,7 +931,7 @@
       html[data-theme="light"] .solary-apple-toast { background: rgba(255,255,255,0.94); color: #000; border-color: rgba(0,0,0,0.12); }
 
       .wish-add-bag-btn { background: #ffffff; color: #000; border: none; border-radius: 980px; padding: 6px 14px; font-family: var(--font-main); font-size: 10px; font-weight: var(--fw-main); cursor: pointer; }
-      html[data-theme="light"] .wish-add-bag-btn { background: #000; color: #fff; }
+      html[data-theme="light"] .wish-add-bag-btn { background: #0071e3; color: #fff; }
 
       @media (max-width: 768px) {
         .sub-header { width: calc(100% - 20px); top: calc(10px + var(--sat)); padding: 0 14px; }
@@ -1068,9 +1063,40 @@
         .apple-user-popover { width: 238px; }
       }
     
+      html[data-theme="light"] body { background: var(--app-backdrop); color: #1d1d1f; }
+      html[data-theme="light"] .sub-header { background: rgba(255,255,255,.84); border-color: rgba(255,255,255,.92); box-shadow: 0 10px 34px rgba(41,67,103,.12); }
+      html[data-theme="light"] .sub-nav-icon { width:38px; height:38px; min-width:38px; padding:0; display:grid; place-items:center; border-radius:50%; color:#0071e3; }
+      .sub-nav-icon svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+      html[data-theme="light"] .faq-nav-icon { font-size:21px; font-weight:700; border:1px solid rgba(0,113,227,.25); }
+      .sub-footer-minimal { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+      .sub-footer-brand { display:inline-flex; align-items:center; gap:10px; color:#1d1d1f; text-decoration:none; font-size:11px; letter-spacing:.12em; }
+      .sub-footer-brand img { width:22px; height:22px; object-fit:contain; }
+      .sub-footer-minimal p { margin:0; color:#77777e; font-size:9px; letter-spacing:.08em; }
+      html[data-theme="light"] .sub-footer { background:rgba(255,255,255,.48); color:#1d1d1f; border-top-color:rgba(20,50,90,.1); }
     </style>
 
     {% block extra_head %}{% endblock %}
+    <style>
+      html[data-theme="light"] body, html[data-theme="light"] .guest-view main { background:var(--app-backdrop)!important; color:#1d1d1f; }
+      html[data-theme="light"] main:not(.product-admin-page):not(.dash-page):not(.profile-page):not(.tracker-page) { background:var(--app-backdrop)!important; }
+      html[data-theme="light"] .dash-page { background:var(--app-backdrop)!important; }
+      html[data-theme="light"] .apple-page-wrapper { background:var(--app-backdrop)!important; }
+      html[data-theme="light"] .product-admin-page, html[data-theme="light"] .tracker-page, html[data-theme="light"] .profile-page { background:var(--app-backdrop)!important; }
+      html[data-theme="light"] .faq-page { background:var(--app-backdrop)!important; }
+      html[data-theme="light"] .admin-page { min-height:calc(100vh - 100px); background:transparent!important; color:#1d1d1f; }
+      html[data-theme="light"] .form-card { background:rgba(255,255,255,.84)!important; border-color:rgba(255,255,255,.94)!important; color:#1d1d1f; box-shadow:0 14px 40px rgba(41,67,103,.1); }
+      html[data-theme="light"] .form-input, html[data-theme="light"] .form-input option, html[data-theme="light"] .talla-stock input { background:#fff!important; color:#1d1d1f!important; border-color:#d7dfeb!important; }
+      html[data-theme="light"] .form-label, html[data-theme="light"] .form-section-title, html[data-theme="light"] .prod-name-highlight { color:#1d1d1f!important; }
+      html[data-theme="light"] .admin-btn-primary { background:#0071e3!important; color:#fff!important; }
+      html[data-theme="light"] .admin-btn-primary:hover { background:#0067cf!important; }
+      html[data-theme="light"] .admin-btn-secondary { background:rgba(255,255,255,.8)!important; color:#1d1d1f!important; border-color:#d7dfeb!important; }
+      html[data-theme="light"] .warning-box, html[data-theme="light"] .error-banner { background:#f2f7ff!important; border-color:#c8ddf8!important; color:#31577f!important; }
+      html[data-theme="light"] .cart-drawer { background:rgba(255,255,255,.97); border-left-color:#dce3ed; box-shadow:-15px 0 50px rgba(41,67,103,.16); }
+      html[data-theme="light"] .cd-head, html[data-theme="light"] .cd-foot { border-color:#e3e7ed; }
+      html[data-theme="light"] .cd-cta:hover { background:#0067cf; }
+      html[data-theme="light"] .user-popover-logout:hover { background:rgba(0,113,227,.08)!important; }
+      html[data-theme="light"] .cart-drawer, html[data-theme="light"] .apple-checkout-modal { color:#1d1d1f; }
+    </style>
 </head>
 <body class="{% if not request.user.is_authenticated %}guest-view{% endif %}">
     {% if request.user.is_authenticated %}
@@ -1085,9 +1111,10 @@
       <!-- 2. Center Navigation Links -->
       {% if request.user.is_authenticated %}<nav>
         <ul class="sub-nav">
-          <li><a href="{% url 'inicio' %}" {% if request.path == '/' %}class="active"{% endif %}>CAMPAIGN</a></li>
-          <li><a href="{% url 'lista_productos' %}" {% if '/productos/' in request.path %}class="active"{% endif %}>VAULT / SHOP</a></li>
-          <li><a href="{% url 'informacion' %}" {% if '/informacion/' in request.path %}class="active"{% endif %}>PREVENTA &amp; LOGÍSTICA</a></li>
+          <li><a class="sub-nav-icon" href="{% url 'inicio' %}" aria-label="Campaign" title="Campaign"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 5.3L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.7L12 3Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></svg></a></li>
+          <li><a class="sub-nav-icon" href="{% url 'lista_productos' %}" aria-label="Shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></a></li>
+          <li><a class="sub-nav-icon faq-nav-icon" href="{% url 'preguntas_frecuentes' %}" aria-label="Preguntas frecuentes" title="Preguntas frecuentes">?</a></li>
+          <li><a href="{% url 'informacion' %}" {% if '/informacion/' in request.path %}class="active"{% endif %}>TRACKER</a></li>
         </ul>
       </nav>{% endif %}
       <div class="sub-notch-divider"></div>
@@ -1095,35 +1122,14 @@
       <!-- 3. Right Interactive Controls Cluster (Apple Cupertino Logical Order) -->
       <div class="header-actions">
         <!-- 3A. APPLE CONTROL CENTER THEME SWITCHER -->
-        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar Modo Día / Noche" aria-label="Cambiar tema">
-          <span class="theme-icon theme-icon-sun">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-          </span>
-          <span class="theme-icon theme-icon-moon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </span>
-        </button>
-
-        {% if request.user.is_authenticated %}
+{% if request.user.is_authenticated %}
         <!-- 3B. BOTÓN WISHLIST EN EL NOTCH -->
         <button type="button" class="header-bag-btn" id="globalWishlistBtn" onclick="openGlobalWishlist()" title="Ver Wishlist" aria-label="Lista de deseos">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
           </svg>
           <span class="bag-label">WISH</span>
-          <span class="bag-counter-badge" id="globalWishlistBadge" style="background:#ff3b30; color:#fff;">0</span>
+          <span class="bag-counter-badge" id="globalWishlistBadge" style="background:#0071e3; color:#fff;">0</span>
         </button>
 
         <!-- 3C. BOTÓN CARRITO / BAG EN EL NOTCH -->
@@ -1160,12 +1166,10 @@
               <span>Mi Perfil &amp; Pedidos</span>
             </a>
             {% if request.user.is_staff or request.user.is_superuser %}
-            <a href="{% url 'admin_dashboard' %}" class="user-popover-link">
+            <a href="{% url 'admin_dashboard' %}" class="user-popover-link user-popover-admin">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-              <span>Panel de administración</span>
+              <span>Admin</span>
             </a>
-            <a href="{% url 'admin_productos' %}" class="user-popover-link"><span>▦</span><span>Gestionar productos</span></a>
-            {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="user-popover-link"><span>♙</span><span>Gestionar usuarios</span></a>{% endif %}
             {% endif %}
             <a href="{% url 'logout' %}" class="user-popover-link user-popover-logout">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -1175,7 +1179,7 @@
         </div>
         {% else %}
         <a href="{% url 'login' %}" class="nav-vip-pill-btn">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5" class="anim-icon-pulse"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2.5" class="anim-icon-pulse"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           <span class="vip-gradient-text">INICIAR SESIÓN</span>
         </a>
         {% endif %}
@@ -1189,47 +1193,13 @@
     </main>
 
     {% if request.user.is_authenticated %}
-    <footer class="sub-footer">
-      <div class="sub-footer-links">
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'inicio' %}">CAMPAÑA</a>
-        <a href="{% url 'lista_productos' %}">CATÁLOGO</a>
-        <a href="{% url 'informacion' %}">PREVENTA &amp; RASTREO</a>
-        <a href="{% url 'perfil' %}">MI PANEL VIP</a>
-        {% else %}
-        <a href="{% url 'login' %}">INICIAR SESIÓN</a>
-        <a href="{% url 'registro' %}">CREAR CUENTA</a>
-        {% endif %}
-        {% if request.user.is_staff or request.user.is_superuser %}
-        <a href="{% url 'admin:index' %}" target="_blank">PANEL ADMIN</a>
-        {% endif %}
-      </div>
-      <p>© 2026 SOLARILUXURY ARCHIVE • OFFICIAL CATALOG STOREFRONT</p>
+    <footer class="sub-footer sub-footer-minimal">
+      <a class="sub-footer-brand" href="{% url 'inicio' %}"><img src="{% static 'img/logo_marca.png' %}" alt="Solariluxury"><span>SOLARILUXURY</span></a>
+      <p>© 2026 SOLARILUXURY. TODOS LOS DERECHOS RESERVADOS.</p>
     </footer>
     {% endif %}
 
     <script>
-    function toggleTheme() {
-      var current = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('solari_theme', next);
-      updateThemeLabels(next);
-      window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: next } }));
-    }
-
-    function updateThemeLabels(theme) {
-      var btns = document.querySelectorAll('.theme-toggle-btn');
-      btns.forEach(function(b) {
-        b.setAttribute('title', theme === 'dark' ? 'Cambiar a Modo Día (Blanco)' : 'Cambiar a Modo Noche (Oscuro)');
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      var current = document.documentElement.getAttribute('data-theme') || 'dark';
-      updateThemeLabels(current);
-    });
-
     function toggleAppleTray(trayId, btn) {
       const tray = document.getElementById(trayId);
       if (!tray) return;
@@ -1322,14 +1292,14 @@
     <div class="cart-drawer wishlist-drawer" id="globalWishlistDrawer">
       <div class="cd-head">
         <div style="display:flex; align-items:center; gap:10px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff3b30" stroke="#ff3b30" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0071e3" stroke="#0071e3" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           <span class="cd-title">TU WISHLIST</span>
         </div>
         <button type="button" class="cd-close" onclick="closeGlobalWishlist()" aria-label="Cerrar Wishlist">✕</button>
       </div>
       <div class="cd-body" id="globalWishlistBody">
         <div class="cd-empty" id="globalWishlistEmpty">
-          <span class="cd-empty-icon" style="color:#ff3b30; opacity:0.7;">♡</span>
+          <span class="cd-empty-icon" style="color:#0071e3; opacity:0.7;">♡</span>
           <p>Tu wishlist está vacía.</p>
           <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:6px;">Toca el corazón en cualquier prenda para guardarla.</p>
         </div>

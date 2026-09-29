@@ -95,6 +95,10 @@ def inicio(request):
     }
     return render(request, 'catalogo/inicio.html', context)
 
+
+def preguntas_frecuentes(request):
+    return render(request, 'catalogo/preguntas_frecuentes.html')
+
 def bloquear_tienda(request):
     from django.contrib.auth import logout
     logout(request)
