@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{% if creating %}Nuevo usuario{% else %}Editar usuario{% endif %} | Panel{% endblock %}
+{% block extra_head %}
+<style>
+  :root { --uf-ink:#171719; --uf-muted:#77777e; --uf-line:#e7e7eb; --uf-bg:#f5f5f7; --uf-red:#e84532; --uf-orange:#f28a35; }
+  .uf-page { min-height:calc(100vh - 100px); padding:32px 20px 58px; color:var(--uf-ink); background:var(--uf-bg); }
+  .uf-wrap { max-width:850px; margin:0 auto; }
+  .uf-back { display:inline-block; margin-bottom:18px; color:#74747b; font-size:11px; font-weight:700; text-decoration:none; }
+  .uf-back:hover { color:var(--uf-red); }
+  .uf-card { overflow:hidden; border:1px solid var(--uf-line); border-radius:22px; background:#fff; box-shadow:0 12px 34px rgba(24,24,32,.04); }
+  .uf-head { padding:22px 25px; border-bottom:1px solid var(--uf-line); }
+  .uf-eyebrow { margin:0 0 7px; color:var(--uf-red); font-size:10px; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
+  .uf-title { margin:0; font-size:27px; letter-spacing:-.04em; }
+  .uf-copy { margin:7px 0 0; color:var(--uf-muted); font-size:12px; }
+  .uf-form { display:grid; grid-template-columns:1fr 1fr; gap:17px 16px; padding:24px 25px; }
+  .uf-field { min-width:0; }
+  .uf-field.full { grid-column:1/-1; }
+  .uf-field label { display:block; margin-bottom:7px; color:#4e4e55; font-size:11px; font-weight:700; }
+  .manage-input { width:100%; min-height:43px; box-sizing:border-box; padding:10px 12px; border:1px solid #dedee3; border-radius:11px; color:#1d1d1f; background:#fff; font:inherit; font-size:12px; outline:none; }
+  .manage-input:focus { border-color:#dc7268; box-shadow:0 0 0 3px rgba(232,69,50,.11); }
+  .uf-error { margin-top:6px; color:#b7382c; font-size:10px; line-height:1.45; }
+  .uf-help { margin-top:6px; color:#92929a; font-size:10px; line-height:1.5; }
+  .uf-check { display:flex; align-items:center; gap:9px; min-height:43px; color:#4e4e55; font-size:12px; font-weight:650; }
+  .uf-check input { width:16px; height:16px; accent-color:var(--uf-red); }
+  .uf-alert { grid-column:1/-1; padding:11px 13px; border:1px solid #f2c7c3; border-radius:11px; color:#a93329; background:#fff5f4; font-size:11px; }
+  .uf-actions { grid-column:1/-1; display:flex; justify-content:flex-end; gap:9px; margin-top:4px; padding-top:18px; border-top:1px solid var(--uf-line); }
+  .uf-button { display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:0 17px; border:1px solid #e2e2e7; border-radius:999px; color:#3d3d42; background:white; font:inherit; font-size:11px; font-weight:750; text-decoration:none; cursor:pointer; }
+  .uf-button.primary { border-color:transparent; color:white; background:linear-gradient(110deg,var(--uf-red),var(--uf-orange)); }
+  .uf-button:hover { filter:brightness(.97); }
+  @media(max-width:600px) { .uf-page { padding:22px 12px 42px; } .uf-head,.uf-form { padding:19px; } .uf-form { grid-template-columns:1fr; gap:14px; } .uf-field.full,.uf-alert,.uf-actions { grid-column:1; } .uf-actions { flex-direction:column-reverse; } .uf-button { width:100%; } }
+</style>
+{% endblock %}
+{% block content %}
+<main class="uf-page"><div class="uf-wrap"><a class="uf-back" href="{% url 'admin_users' %}">← Volver a usuarios</a>
+  <section class="uf-card"><header class="uf-head"><p class="uf-eyebrow">SOLARY LUXURY · CUENTAS</p><h1 class="uf-title">{% if creating %}Agregar usuario{% else %}Editar usuario{% endif %}</h1><p class="uf-copy">Define los datos de acceso, estado y nivel de esta cuenta.</p></header>
+    <form class="uf-form" method="post" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="uf-alert">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}<div class="uf-field {% if field.name == 'password1' or field.name == 'password2' %}full{% endif %}">
+        {% if field.field.widget.input_type == 'checkbox' %}<label class="uf-check" for="{{ field.id_for_label }}">{{ field }} {{ field.label }}</label>
+        {% else %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% endif %}
+        {% if field.name == 'is_admin' and not can_change_role and not creating %}<p class="uf-help">No puedes cambiar el rol de tu propia cuenta.</p>{% endif %}
+        {% if field.name == 'password1' and not creating %}<p class="uf-help">Déjalas vacías para conservar la contraseña actual.</p>{% endif %}
+        {% if field.errors %}<div class="uf-error">{{ field.errors|join:" " }}</div>{% endif %}
+        {% if field.help_text %}<div class="uf-help">{{ field.help_text }}</div>{% endif %}
+      </div>{% endfor %}
+      {% if not creating %}<div class="uf-field full"><span class="uf-help">Los pedidos asociados protegen su historial. Si tiene compras, esta cuenta no podrá eliminarse; puedes desactivarla.</span></div>{% endif %}
+      <div class="uf-actions"><a class="uf-button" href="{% url 'admin_users' %}">Cancelar</a><button class="uf-button primary" type="submit">{% if creating %}Crear cuenta{% else %}Guardar cambios{% endif %}</button></div>
+    </form>
+  </section>
+</div></main>
+{% endblock %}

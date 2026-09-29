@@ -207,6 +207,20 @@ def _staff_required(view_func):
     return wrapper
 
 @_staff_required
+def admin_dashboard(request):
+    recent_orders = Pedido.objects.select_related('producto').order_by('-fecha_creacion')[:6]
+    pending_orders = PreOrden.objects.exclude(estado__in=['ENTREGADA', 'CANCELADA']).count()
+    context = {
+        'product_count': Producto.objects.count(),
+        'active_customer_count': User.objects.filter(is_active=True, is_staff=False, is_superuser=False).count(),
+        'order_count': Pedido.objects.count(),
+        'pending_order_count': pending_orders,
+        'recent_orders': recent_orders,
+    }
+    return render(request, 'catalogo/admin_dashboard.html', context)
+
+
+@_staff_required
 def admin_productos(request):
     q = request.GET.get('q', '').strip()
     cat_id = request.GET.get('categoria', '')

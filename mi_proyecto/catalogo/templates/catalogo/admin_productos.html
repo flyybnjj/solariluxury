@@ -299,6 +299,8 @@
     </div>
 
     <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
+      <a href="{% url 'admin_dashboard' %}" class="admin-btn admin-btn-secondary">PANEL DE ADMINISTRACIÓN</a>
+      {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="admin-btn admin-btn-secondary">GESTIÓN DE USUARIOS</a>{% endif %}
       <a href="{% url 'lista_productos' %}" class="admin-btn admin-btn-secondary">← VER CATÁLOGO</a>
       <a href="{% url 'perfil' %}" class="admin-btn admin-btn-secondary">MI PERFIL</a>
       <a href="{% url 'admin:index' %}" target="_blank" class="admin-btn admin-btn-secondary">DJANGO ADMIN ↗</a>

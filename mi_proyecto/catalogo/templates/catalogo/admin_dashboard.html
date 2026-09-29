@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Panel de administración | SOLARY LUXURY{% endblock %}
+{% block extra_head %}
+<style>
+  :root { --dash-ink:#171719; --dash-muted:#77777e; --dash-line:#e7e7eb; --dash-paper:#fff; --dash-bg:#f5f5f7; --dash-accent:#e84532; --dash-orange:#f28a35; }
+  .dash-page { min-height:calc(100vh - 100px); padding:34px 24px 64px; color:var(--dash-ink); background:var(--dash-bg); }
+  .dash-layout { display:grid; grid-template-columns:230px minmax(0,1fr); gap:24px; max-width:1440px; margin:auto; }
+  .dash-sidebar { align-self:start; position:sticky; top:24px; padding:20px 14px; border:1px solid var(--dash-line); border-radius:22px; background:var(--dash-paper); box-shadow:0 8px 26px rgba(20,20,30,.04); }
+  .dash-brand { display:flex; align-items:center; gap:11px; padding:2px 8px 20px; border-bottom:1px solid var(--dash-line); }
+  .dash-brand-mark { width:36px; height:36px; display:grid; place-items:center; border-radius:12px; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--dash-accent),var(--dash-orange)); }
+  .dash-brand strong { display:block; font-size:13px; letter-spacing:.03em; }
+  .dash-brand small { display:block; margin-top:3px; color:var(--dash-muted); font-size:10px; letter-spacing:.13em; }
+  .dash-nav-label { margin:20px 10px 8px; color:#96969c; font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+  .dash-nav { display:grid; gap:5px; }
+  .dash-nav a { display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:12px; color:#626269; font-size:12px; font-weight:650; text-decoration:none; transition:background .18s,color .18s; }
+  .dash-nav a:hover,.dash-nav a.active { color:var(--dash-ink); background:#f1f1f3; }
+  .dash-nav a.active { box-shadow:inset 3px 0 var(--dash-accent); }
+  .dash-nav-icon { width:18px; text-align:center; font-size:15px; }
+  .dash-main { min-width:0; }
+  .dash-topline { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:26px; }
+  .dash-kicker { margin:0 0 8px; color:var(--dash-accent); font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+  .dash-title { margin:0; font-size:clamp(28px,3vw,40px); line-height:1.08; letter-spacing:-.045em; }
+  .dash-subtitle { margin:9px 0 0; color:var(--dash-muted); font-size:13px; }
+  .dash-account { padding:10px 14px; border:1px solid var(--dash-line); border-radius:999px; background:#fff; color:#55555b; font-size:11px; }
+  .dash-account strong { color:var(--dash-ink); }
+  .dash-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:20px; }
+  .dash-metric { position:relative; min-height:128px; padding:19px; overflow:hidden; border:1px solid var(--dash-line); border-radius:19px; background:#fff; }
+  .dash-metric::after { content:""; position:absolute; width:84px; height:84px; right:-32px; top:-34px; border-radius:50%; background:radial-gradient(circle,rgba(232,69,50,.16),transparent 70%); }
+  .dash-metric-label { color:var(--dash-muted); font-size:11px; font-weight:600; }
+  .dash-metric-value { margin-top:15px; font-size:32px; font-weight:750; letter-spacing:-.05em; }
+  .dash-metric-note { margin-top:4px; color:#9a9aa0; font-size:10px; }
+  .dash-content-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(260px,.8fr); gap:18px; align-items:start; }
+  .dash-panel { min-width:0; border:1px solid var(--dash-line); border-radius:20px; background:#fff; overflow:hidden; }
+  .dash-panel-head { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:19px 20px; border-bottom:1px solid var(--dash-line); }
+  .dash-panel-head h2 { margin:0; font-size:15px; letter-spacing:-.025em; }
+  .dash-panel-head p { margin:5px 0 0; color:var(--dash-muted); font-size:11px; }
+  .dash-link { color:var(--dash-accent); font-size:11px; font-weight:700; text-decoration:none; white-space:nowrap; }
+  .dash-link:hover { text-decoration:underline; }
+  .dash-table-scroll { overflow-x:auto; }
+  .dash-table { width:100%; border-collapse:collapse; min-width:580px; }
+  .dash-table th { padding:12px 18px; color:#92929a; font-size:9px; font-weight:700; letter-spacing:.1em; text-align:left; text-transform:uppercase; }
+  .dash-table td { padding:14px 18px; border-top:1px solid #f0f0f2; color:#5d5d64; font-size:11px; }
+  .dash-table td:first-child { color:var(--dash-ink); font-weight:700; }
+  .dash-status { display:inline-flex; padding:5px 9px; border-radius:999px; background:#f3f3f5; color:#55555b; font-size:9px; font-weight:700; white-space:nowrap; }
+  .dash-status[data-state="ENTREGADA"] { background:#edf7ef; color:#25733a; }
+  .dash-status[data-state="CANCELADA"] { background:#fff0ef; color:#bb3b30; }
+  .dash-empty { padding:36px 20px; color:var(--dash-muted); text-align:center; font-size:12px; }
+  .dash-shortcuts { display:grid; gap:10px; padding:14px; }
+  .dash-shortcut { display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--dash-line); border-radius:15px; color:inherit; text-decoration:none; transition:transform .18s,border-color .18s,background .18s; }
+  .dash-shortcut:hover { transform:translateY(-2px); border-color:#d6d6dc; background:#fbfbfc; }
+  .dash-shortcut-icon { width:38px; height:38px; display:grid; place-items:center; flex:0 0 38px; border-radius:12px; color:var(--dash-accent); background:#fff1ee; font-size:17px; }
+  .dash-shortcut strong { display:block; font-size:12px; }
+  .dash-shortcut small { display:block; margin-top:4px; color:var(--dash-muted); font-size:10px; }
+  .dash-arrow { margin-left:auto; color:#a0a0a6; }
+  .dash-footer-note { padding:0 20px 18px; color:#92929a; font-size:10px; line-height:1.5; }
+  @media(max-width:1050px) { .dash-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .dash-content-grid { grid-template-columns:1fr; } }
+  @media(max-width:700px) { .dash-page { padding:20px 12px 42px; } .dash-layout { grid-template-columns:1fr; gap:14px; } .dash-sidebar { position:static; padding:12px; } .dash-brand { padding-bottom:12px; } .dash-nav-label { display:none; } .dash-nav { display:flex; overflow-x:auto; padding-top:10px; } .dash-nav a { flex:0 0 auto; padding:10px; } .dash-topline { align-items:flex-start; flex-direction:column; margin-bottom:18px; } .dash-metrics { gap:9px; } .dash-metric { min-height:110px; padding:14px; } .dash-metric-value { font-size:27px; } }
+  @media(prefers-reduced-motion:reduce) { .dash-nav a,.dash-shortcut { transition:none; } .dash-shortcut:hover { transform:none; } }
+</style>
+{% endblock %}
+{% block content %}
+<main class="dash-page">
+  <div class="dash-layout">
+    <aside class="dash-sidebar" aria-label="Navegación de administración">
+      <div class="dash-brand"><span class="dash-brand-mark">S</span><span><strong>SOLARY LUXURY</strong><small>ADMIN STUDIO</small></span></div>
+      <p class="dash-nav-label">Workspace</p>
+      <nav class="dash-nav">
+        <a class="active" href="{% url 'admin_dashboard' %}"><span class="dash-nav-icon">⌂</span>Resumen</a>
+        <a href="{% url 'admin_productos' %}"><span class="dash-nav-icon">▦</span>Productos</a>
+        {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}"><span class="dash-nav-icon">♙</span>Usuarios</a>{% endif %}
+      </nav>
+      <p class="dash-nav-label">Tienda</p>
+      <nav class="dash-nav"><a href="{% url 'inicio' %}"><span class="dash-nav-icon">↗</span>Volver a la tienda</a><a href="{% url 'admin:index' %}"><span class="dash-nav-icon">⚙</span>Admin de Django</a></nav>
+    </aside>
+
+    <section class="dash-main">
+      <header class="dash-topline">
+        <div><p class="dash-kicker">SOLARY LUXURY · OPERACIONES</p><h1 class="dash-title">Panel de administración</h1><p class="dash-subtitle">Un resumen claro del catálogo, las cuentas y los pedidos.</p></div>
+        <div class="dash-account">Sesión: <strong>{{ request.user.get_short_name|default:request.user.username }}</strong></div>
+      </header>
+
+      <div class="dash-metrics" aria-label="Resumen de la tienda">
+        <article class="dash-metric"><div class="dash-metric-label">Productos en catálogo</div><div class="dash-metric-value">{{ product_count }}</div><div class="dash-metric-note">Registros actuales</div></article>
+        <article class="dash-metric"><div class="dash-metric-label">Cuentas activas</div><div class="dash-metric-value">{{ active_customer_count }}</div><div class="dash-metric-note">Sin contar administradores</div></article>
+        <article class="dash-metric"><div class="dash-metric-label">Pedidos registrados</div><div class="dash-metric-value">{{ order_count }}</div><div class="dash-metric-note">Historial completo</div></article>
+        <article class="dash-metric"><div class="dash-metric-label">Preórdenes en curso</div><div class="dash-metric-value">{{ pending_order_count }}</div><div class="dash-metric-note">Pendientes de entrega o cancelación</div></article>
+      </div>
+
+      <div class="dash-content-grid">
+        <section class="dash-panel">
+          <div class="dash-panel-head"><div><h2>Pedidos recientes</h2><p>Últimos registros de compra guardados</p></div><a class="dash-link" href="{% url 'admin:catalogo_pedido_changelist' %}">Abrir pedidos ↗</a></div>
+          <div class="dash-table-scroll"><table class="dash-table"><thead><tr><th>Pedido</th><th>Cliente</th><th>Producto</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>
+            {% for pedido in recent_orders %}<tr><td>{{ pedido.codigo_pedido }}</td><td>{{ pedido.nombre_cliente|default:"Cliente"|truncatechars:22 }}</td><td>{{ pedido.producto.nombre|truncatechars:28 }}</td><td><span class="dash-status" data-state="{{ pedido.estado }}">{{ pedido.get_estado_display }}</span></td><td>{{ pedido.fecha_creacion|date:"d M Y" }}</td></tr>
+            {% empty %}<tr><td colspan="5" class="dash-empty">Todavía no hay pedidos registrados.</td></tr>{% endfor %}
+          </tbody></table></div>
+        </section>
+
+        <section class="dash-panel">
+          <div class="dash-panel-head"><div><h2>Accesos rápidos</h2><p>Gestiona lo esencial de la tienda</p></div></div>
+          <div class="dash-shortcuts">
+            <a class="dash-shortcut" href="{% url 'admin_productos' %}"><span class="dash-shortcut-icon">▦</span><span><strong>Gestionar productos</strong><small>Crear, editar y actualizar el catálogo</small></span><span class="dash-arrow">→</span></a>
+            {% if request.user.is_superuser %}<a class="dash-shortcut" href="{% url 'admin_users' %}"><span class="dash-shortcut-icon">♙</span><span><strong>Gestionar usuarios</strong><small>Roles, cuentas y estado de acceso</small></span><span class="dash-arrow">→</span></a>{% endif %}
+            <a class="dash-shortcut" href="{% url 'admin:index' %}"><span class="dash-shortcut-icon">⚙</span><span><strong>Administración avanzada</strong><small>Modelos y configuración de Django</small></span><span class="dash-arrow">→</span></a>
+          </div>
+          <p class="dash-footer-note">Los indicadores muestran los registros actuales de la base de datos. El historial de pedidos se conserva al desactivar una cuenta.</p>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+{% endblock %}

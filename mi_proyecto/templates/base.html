@@ -1060,6 +1060,13 @@
           display: none;
         }
       }
+
+      @media (min-width: 1024px) {
+        .sub-header { width: min(1240px, calc(100% - 40px)); max-width: none; justify-content: space-between; gap: 22px; }
+        .sub-header > nav { margin-left: clamp(8px, 2.5vw, 34px); }
+        .sub-header .header-actions { margin-left: auto; gap: 12px; flex: 0 0 auto; }
+        .apple-user-popover { width: 238px; }
+      }
     
     </style>
 
@@ -1081,40 +1088,6 @@
           <li><a href="{% url 'inicio' %}" {% if request.path == '/' %}class="active"{% endif %}>CAMPAIGN</a></li>
           <li><a href="{% url 'lista_productos' %}" {% if '/productos/' in request.path %}class="active"{% endif %}>VAULT / SHOP</a></li>
           <li><a href="{% url 'informacion' %}" {% if '/informacion/' in request.path %}class="active"{% endif %}>PREVENTA &amp; LOGÍSTICA</a></li>
-          
-          {% if request.user.is_staff or request.user.is_superuser %}
-          <li class="header-panel-item">
-            <button type="button" class="header-panel-btn" id="subHeaderPanelBtn" onclick="toggleAppleTray('subHeaderPanelTray', this)">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff3333" stroke-width="2.5" class="anim-icon-pulse"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-              <span>ADMIN</span>
-              <span class="apple-chevron">▼</span>
-            </button>
-            <div class="apple-expandable-tray header-panel-tray" id="subHeaderPanelTray">
-              <div class="apple-tray-inner header-panel-inner">
-                <div class="header-panel-group-title">ADMINISTRACIÓN CATÁLOGO (CRUD)</div>
-                <div class="header-panel-row">
-                  <a href="{% url 'admin:catalogo_producto_add' %}" class="apple-crud-item apple-crud-add" target="_blank">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    AGREGAR
-                  </a>
-                  <a href="{% url 'admin:catalogo_producto_changelist' %}" class="apple-crud-item apple-crud-edit" target="_blank">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    MODIFICAR
-                  </a>
-                  <a href="{% url 'admin:catalogo_producto_changelist' %}" class="apple-crud-item apple-crud-del" target="_blank">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    ELIMINAR
-                  </a>
-                </div>
-                <div class="header-panel-divider"></div>
-                <a href="{% url 'admin:index' %}" class="header-panel-full-link" target="_blank">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="anim-icon-spin"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                  <span>DJANGO ADMIN GENERAL →</span>
-                </a>
-              </div>
-            </div>
-          </li>
-          {% endif %}
         </ul>
       </nav>{% endif %}
       <div class="sub-notch-divider"></div>
@@ -1187,10 +1160,12 @@
               <span>Mi Perfil &amp; Pedidos</span>
             </a>
             {% if request.user.is_staff or request.user.is_superuser %}
-            <a href="{% url 'admin_productos' %}" class="user-popover-link" style="color:#ff6b6b; border-top:1px solid rgba(255,51,51,0.2); margin-top:4px; padding-top:8px;">
+            <a href="{% url 'admin_dashboard' %}" class="user-popover-link">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-              <span>Gestión de Productos</span>
+              <span>Panel de administración</span>
             </a>
+            <a href="{% url 'admin_productos' %}" class="user-popover-link"><span>▦</span><span>Gestionar productos</span></a>
+            {% if request.user.is_superuser %}<a href="{% url 'admin_users' %}" class="user-popover-link"><span>♙</span><span>Gestionar usuarios</span></a>{% endif %}
             {% endif %}
             <a href="{% url 'logout' %}" class="user-popover-link user-popover-logout">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
