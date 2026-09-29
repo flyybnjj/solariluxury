@@ -11,7 +11,7 @@
     color: var(--text-primary);
     padding: 100px 24px 80px;
     transition: background-color 0.3s ease, color 0.3s ease;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: var(--font-main);
   }
   .detail-container {
     max-width: 1240px;
@@ -24,7 +24,7 @@
     font-size: 12px;
     color: var(--text-muted, #86868b);
     margin-bottom: 32px;
-    font-family: inherit;
+    font-family: var(--font-main);
     letter-spacing: 0.02em;
   }
   .detail-breadcrumb a {
@@ -97,7 +97,7 @@
     border-radius: 980px;
     font-size: 11px;
     color: #f5f5f7;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     letter-spacing: 0.02em;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -139,14 +139,14 @@
     font-size: 12px;
     letter-spacing: 0.02em;
     color: var(--text-primary, #f5f5f7);
-    font-weight: 600;
+    font-weight: var(--fw-main);
     display: flex;
     align-items: center;
     gap: 8px;
   }
   .stockx-angle-text {
     font-size: 11px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     color: var(--text-muted, #86868b);
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -170,7 +170,7 @@
     padding: 8px 16px;
     border-radius: 980px;
     font-size: 11.5px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -280,16 +280,16 @@
   .detail-info { padding-top: 4px; }
   .detail-cat {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     color: var(--text-muted, #86868b);
     text-transform: uppercase;
     margin-bottom: 8px;
   }
   .detail-title {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-main);
     font-size: clamp(32px, 3.8vw, 48px);
-    font-weight: 700;
+    font-weight: var(--fw-main);
     line-height: 1.1;
     letter-spacing: -0.02em;
     color: var(--text-primary, #ffffff);
@@ -299,7 +299,7 @@
   .detail-subtitle {
     font-size: 15px;
     color: var(--text-muted, #86868b);
-    font-weight: 400;
+    font-weight: var(--fw-main);
     line-height: 1.4;
     margin-bottom: 18px;
   }
@@ -312,7 +312,7 @@
     padding: 6px 14px;
     border-radius: 980px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     letter-spacing: 0.01em;
     margin-bottom: 24px;
   }
@@ -339,9 +339,9 @@
   }
 
   .detail-price {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-family: var(--font-main);
     font-size: clamp(38px, 4vw, 54px);
-    font-weight: 700;
+    font-weight: var(--fw-main);
     color: var(--text-primary, #ffffff);
     line-height: 1;
     letter-spacing: -0.02em;
@@ -350,14 +350,14 @@
   .detail-price-usd {
     font-size: 13.5px;
     color: var(--text-muted, #86868b);
-    font-family: inherit;
+    font-family: var(--font-main);
     margin-bottom: 28px;
   }
 
   /* Size selector - Apple Segmented Pills */
   .detail-section-label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--text-muted, #86868b);
@@ -375,9 +375,9 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(255, 255, 255, 0.04);
     color: var(--text-primary, #f5f5f7);
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -390,7 +390,7 @@
     background: #ffffff !important;
     border-color: #ffffff !important;
     color: #000000 !important;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2);
     transform: scale(1.02);
   }
@@ -424,9 +424,9 @@
     border: none;
     border-radius: 980px;
     color: #ffffff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: -0.01em;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -458,9 +458,9 @@
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 980px;
     color: var(--text-primary, #f5f5f7);
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
@@ -556,7 +556,7 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text-muted, #86868b);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     text-decoration: none;
     transition: all 0.2s ease;
   }
@@ -813,10 +813,10 @@
     <div class="related-section" style="margin-top: 80px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.08);">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
         <div>
-          <div style="font-size: 11px; color: #86868b; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">COLECCIÓN ARCHIVE</div>
-          <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary, #fff);">Piezas Relacionadas</h2>
+          <div style="font-size: 11px; color: #86868b; letter-spacing: 0.08em; text-transform: uppercase; font-weight: var(--fw-main); margin-bottom: 4px;">COLECCIÓN ARCHIVE</div>
+          <h2 style="font-family: var(--font-main); font-size: 32px; font-weight: var(--fw-main); letter-spacing: -0.01em; color: var(--text-primary, #fff);">Piezas Relacionadas</h2>
         </div>
-        <a href="{% url 'lista_productos' %}" style="font-size: 13px; color: #0071e3; text-decoration: none; font-weight: 500;">Ver Catálogo Completo →</a>
+        <a href="{% url 'lista_productos' %}" style="font-size: 13px; color: #0071e3; text-decoration: none; font-weight: var(--fw-main);">Ver Catálogo Completo →</a>
       </div>
       <div class="related-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
         {% for r in relacionados %}
@@ -825,9 +825,9 @@
             <img src="{% static r.imagen %}" alt="{{ r.nombre }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.4s ease;">
           </div>
           <div style="padding: 18px; display: flex; flex-direction: column; flex: 1;">
-            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: 600;">{{ r.categoria.nombre|default:"STREETWEAR" }}</span>
-            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: 600; line-height: 1.25; margin-bottom: 8px;">{{ r.nombre|truncatechars:35 }}</span>
-            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: 700;">${{ r.precio|floatformat:"0" }} CLP</span>
+            <span style="font-size: 11px; color: #86868b; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; font-weight: var(--fw-main);">{{ r.categoria.nombre|default:"STREETWEAR" }}</span>
+            <span style="font-size: 16px; color: var(--text-primary, #fff); font-weight: var(--fw-main); line-height: 1.25; margin-bottom: 8px;">{{ r.nombre|truncatechars:35 }}</span>
+            <span style="font-size: 14px; color: var(--text-primary, #fff); margin-top: auto; font-weight: var(--fw-main);">${{ r.precio|floatformat:"0" }} CLP</span>
           </div>
         </a>
         {% endfor %}

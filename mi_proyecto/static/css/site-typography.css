@@ -1,0 +1,34 @@
+:root {
+  --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fw-main: 700;
+  --bs-body-font-family: var(--font-main);
+  --bs-body-font-weight: var(--fw-main);
+}
+
+*:not(svg):not(path),
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, a, li, span, label, th, td, small,
+.navbar, .btn, .card, .badge, .form-control, .form-select,
+.dropdown-item, .modal, .alert {
+  font-family: var(--font-main) !important;
+  font-weight: var(--fw-main) !important;
+}
+
+input, button, select, textarea {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+}
+
+.fa, .fas, .far, .fal, .fab, .fad,
+.fa-solid, .fa-regular, .fa-light, .fa-thin, .fa-brands,
+[class^="fa-"], [class*=" fa-"] {
+  font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", sans-serif !important;
+}
+
+.fab, .fa-brands { font-family: "Font Awesome 6 Brands", "Font Awesome 5 Brands", sans-serif !important; }
+.bi, [class^="bi-"], [class*=" bi-"] { font-family: "bootstrap-icons" !important; }
+.material-icons, .material-icons-outlined, .material-symbols-outlined { font-family: "Material Icons", sans-serif !important; }
+.fas, .fa-solid { font-weight: 900 !important; }
+.far, .fa-regular, .fab, .fa-brands, .bi { font-weight: 400 !important; }

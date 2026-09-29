@@ -21,11 +21,11 @@
   --color-border-glow: rgba(230, 0, 0, 0.4);
   --color-border-light: rgba(255, 255, 255, 0.1);
 
-  --font-gothic: 'UnifrakturMaguntia', cursive;
-  --font-display: 'Oswald', sans-serif;
-  --font-serif: 'Cinzel Decorative', Georgia, serif;
-  --font-mono: 'Roboto Mono', monospace;
-  --font-sans: 'Helvetica Neue', Arial, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-gothic: var(--font-main);
+  --font-display: var(--font-main);
+  --font-serif: var(--font-main);
+  --font-mono: var(--font-main);
+  --font-sans: var(--font-main);
 
   --ease-luxury: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-tech: cubic-bezier(0.16, 1, 0.3, 1);
@@ -64,7 +64,7 @@ body::after {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-main);
   background-color: var(--color-bg);
   color: var(--color-text-main);
   min-height: 100vh;
@@ -122,9 +122,9 @@ body {
 }
 
 .nav-link {
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-main);
   font-size: 0.75rem;
-  font-weight: 400;
+  font-weight: var(--fw-main);
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
@@ -152,7 +152,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   color: var(--color-text-muted);
@@ -202,7 +202,7 @@ body {
   cursor: pointer;
   display: flex;
   gap: 0.5rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   color: var(--color-white);
@@ -284,7 +284,7 @@ body {
 .flank-text {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
@@ -360,7 +360,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   letter-spacing: 0.25em;
   color: var(--color-white);
@@ -407,7 +407,7 @@ body {
 }
 
 .cue-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.6rem;
   letter-spacing: 0.3em;
   color: var(--color-text-dim);
@@ -516,7 +516,7 @@ body {
   background: transparent;
   border: none;
   color: var(--color-text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   padding: 0.5rem 1rem;
@@ -537,7 +537,7 @@ body {
 .hud-btn.active {
   background: var(--color-cyan);
   color: #000;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   box-shadow: 0 0 18px var(--color-cyan-glow);
 }
 
@@ -661,7 +661,7 @@ body {
 }
 
 .hotspot-tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.6rem;
   letter-spacing: 0.25em;
   color: var(--color-cyan);
@@ -670,9 +670,9 @@ body {
 }
 
 .hotspot-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   letter-spacing: 0.15em;
   color: var(--color-white);
   margin-bottom: 0.5rem;
@@ -749,7 +749,7 @@ body {
 }
 
 .milestone-num {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.3em;
   color: var(--color-cyan);
@@ -758,9 +758,9 @@ body {
 }
 
 .milestone-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 1.35rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.08em;
   color: var(--color-white);
   margin-bottom: 0.75rem;
@@ -878,7 +878,7 @@ body {
   background: linear-gradient(180deg, transparent 0%, rgba(6, 6, 8, 0.9) 100%);
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   color: var(--color-text-muted);
@@ -909,7 +909,7 @@ body {
 }
 
 .brand-subline {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   letter-spacing: 0.28em;
   color: var(--color-cyan);
@@ -919,9 +919,9 @@ body {
 }
 
 .product-headline {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 2.3rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.05em;
   line-height: 1.15;
   color: var(--color-white);
@@ -929,7 +929,7 @@ body {
 }
 
 .product-edition-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.85rem;
   letter-spacing: 0.2em;
   color: var(--color-text-muted);
@@ -937,9 +937,9 @@ body {
 }
 
 .product-price-tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   color: var(--color-white);
   margin-top: 1rem;
 }
@@ -947,7 +947,7 @@ body {
 .product-price-tag .currency {
   font-size: 0.9rem;
   color: var(--color-cyan);
-  font-weight: 400;
+  font-weight: var(--fw-main);
   margin-left: 0.4rem;
 }
 
@@ -960,7 +960,7 @@ body {
 }
 
 .spec-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   letter-spacing: 0.25em;
   color: var(--color-text-dim);
@@ -984,7 +984,7 @@ body {
   border-radius: 4px;
   cursor: pointer;
   color: var(--color-text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   transition: all 0.3s ease;
@@ -1021,7 +1021,7 @@ body {
 }
 
 .stock-flag {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   color: var(--color-red);
   letter-spacing: 0.15em;
@@ -1041,9 +1041,9 @@ body {
   background: #13131a;
   border: 1px solid var(--color-border);
   color: var(--color-text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -1105,7 +1105,7 @@ body {
 }
 
 .spec-key {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   color: var(--color-text-dim);
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1113,7 +1113,7 @@ body {
 
 .spec-val {
   color: var(--color-white);
-  font-weight: 500;
+  font-weight: var(--fw-main);
   text-align: right;
 }
 
@@ -1131,9 +1131,9 @@ body {
   color: #000;
   border: none;
   border-radius: 4px;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   letter-spacing: 0.25em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1161,7 +1161,7 @@ body {
 }
 
 .shipping-clean-notice {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   letter-spacing: 0.15em;
   color: var(--color-text-dim);
@@ -1200,7 +1200,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.78rem;
   letter-spacing: 0.3em;
   color: var(--color-text-muted);
@@ -1227,7 +1227,7 @@ body {
 }
 
 .catalog-title-wrap .subhead {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   letter-spacing: 0.3em;
   color: var(--color-cyan);
@@ -1237,9 +1237,9 @@ body {
 }
 
 .catalog-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 2.4rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.08em;
   color: var(--color-white);
   text-transform: uppercase;
@@ -1266,9 +1266,9 @@ body {
   color: var(--color-text-muted);
   padding: 0.5rem 1.2rem;
   border-radius: 100px;
-  font-family: var(--font-sans);
+  font-family: var(--font-main);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: var(--fw-main);
   letter-spacing: 0.02em;
   cursor: pointer;
   white-space: nowrap;
@@ -1281,7 +1281,7 @@ body {
   background: rgba(255, 255, 255, 0.15);
   color: #fff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  font-weight: 600;
+  font-weight: var(--fw-main);
 }
 
 
@@ -1315,7 +1315,7 @@ body {
   top: 1rem;
   left: 1rem;
   z-index: 3;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   padding: 0.25rem 0.6rem;
@@ -1386,7 +1386,7 @@ body {
   padding: 0.6rem 0;
   border: none;
   border-radius: 3px;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   cursor: pointer;
@@ -1408,7 +1408,7 @@ body {
 .btn-card-add {
   background: var(--color-cyan);
   color: #000;
-  font-weight: 700;
+  font-weight: var(--fw-main);
 }
 
 .btn-card-add:hover {
@@ -1426,16 +1426,16 @@ body {
 }
 
 .card-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   letter-spacing: 0.05em;
   color: var(--color-white);
   line-height: 1.35;
 }
 
 .card-subline {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   color: var(--color-text-dim);
   letter-spacing: 0.15em;
@@ -1452,14 +1452,14 @@ body {
 }
 
 .card-price {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   color: var(--color-white);
 }
 
 .card-category-tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.6rem;
   color: var(--color-cyan);
   letter-spacing: 0.15em;
@@ -1533,16 +1533,16 @@ body {
 }
 
 .cart-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 1.1rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.15em;
   color: var(--color-white);
   text-transform: uppercase;
 }
 
 .cart-count-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.8rem;
   color: var(--color-text-dim);
 }
@@ -1569,7 +1569,7 @@ body {
 }
 
 .shipping-meter-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   color: var(--color-text-muted);
   margin-bottom: 0.6rem;
@@ -1577,7 +1577,7 @@ body {
 
 .shipping-meter-text .highlight {
   color: var(--color-cyan);
-  font-weight: 700;
+  font-weight: var(--fw-main);
 }
 
 .shipping-meter-track {
@@ -1641,22 +1641,22 @@ body {
 }
 
 .cart-item-title {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   color: var(--color-white);
   line-height: 1.3;
 }
 
 .cart-item-price {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   color: var(--color-white);
 }
 
 .cart-item-shade {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   color: var(--color-cyan);
   margin-top: 0.2rem;
@@ -1691,7 +1691,7 @@ body {
 }
 
 .qty-val {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.75rem;
   width: 24px;
   text-align: center;
@@ -1701,7 +1701,7 @@ body {
 .cart-item-remove {
   background: transparent;
   border: none;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   color: var(--color-text-dim);
@@ -1727,7 +1727,7 @@ body {
 }
 
 .empty-msg {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.8rem;
   color: var(--color-text-dim);
 }
@@ -1752,7 +1752,7 @@ body {
   background: #13131a;
   border: 1px solid var(--color-border);
   padding: 0.7rem 1rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   color: #fff;
   border-radius: 3px;
@@ -1767,7 +1767,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--color-border);
   color: #fff;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.72rem;
   padding: 0 1.2rem;
   cursor: pointer;
@@ -1783,7 +1783,7 @@ body {
 }
 
 .promo-discount-msg {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.68rem;
   color: var(--color-cyan);
 }
@@ -1808,17 +1808,17 @@ body {
 }
 
 .total-key {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 1rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.15em;
   color: #fff;
 }
 
 .total-val {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   color: var(--color-cyan);
 }
 
@@ -1828,9 +1828,9 @@ body {
   background: var(--color-cyan);
   color: #000;
   border: none;
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-main);
   letter-spacing: 0.25em;
   border-radius: 3px;
   cursor: pointer;
@@ -1847,7 +1847,7 @@ body {
 }
 
 .cart-secure-notice {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.62rem;
   letter-spacing: 0.15em;
   color: var(--color-text-dim);
@@ -1915,7 +1915,7 @@ body {
 }
 
 .quote-subhead {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.7rem;
   letter-spacing: 0.35em;
   color: var(--color-cyan);
@@ -1925,9 +1925,9 @@ body {
 }
 
 .quote-heading {
-  font-family: var(--font-display);
+  font-family: var(--font-main);
   font-size: 1.6rem;
-  font-weight: 700; letter-spacing: 0.03em;
+  font-weight: var(--fw-main); letter-spacing: 0.03em;
   letter-spacing: 0.08em;
   color: #fff;
   margin-bottom: 1.5rem;
@@ -1951,14 +1951,14 @@ body {
 }
 
 .signature-font {
-  font-family: var(--font-gothic);
+  font-family: var(--font-main);
   font-size: 2.2rem;
   color: #fff;
   letter-spacing: 0.15em;
 }
 
 .signature-role {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.25em;
   color: var(--color-cyan);
@@ -1992,7 +1992,7 @@ body {
 }
 
 .footer-logo {
-  font-family: var(--font-gothic);
+  font-family: var(--font-main);
   font-size: 1.8rem;
   color: #fff;
 }
@@ -2003,7 +2003,7 @@ body {
 }
 
 .footer-links a {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   color: var(--color-text-muted);
@@ -2021,7 +2021,7 @@ body {
 }
 
 .legal-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-main);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   color: var(--color-text-dim);

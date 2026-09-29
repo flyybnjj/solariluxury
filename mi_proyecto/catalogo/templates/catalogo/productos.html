@@ -26,9 +26,9 @@
     min-width: 0;
   }
   .vault-tag {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.12em;
     color: var(--text-muted, #86868b);
     text-transform: uppercase;
@@ -44,7 +44,7 @@
     background: #0071e3;
   }
   .vault-title {
-    font-family: var(--font-display);
+    font-family: var(--font-main);
     font-size: clamp(48px, 7vw, 92px);
     line-height: 0.92;
     letter-spacing: 0.02em;
@@ -58,7 +58,7 @@
     margin-bottom: 32px;
   }
   .vault-count-badge {
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 11px;
     color: rgba(255,255,255,0.4);
     letter-spacing: 0.15em;
@@ -117,7 +117,7 @@
     background: transparent;
     border: none;
     color: #fff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 12px;
     letter-spacing: 0.02em;
     outline: none;
@@ -147,9 +147,9 @@
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.45);
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.02em;
     cursor: pointer;
     display: inline-flex;
@@ -176,7 +176,7 @@
   .sort-label {
     font-size: 11px;
     color: rgba(255,255,255,0.45);
-    font-weight: 500;
+    font-weight: var(--fw-main);
     text-transform: uppercase;
   }
   .sort-select {
@@ -185,9 +185,9 @@
     border-radius: 100px;
     padding: 7px 14px;
     color: #fff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     letter-spacing: 0.02em;
     outline: none;
     cursor: pointer;
@@ -231,9 +231,9 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.65);
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
@@ -250,7 +250,7 @@
     color: #000;
     background: #fff;
     border-color: #fff;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
   }
   .cat-chip-count {
@@ -263,7 +263,7 @@
   .cat-badge-chip.active .cat-chip-count {
     background: rgba(0, 0, 0, 0.12);
     color: #000;
-    font-weight: 700;
+    font-weight: var(--fw-main);
   }
 
   /* Filters subrow: Status & Price filters */
@@ -287,7 +287,7 @@
   }
   .filter-group-label {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.04em;
     color: rgba(255, 255, 255, 0.4);
     margin-right: 4px;
@@ -299,9 +299,9 @@
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.65);
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11.5px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -314,7 +314,7 @@
     background: #ffffff;
     border-color: #ffffff;
     color: #000000;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     box-shadow: 0 2px 12px rgba(255, 255, 255, 0.2);
   }
 
@@ -338,7 +338,7 @@
     color: #ffffff;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-weight: 500;
+    font-weight: var(--fw-main);
   }
   .active-filter-chip:hover {
     background: rgba(255, 255, 255, 0.16);
@@ -545,9 +545,9 @@
     background: rgba(18, 18, 22, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.16);
     color: #f5f5f7;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 10px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     padding: 4px 10px;
     border-radius: 980px;
     letter-spacing: 0.02em;
@@ -597,9 +597,9 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 8px;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: 0.12em;
     color: rgba(255, 255, 255, 0.85);
     pointer-events: none;
@@ -623,9 +623,9 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: #fff;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     opacity: 0;
@@ -673,7 +673,7 @@
     opacity: 1;
   }
   .pc-size-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 8px;
     letter-spacing: 0.15em;
     color: rgba(255, 255, 255, 0.45);
@@ -686,9 +686,9 @@
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -701,7 +701,7 @@
     background: #ffffff;
     border-color: #ffffff;
     color: #000000;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
   }
 
@@ -715,9 +715,9 @@
     z-index: 2;
   }
   .pc-cat {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     color: var(--text-muted, #86868b);
     text-transform: uppercase;
@@ -730,7 +730,7 @@
     content: ''; width: 4px; height: 4px; border-radius: 50%; background: #0071e3;
   }
   .pc-name {
-    font-family: var(--font-display);
+    font-family: var(--font-main);
     font-size: 20px;
     letter-spacing: 0.03em;
     color: #fff;
@@ -759,7 +759,7 @@
     gap: 6px;
   }
   .pc-editorial-specs li {
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 10px;
     color: rgba(255, 255, 255, 0.5);
     letter-spacing: 0.05em;
@@ -776,7 +776,7 @@
   }
   .pc-price-wrap {}
   .pc-price {
-    font-family: var(--font-display);
+    font-family: var(--font-main);
     font-size: 24px;
     letter-spacing: 0.02em;
     color: #fff;
@@ -786,9 +786,9 @@
     display: block;
     font-size: 10px;
     color: rgba(255, 255, 255, 0.35);
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     letter-spacing: 0.08em;
-    font-weight: 400;
+    font-weight: var(--fw-main);
     margin-top: 3px;
   }
 
@@ -802,9 +802,9 @@
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -842,12 +842,12 @@
     margin-bottom: 16px;
   }
   .catalog-empty-notice h3 {
-    font-family: var(--font-display);
+    font-family: var(--font-main);
     font-size: 32px;
     margin-bottom: 8px;
   }
   .catalog-empty-notice p {
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 12px;
     color: rgba(255, 255, 255, 0.4);
     margin-bottom: 24px;
@@ -942,9 +942,9 @@
     flex-direction: column;
   }
   .qv-collab-badge {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     color: var(--text-muted, #86868b);
     text-transform: uppercase;
@@ -957,15 +957,15 @@
     content: ''; width: 6px; height: 6px; border-radius: 50%; background: #0071e3;
   }
   .qv-title {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-family: var(--font-main);
     font-size: clamp(28px, 3.2vw, 40px);
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: -0.01em;
     line-height: 1.1;
     margin-bottom: 8px;
   }
   .qv-sub {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 13px;
     color: var(--text-muted, #86868b);
     line-height: 1.4;
@@ -980,24 +980,24 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
   .qv-price {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-family: var(--font-main);
     font-size: 34px;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     color: #fff;
     letter-spacing: -0.02em;
   }
   .qv-price-usd {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 13px;
     color: var(--text-muted, #86868b);
   }
 
   .qv-size-wrap { margin-bottom: 24px; }
   .qv-size-title {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
     letter-spacing: 0.04em;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     color: var(--text-muted, #86868b);
     text-transform: uppercase;
     margin-bottom: 10px;
@@ -1006,7 +1006,7 @@
   }
   .qv-size-title span.selected-size-label {
     color: #0071e3;
-    font-weight: 600;
+    font-weight: var(--fw-main);
   }
   .qv-size-grid { display: flex; flex-wrap: wrap; gap: 8px; }
   .qv-size-btn {
@@ -1015,9 +1015,9 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: #fff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: var(--fw-main);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -1026,7 +1026,7 @@
     background: #ffffff !important;
     border-color: #ffffff !important;
     color: #000000 !important;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
   }
 
@@ -1039,7 +1039,7 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
   .qv-specs-list li {
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 11px;
     color: rgba(255, 255, 255, 0.7);
     padding: 6px 0;
@@ -1049,7 +1049,7 @@
     gap: 8px;
   }
   .qv-specs-list li:last-child { border-bottom: none; }
-  .qv-specs-list li::before { content: '✓'; color: #0071e3; font-size: 10px; font-weight: 700; }
+  .qv-specs-list li::before { content: '✓'; color: #0071e3; font-size: 10px; font-weight: var(--fw-main); }
 
   .qv-actions { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
   .qv-add-btn {
@@ -1059,9 +1059,9 @@
     background: #0071e3;
     border: none;
     color: #fff;
-    font-family: inherit;
+    font-family: var(--font-main);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: var(--fw-main);
     letter-spacing: -0.01em;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1078,7 +1078,7 @@
   }
   .qv-detail-link {
     text-align: center;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 10px;
     letter-spacing: 0.12em;
     color: rgba(255, 255, 255, 0.5);
@@ -1145,9 +1145,9 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 16px 40px rgba(0,0,0,0.8), 0 0 25px rgba(230,0,0,0.3);
     color: #fff;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transform: translateY(100px) scale(0.9);

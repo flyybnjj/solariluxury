@@ -15,7 +15,7 @@
     --border-black: #000000;
     --border-light: #E0E0E0;
     --font-main: "Helvetica Neue", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-    --font-mono: "Courier New", Courier, monospace;
+    --font-mono: var(--font-main);
     --header-height: 60px;
     --marquee-height: 38px;
 }
@@ -101,7 +101,7 @@ a:active, button:active {
     align-items: center;
     gap: 12px;
     font-size: 0.72rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     flex-shrink: 0;
@@ -117,7 +117,7 @@ a:active, button:active {
 .trm-arabic-text {
     font-size: 0.9rem;
     letter-spacing: 0;
-    font-weight: bold;
+    font-weight: var(--fw-main);
     color: #FFFFFF;
 }
 
@@ -175,7 +175,7 @@ a:active, button:active {
 
 .trm-nav-links li a {
     font-size: 0.8rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-black);
@@ -221,7 +221,7 @@ a:active, button:active {
     background-color: var(--bg-dark);
     color: var(--text-white);
     font-size: 0.58rem;
-    font-weight: bold;
+    font-weight: var(--fw-main);
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -290,7 +290,7 @@ a:active, button:active {
     justify-content: space-between;
     padding: 14px 16px;
     font-size: 0.95rem;
-    font-weight: 900;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-black);
@@ -315,9 +315,9 @@ a:active, button:active {
 .trm-live-clock-wrapper {
     text-align: center;
     padding: 10px 16px;
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 0.74rem;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     color: var(--text-black);
     letter-spacing: 0.05em;
     background-color: #fafafa;
@@ -352,9 +352,9 @@ a:active, button:active {
 }
 
 .trm-gateway-clock {
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     font-size: 0.8rem;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: 0.05em;
     margin-bottom: 30px;
     color: var(--text-black);
@@ -381,7 +381,7 @@ a:active, button:active {
     background-color: var(--bg-white);
     color: var(--text-black);
     font-size: 0.82rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
@@ -451,7 +451,7 @@ a:active, button:active {
 
 .trm-sidebar-categories li a {
     font-size: 0.82rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-black);
@@ -463,7 +463,7 @@ a:active, button:active {
 .trm-sidebar-categories li a:hover {
     opacity: 1;
     transform: translateX(4px);
-    font-weight: 900;
+    font-weight: var(--fw-main);
     text-decoration: underline;
 }
 
@@ -494,7 +494,7 @@ a:active, button:active {
     background-color: var(--bg-white);
     color: var(--text-black);
     font-size: 0.62rem;
-    font-weight: 900;
+    font-weight: var(--fw-main);
     padding: 3px 6px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -544,7 +544,7 @@ a:active, button:active {
     color: var(--text-white);
     border: 1px solid var(--border-black);
     font-size: 0.74rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.05em;
     text-transform: uppercase;
     text-align: center;
@@ -576,7 +576,7 @@ a:active, button:active {
 
 .trm-product-title {
     font-size: 0.78rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.03em;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -592,9 +592,9 @@ a:active, button:active {
 
 .trm-product-price {
     font-size: 0.8rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     color: var(--text-black);
-    font-family: var(--font-mono);
+    font-family: var(--font-main);
     margin: 0;
 }
 
@@ -661,7 +661,7 @@ a:active, button:active {
 
 .trm-detail-title {
     font-size: 1.5rem;
-    font-weight: 900;
+    font-weight: var(--fw-main);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     margin-bottom: 12px;
@@ -679,13 +679,13 @@ a:active, button:active {
 
 .trm-detail-price {
     font-size: 1.15rem;
-    font-weight: 800;
-    font-family: var(--font-mono);
+    font-weight: var(--fw-main);
+    font-family: var(--font-main);
 }
 
 .trm-tax-included {
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -694,7 +694,7 @@ a:active, button:active {
 
 .trm-size-label {
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: 8px;
@@ -712,7 +712,7 @@ a:active, button:active {
     background-color: var(--bg-white);
     color: var(--text-black);
     font-size: 0.8rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     padding: 10px 16px;
     cursor: pointer;
     min-width: 48px;
@@ -728,7 +728,7 @@ a:active, button:active {
 
 .trm-size-chart-link {
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-decoration: underline;
@@ -745,7 +745,7 @@ a:active, button:active {
     background-color: var(--bg-white);
     color: var(--text-muted);
     font-size: 0.85rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
@@ -764,7 +764,7 @@ a:active, button:active {
     border: 1px solid #E0AC28;
     color: #111111;
     font-size: 0.88rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     text-align: center;
     border-radius: 4px;
     margin-bottom: 20px;
@@ -789,7 +789,7 @@ a:active, button:active {
     border: 1px solid var(--border-black);
     background-color: var(--bg-white);
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: var(--fw-main);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     display: flex;
@@ -808,7 +808,7 @@ a:active, button:active {
     list-style: disc;
     padding-left: 20px;
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: var(--fw-main);
     line-height: 1.8;
     letter-spacing: 0.05em;
     text-transform: uppercase;
