@@ -1118,7 +1118,7 @@
     .big-text .word.lit { color: #0a0a0a; }
     .big-text em {
       font-style: normal;
-      background: linear-gradient(90deg, #0071e3 0%, #00c7be 50%, #0071e3 100%);
+      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       animation: appleGradientShimmer 4s ease-in-out infinite, appleEmPulse 3.5s ease-in-out infinite alternate;
@@ -1137,14 +1137,14 @@
     }
     @keyframes appleEmPulse {
       0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(230,0,0,0)); }
-      50% { transform: scale(1.025) translateY(-2px); filter: drop-shadow(0 8px 24px rgba(0, 113, 227, 0.25)); }
+      50% { transform: scale(1.025) translateY(-2px); filter: drop-shadow(0 8px 24px rgba(255, 106, 0, 0.25)); }
       100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(230,0,0,0)); }
     }
 
     /* Decorative red line */
     .section-rule {
       width: 60px; height: 2px;
-      background: #0071e3;
+      background: linear-gradient(90deg, #ff3b30, #ff9f0a);
       margin-bottom: 32px;
     }
     .section-label {
@@ -4263,7 +4263,7 @@
     .big-text .word.lit { color: #0a0a0a; }
     .big-text em {
       font-style: normal;
-      background: linear-gradient(90deg, #0071e3 0%, #00c7be 50%, #0071e3 100%);
+      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       animation: appleGradientShimmer 4s ease-in-out infinite, appleEmPulse 3.5s ease-in-out infinite alternate;
@@ -4282,14 +4282,14 @@
     }
     @keyframes appleEmPulse {
       0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(230,0,0,0)); }
-      50% { transform: scale(1.025) translateY(-2px); filter: drop-shadow(0 8px 24px rgba(0, 113, 227, 0.25)); }
+      50% { transform: scale(1.025) translateY(-2px); filter: drop-shadow(0 8px 24px rgba(255, 106, 0, 0.25)); }
       100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(230,0,0,0)); }
     }
 
     /* Decorative red line */
     .section-rule {
       width: 60px; height: 2px;
-      background: #0071e3;
+      background: linear-gradient(90deg, #ff3b30, #ff9f0a);
       margin-bottom: 32px;
     }
     .section-label {
@@ -8315,20 +8315,22 @@
       100% { opacity: 1; text-shadow: 0 4px 30px rgba(0,0,0,0.9), 0 0 60px rgba(255,255,255,0.5), 0 0 90px rgba(255,107,53,0.3); }
     }
 
-    /* MANIFESTO WORD VISIBILITY FIX (PHOTO 2) */
-    .big-text em {
+    /* MANIFESTO: brand red-to-orange Apple-style gradient */
+    .big-text em,
+    .big-text em .word,
+    .big-text em .word.lit {
       font-style: normal !important;
-      color: #0071e3 !important;
-      -webkit-text-fill-color: #0071e3 !important;
-      background: none !important;
-      display: inline !important;
+      color: #ff3b30 !important;
+      background: linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%) !important;
+      background-size: 200% auto !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+      opacity: 1 !important;
     }
     .big-text em .word,
     .big-text em .word.lit {
-      color: #0071e3 !important;
-      -webkit-text-fill-color: #0071e3 !important;
-      opacity: 1 !important;
-      background: none !important;
+      display: inline-block !important;
     }
 
     /* FEATURED BESTSELLER RESPONSIVE STACK (PHOTO 3) */
@@ -10127,9 +10129,8 @@ function dismissLoader() {
     setTimeout(() => { l.style.display = 'none'; }, 600);
   }
 }
-window.addEventListener('DOMContentLoaded', () => setTimeout(dismissLoader, 400));
-window.addEventListener('load', () => setTimeout(dismissLoader, 150));
-setTimeout(dismissLoader, 900);
+window.addEventListener('DOMContentLoaded', () => setTimeout(dismissLoader, 1800));
+setTimeout(dismissLoader, 2400);
 
 // ── CUSTOM CURSOR ─────────────────────────────────────────────
 const cur = document.getElementById('cur');

@@ -55,7 +55,7 @@ def login_view(request):
         user = form.get_user()
         _establish_password_session(request, user)
         messages.success(request, f'Bienvenido/a a SOLARY LUXURY, {user.first_name or user.username}.')
-        return redirect(_safe_next(request, 'lista_productos'))
+        return redirect(_safe_next(request, 'inicio'))
     return render(request, 'usuarios/login.html', {
         'form': form,
         'next': request.GET.get('next', ''),

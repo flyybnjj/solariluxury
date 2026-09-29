@@ -56,8 +56,12 @@ class TraditionalAccountFlowTests(TestCase):
             'username': 'OLD@example.test', 'password': 'OldPassphrase-2026!x'
         })
 
-        self.assertRedirects(response, reverse('lista_productos'))
+        self.assertRedirects(response, reverse('inicio'))
         self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
+        campaign_home = self.client.get(reverse('inicio'))
+        self.assertContains(campaign_home, 'id="loader"')
+        self.assertContains(campaign_home, 'setTimeout(dismissLoader, 1800)')
+        self.assertContains(campaign_home, 'linear-gradient(90deg, #ff3b30 0%, #ff6a00 52%, #ff9f0a 100%)')
 
     def test_invalid_credentials_do_not_authenticate(self):
         User.objects.create_user(username='customer', email='customer@example.test', password='CorrectPass-2026!x')
