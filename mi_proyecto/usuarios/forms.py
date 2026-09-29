@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
@@ -76,3 +77,15 @@ class LoginForm(AuthenticationForm):
         'required': True,
         'autocomplete': 'current-password'
     }))
+
+
+class CustomerPasswordResetForm(PasswordResetForm):
+    """Allow active legacy accounts with an unset password to establish one."""
+
+    def get_users(self, email):
+        user_model = get_user_model()
+        email_field = user_model.get_email_field_name()
+        users = user_model._default_manager.filter(
+            **{f'{email_field}__iexact': email, 'is_active': True}
+        )
+        return (user for user in users if getattr(user, email_field, None))

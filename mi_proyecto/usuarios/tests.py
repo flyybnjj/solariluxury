@@ -77,9 +77,42 @@ class TraditionalAccountFlowTests(TestCase):
         self.assertTrue(user.check_password('AfterReset-2026!x'))
         self.assertFalse(user.check_password('BeforeReset-2026!x'))
 
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend', DEFAULT_FROM_EMAIL='accounts@example.test')
+    def test_active_legacy_account_without_password_can_set_one_from_email(self):
+        user = User.objects.create_user(
+            username='legacy-no-password', email='legacy-reset@example.test', password=None
+        )
+        self.assertFalse(user.has_usable_password())
+
+        response = self.client.post(reverse('password_reset'), {'email': user.email})
+
+        self.assertRedirects(response, reverse('password_reset_done'))
+        self.assertEqual(len(mail.outbox), 1)
+        reset_url = next(line for line in mail.outbox[0].body.splitlines() if '/restablecer-password/' in line)
+        response = self.client.get(reset_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(response.request['PATH_INFO'], {
+            'new_password1': 'FirstPassword-2026!x', 'new_password2': 'FirstPassword-2026!x'
+        })
+
+        self.assertRedirects(response, reverse('password_reset_complete'))
+        user.refresh_from_db()
+        self.assertTrue(user.has_usable_password())
+        self.assertTrue(user.check_password('FirstPassword-2026!x'))
+
     @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
     def test_recovery_response_is_generic_for_unknown_email(self):
         response = self.client.post(reverse('password_reset'), {'email': 'unknown@example.test'})
+
+        self.assertRedirects(response, reverse('password_reset_done'))
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
+    def test_inactive_account_does_not_receive_password_reset_email(self):
+        user = User.objects.create_user(
+            username='inactive-customer', email='inactive@example.test', password=None, is_active=False
+        )
+        response = self.client.post(reverse('password_reset'), {'email': user.email})
 
         self.assertRedirects(response, reverse('password_reset_done'))
         self.assertEqual(len(mail.outbox), 0)
