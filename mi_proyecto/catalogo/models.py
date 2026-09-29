@@ -146,7 +146,7 @@ class PreOrden(models.Model):
     codigo_orden = models.CharField(max_length=50, unique=True, db_index=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name='preordenes',
@@ -204,11 +204,23 @@ class PreOrden(models.Model):
     def __str__(self):
         return f"{self.codigo_orden} — {self.nombre_cliente} ({self.producto.nombre})"
 
+
+class CheckoutRequest(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    key = models.CharField(max_length=64)
+    orden = models.OneToOneField(PreOrden, on_delete=models.CASCADE, null=True, blank=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['usuario', 'key'], name='uniq_checkout_request_user_key'),
+        ]
+
 class Pedido(models.Model):
     codigo_pedido = models.CharField(max_length=50, unique=True, db_index=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='pedidos',
         null=True,
         blank=True,
@@ -263,7 +275,7 @@ class Tracker(models.Model):
     preorden = models.OneToOneField(PreOrden, on_delete=models.CASCADE, related_name='tracker_rel', null=True, blank=True)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='trackers',
         null=True,
         blank=True

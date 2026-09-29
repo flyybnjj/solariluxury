@@ -1,8 +1,37 @@
 from django.contrib.auth.models import User
 from django.core import mail
-from django.test import TestCase, override_settings
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
+import json
+
+
+class SupportTicketSecurityTests(TestCase):
+    def test_ticket_requires_csrf_and_accepts_valid_contact_from_store_page(self):
+        client = Client(enforce_csrf_checks=True)
+        payload = json.dumps({
+            'nombre': 'Cliente de prueba',
+            'email': 'cliente@example.test',
+            'mensaje': 'Consulta de prueba',
+        })
+        rejected = client.post('/api/crear-ticket/', payload, content_type='application/json')
+        self.assertEqual(rejected.status_code, 403)
+
+        page = client.get('/locales/')
+        self.assertEqual(page.status_code, 200)
+        csrf_token = client.cookies['csrftoken'].value
+        accepted = client.post(
+            '/api/crear-ticket/', payload, content_type='application/json',
+            HTTP_X_CSRFTOKEN=csrf_token,
+        )
+        self.assertEqual(accepted.status_code, 200)
+        self.assertTrue(accepted.json()['success'])
+
+    def test_ticket_rejects_malformed_email(self):
+        response = self.client.post('/api/crear-ticket/', {
+            'nombre': 'Cliente', 'email': 'not-an-email', 'mensaje': 'Consulta',
+        })
+        self.assertEqual(response.status_code, 400)
 
 
 class TraditionalAccountFlowTests(TestCase):

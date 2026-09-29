@@ -112,9 +112,6 @@ def perfil_view(request):
     }
     return render(request, 'usuarios/perfil.html', context)
 
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
 def crear_ticket_view(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido.'}, status=405)
@@ -132,8 +129,14 @@ def crear_ticket_view(request):
 
     if not nombre:
         return JsonResponse({'success': False, 'error': 'Por favor ingresa tu nombre completo.'}, status=400)
-    if not email or '@' not in email:
+    from django.core.exceptions import ValidationError
+    from django.core.validators import validate_email
+    try:
+        validate_email(email)
+    except ValidationError:
         return JsonResponse({'success': False, 'error': 'Por favor ingresa un correo de cuenta válido.'}, status=400)
+    if len(nombre) > 150 or len(email) > 254 or len(contacto_alternativo) > 150 or len(motivo) > 255 or len(mensaje) > 10000:
+        return JsonResponse({'success': False, 'error': 'El mensaje excede el largo permitido.'}, status=400)
     if not mensaje:
         return JsonResponse({'success': False, 'error': 'Por favor detalla tu problema o solicitud.'}, status=400)
 

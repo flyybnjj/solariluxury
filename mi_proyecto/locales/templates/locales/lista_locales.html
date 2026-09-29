@@ -539,7 +539,8 @@ async function handleAceternityContactSubmit(e) {
     const res = await fetch('/api/crear-ticket/', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('#aceternityContactForm [name=csrfmiddlewaretoken]')?.value || ''
       },
       body: JSON.stringify({
         nombre: name,

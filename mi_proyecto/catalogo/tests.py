@@ -96,3 +96,27 @@ class Bug012PreOrdenPedidoSyncTest(TestCase):
         orden.refresh_from_db()
         self.assertEqual(orden.estado, "CANCELADA")
 
+
+class CustomerOrderHistoryProtectionTests(TestCase):
+    def test_deleting_customer_does_not_cascade_purchase_history(self):
+        from django.contrib.auth.models import User
+
+        user = User.objects.create_user(username="history-owner", email="history@example.test")
+        product = Producto.objects.create(nombre="History product", precio=1000, precio_usd=1)
+        order = PreOrden.objects.create(
+            codigo_orden="SL-HISTORY-PROTECT",
+            usuario=user,
+            nombre_cliente="History owner",
+            email_cliente=user.email,
+            direccion_entrega="Test address",
+            producto=product,
+            precio_total=1000,
+        )
+
+        with self.assertRaises(ProtectedError):
+            user.delete()
+
+        self.assertTrue(User.objects.filter(pk=user.pk).exists())
+        self.assertTrue(PreOrden.objects.filter(pk=order.pk).exists())
+        self.assertTrue(Pedido.objects.filter(codigo_pedido=order.codigo_orden).exists())
+
