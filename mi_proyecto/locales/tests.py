@@ -531,6 +531,26 @@ class StoreAuthenticationBoundaryTests(TestCase):
         self.assertNotIn('Private Name', response.content.decode())
         self.assertNotIn('private-address', response.content.decode())
 
+    def test_customer_profile_only_lists_their_own_orders(self):
+        own_order = PreOrden.objects.create(
+            codigo_orden='SL-OWN-ORDERS', usuario=self.user,
+            nombre_cliente='Account Owner', email_cliente=self.user.email,
+            direccion_entrega='own-address', producto=self.product,
+            precio_total=self.product.precio,
+        )
+        PreOrden.objects.create(
+            codigo_orden='SL-OTHER-ORDERS', usuario=self.other_user,
+            nombre_cliente='Other Customer', email_cliente=self.other_user.email,
+            direccion_entrega='other-address', producto=self.product,
+            precio_total=self.product.precio,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get('/perfil/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['ordenes']), [own_order])
+
     def test_matching_email_does_not_claim_unowned_historical_orders(self):
         legacy = PreOrden.objects.create(
             codigo_orden='SL-UNCLAIMED', nombre_cliente='Legacy Guest',

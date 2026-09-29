@@ -32,6 +32,10 @@ class TraditionalAccountFlowTests(TestCase):
         self.assertNotEqual(user.password, 'SafePassphrase-2026!x')
         self.assertTrue(user.check_password('SafePassphrase-2026!x'))
         self.assertTrue(user.cliente)
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+        self.assertEqual(user.groups.count(), 0)
+        self.assertEqual(user.user_permissions.count(), 0)
         self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
 
     @patch('usuarios.views.enviar_cupon_bienvenida')
