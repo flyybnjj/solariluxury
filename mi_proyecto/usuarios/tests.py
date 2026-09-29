@@ -12,10 +12,19 @@ class TraditionalAccountFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'auth-card')
         self.assertContains(response, 'ENVIAR ENLACE')
+        self.assertContains(response, 'class="apple-dots-svg"')
+        self.assertContains(response, '@keyframes appleDotsMotion')
         self.assertContains(response, 'class="guest-view"')
         self.assertContains(response, '.guest-view main { padding-top: 0; min-height: 100vh; background: #ebebf0; }')
         self.assertNotContains(response, 'class="sub-footer"')
         self.assertNotContains(response, 'Administración de Django')
+
+    def test_registration_uses_the_same_animated_brand_mark_as_login(self):
+        response = self.client.get(reverse('registro'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="apple-dots-svg"')
+        self.assertContains(response, '@keyframes appleDotsMotion')
 
     @patch('usuarios.views.enviar_cupon_bienvenida')
     def test_new_account_is_saved_with_hashed_password_and_authenticated(self, _send_welcome):
